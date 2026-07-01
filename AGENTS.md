@@ -187,6 +187,7 @@ Use these default behaviors:
 ## Open TODO
 
 - Connect a real VLM provider to fill the product JSON from image inputs.
+- Add an opt-in local Ollama extractor. Current local tests: `llama3.2:1b` and `moondream` run; `qwen2.5vl:3b` crashes with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
 - Validate VLM responses before writing product JSON.
 - Decide how API credentials and model selection should be configured.
 - Add PDF page rendering and PDF type detection.
