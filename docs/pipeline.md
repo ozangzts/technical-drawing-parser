@@ -20,7 +20,7 @@ Each processed input gets one product JSON file:
 outputs/products/<input_or_product_code>.json
 ```
 
-At the current MVP stage, the output name is based on the input filename. Later, once title block extraction exists, the output name can use a detected product or drawing code.
+At the current MVP stage, the output name is derived from the input filename and cleaned to prefer a short brand/code style name when possible. For example, `DEICO_DE8135_Technical_Drawing_page-0001.jpg` becomes `deico_de8135.json`. Later, once title block extraction exists, the output name can use a detected product or drawing code.
 
 Developer-facing metadata is written separately:
 

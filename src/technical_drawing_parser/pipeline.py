@@ -95,7 +95,7 @@ def create_product_json(
     products_dir.mkdir(parents=True, exist_ok=True)
     internal_dir.mkdir(parents=True, exist_ok=True)
 
-    output_slug = slugify(input_file.stem)
+    output_slug = build_output_slug(input_file.stem)
     result_path = products_dir / f"{output_slug}.json"
     internal_path = internal_dir / f"{output_slug}.internal.json"
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
@@ -222,6 +222,36 @@ def slugify(value: str) -> str:
         for character in value
     ).strip("_")
     return "_".join(part for part in slug.split("_") if part) or "drawing"
+
+
+def build_output_slug(value: str) -> str:
+    parts = slugify(value).split("_")
+    noise_words = {
+        "technical",
+        "drawing",
+        "drawings",
+        "page",
+        "sheet",
+        "rev",
+        "revision",
+        "pdf",
+        "jpg",
+        "jpeg",
+        "png",
+        "tif",
+        "tiff",
+    }
+    useful_parts = [
+        part
+        for part in parts
+        if part not in noise_words and not part.isdigit()
+    ]
+
+    if len(useful_parts) >= 2:
+        return "_".join(useful_parts[:2])
+    if useful_parts:
+        return useful_parts[0]
+    return slugify(value)
 
 
 def now_utc() -> str:

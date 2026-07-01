@@ -33,6 +33,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Simplified the MVP output flow to write one product JSON per input under `outputs/products/` instead of per-run output directories.
 - Simplified product JSON to user-facing technical fields and moved developer metadata to `outputs/internal/`.
 - Added VLM extraction documentation, a canonical prompt builder, and per-file prompt output under `outputs/internal/`.
+- Shortened generated output names by removing common filename noise and preferring brand/code style slugs.
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.
