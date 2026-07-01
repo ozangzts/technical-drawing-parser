@@ -26,6 +26,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added `tdp.py` as a local no-install CLI wrapper.
 - Improved skip output to show the existing result path and run id when a file was already processed.
 - Improved CLI help text with usage examples and documented the `process` command.
+- Documented the recommended onboarding reading order for future agents.
 - Added input discovery for PDF, PNG, JPG, JPEG, TIFF, and TIF files.
 - Added SHA-256 fingerprinting and `outputs/index.json` registry handling.
 - Added initial run output generation with copied input, `manifest.json`, `result.json`, `warnings.json`, and full-page region metadata.
