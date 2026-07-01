@@ -147,6 +147,7 @@ Prefer explicit uncertainty:
 - Source input location: `inputs/incoming/`
 - Product JSON output location: `outputs/products/`
 - Developer/internal metadata output location: `outputs/internal/`
+- Local configuration template: `.env.example`
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
@@ -171,6 +172,7 @@ Use these default behaviors:
 ## Development Rules For Future Agents
 
 - Keep all repository content in English.
+- Do not commit real `.env` files or API keys. Keep `.env.example` updated when configuration changes.
 - Update `AGENTS.md` when project structure, pipeline stages, extraction rules, schema strategy, or major assumptions change.
 - Update `CHANGELOG.md` for every meaningful project change.
 - Preserve original documents and coordinates whenever processing files.

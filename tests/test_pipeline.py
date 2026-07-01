@@ -32,9 +32,12 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(second_summary["skipped"], 1)
 
             result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
             self.assertEqual(result["source_file"], drawing.name)
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
+            self.assertEqual(internal["extraction"]["extractor"], "none")
+            self.assertEqual(internal["extraction"]["status"], "not_run")
             self.assertIn("Schema:", prompt_path.read_text(encoding="utf-8"))
 
     def test_build_output_slug_prefers_brand_and_code(self) -> None:

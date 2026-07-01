@@ -10,6 +10,14 @@ Semantic extraction is not implemented yet. The next major step is connecting a 
 
 ## Usage
 
+Optional local configuration:
+
+```bash
+copy .env.example .env
+```
+
+The default configuration uses `TDP_EXTRACTOR=none`, which does not call any external API.
+
 Show available commands:
 
 ```bash
@@ -20,6 +28,12 @@ Process the default input directory:
 
 ```bash
 python tdp.py process
+```
+
+Process with explicit defaults:
+
+```bash
+python tdp.py process --extractor none
 ```
 
 Process a specific file or directory:
@@ -45,3 +59,4 @@ python tdp.py status
 - `inputs/incoming/`: place source drawings here
 - `outputs/products/`: product JSON outputs will be written here
 - `outputs/internal/`: developer-facing metadata will be written here
+- `.env.example`: local configuration template

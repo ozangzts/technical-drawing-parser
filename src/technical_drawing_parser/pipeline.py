@@ -23,6 +23,8 @@ def process_inputs(
     outputs_root: Path,
     force: bool = False,
     retry_failed: bool = False,
+    extractor: str = "none",
+    model: str | None = None,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -55,6 +57,8 @@ def process_inputs(
                 input_file=input_file,
                 fingerprint=fingerprint,
                 outputs_root=outputs_root,
+                extractor=extractor,
+                model=model,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -89,6 +93,8 @@ def create_product_json(
     input_file: Path,
     fingerprint: str,
     outputs_root: Path,
+    extractor: str = "none",
+    model: str | None = None,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
@@ -111,6 +117,8 @@ def create_product_json(
         regions=regions,
         product_json_path=result_path,
         prompt_path=prompt_path,
+        extractor=extractor,
+        model=model,
         processed_at=processed_at,
     )
     write_json(result_path, result)
@@ -125,6 +133,8 @@ def create_product_json(
         "result_path": str(result_path),
         "internal_path": str(internal_path),
         "prompt_path": str(prompt_path),
+        "extractor": extractor,
+        "model": model,
         "processed_at": processed_at,
     }
 
@@ -171,12 +181,19 @@ def build_internal_result(
     regions: list[dict[str, object]],
     product_json_path: Path,
     prompt_path: Path,
+    extractor: str,
+    model: str | None,
     processed_at: str,
 ) -> dict[str, object]:
     return {
         "schema_version": "0.1.0",
         "product_json_path": str(product_json_path),
         "vlm_prompt_path": str(prompt_path),
+        "extraction": {
+            "extractor": extractor,
+            "model": model,
+            "status": "not_run",
+        },
         "document": {
             "source_path": str(input_file),
             "original_filename": input_file.name,

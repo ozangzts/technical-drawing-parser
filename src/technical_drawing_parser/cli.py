@@ -3,10 +3,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .config import DEFAULT_EXTRACTOR, load_dotenv, read_config
 from .pipeline import process_inputs
 
 
 def build_parser() -> argparse.ArgumentParser:
+    config = read_config()
     parser = argparse.ArgumentParser(
         prog="tdp",
         description="Process technical drawings into traceable JSON outputs.",
@@ -14,6 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
+            "  python tdp.py process --extractor none\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
             "  python tdp.py status"
         ),
@@ -50,6 +53,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Process files that have a previous failed registry entry.",
     )
+    process_parser.add_argument(
+        "--extractor",
+        default=config.extractor,
+        choices=[DEFAULT_EXTRACTOR],
+        help="Extraction provider to use. Defaults to TDP_EXTRACTOR or none.",
+    )
+    process_parser.add_argument(
+        "--model",
+        default=config.model,
+        help="Model name for future extractor providers. Defaults to TDP_MODEL.",
+    )
 
     status_parser = subparsers.add_parser(
         "status",
@@ -66,6 +80,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    load_dotenv()
     parser = build_parser()
     args = parser.parse_args(argv)
 
@@ -77,6 +92,8 @@ def main(argv: list[str] | None = None) -> int:
             outputs_root=outputs_root,
             force=getattr(args, "force", False),
             retry_failed=getattr(args, "retry_failed", False),
+            extractor=getattr(args, "extractor", DEFAULT_EXTRACTOR),
+            model=getattr(args, "model", None),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

@@ -58,10 +58,22 @@ Use the local CLI wrapper:
 ```bash
 python tdp.py --help
 python tdp.py process
+python tdp.py process --extractor none
 python tdp.py status
 ```
 
 `process` is the command that starts drawing processing. Command names keep the CLI extensible as future actions are added.
+
+## Configuration
+
+Copy `.env.example` to `.env` for local settings. The default configuration is:
+
+```text
+TDP_EXTRACTOR=none
+TDP_MODEL=
+```
+
+`none` does not call any external API. Future VLM providers can use the same configuration pattern.
 
 ## Current Minimal Pipeline Stages
 
