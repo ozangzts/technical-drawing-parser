@@ -24,8 +24,10 @@ class PipelineTests(unittest.TestCase):
 
             result_path = outputs / "products" / "example_drawing.json"
             internal_path = outputs / "internal" / "example_drawing.internal.json"
+            prompt_path = outputs / "internal" / "example_drawing.vlm_prompt.txt"
             self.assertTrue(result_path.exists())
             self.assertTrue(internal_path.exists())
+            self.assertTrue(prompt_path.exists())
             self.assertEqual(first_summary["processed"], 1)
             self.assertEqual(second_summary["skipped"], 1)
 
@@ -33,6 +35,7 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(result["source_file"], drawing.name)
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
+            self.assertIn("Schema:", prompt_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":

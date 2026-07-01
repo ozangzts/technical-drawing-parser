@@ -143,12 +143,14 @@ Prefer explicit uncertainty:
 - Current user-facing summary: `README.md`
 - Planned pipeline and processing registry: `docs/pipeline.md`
 - Initial JSON schema draft: `docs/schema.md`
+- VLM extraction rules and prompt strategy: `docs/extraction.md`
 - Source input location: `inputs/incoming/`
 - Product JSON output location: `outputs/products/`
 - Developer/internal metadata output location: `outputs/internal/`
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
+- Product extraction prompt: `src/technical_drawing_parser/extraction/prompt.py`
 - Registry helpers: `src/technical_drawing_parser/registry.py`
 - Reference sample drawing: `DEICO_DE8135_Technical_Drawing_page-0001.jpg`
 

@@ -26,6 +26,7 @@ Developer-facing metadata is written separately:
 
 ```text
 outputs/internal/<input_or_product_code>.internal.json
+outputs/internal/<input_or_product_code>.vlm_prompt.txt
 ```
 
 Debug artifacts, crops, and page images should only be added when they become necessary.
@@ -71,7 +72,8 @@ python tdp.py status
 5. Create initial page and full-page region records.
 6. Write one simple product JSON file under `outputs/products/`.
 7. Write internal metadata under `outputs/internal/`.
-8. Update `outputs/index.json`.
+8. Write the VLM extraction prompt under `outputs/internal/`.
+9. Update `outputs/index.json`.
 
 Later stages will add PDF rendering, OCR, layout detection, crops, debug overlays, and semantic extraction.
 
