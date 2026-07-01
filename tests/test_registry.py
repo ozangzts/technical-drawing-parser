@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from technical_drawing_parser.registry import should_process
+from technical_drawing_parser.registry import find_latest_completed_entry, should_process
 
 
 class RegistryTests(unittest.TestCase):
@@ -47,6 +47,27 @@ class RegistryTests(unittest.TestCase):
 
         self.assertTrue(should_run)
         self.assertIsNone(reason)
+
+    def test_find_latest_completed_entry_returns_last_completed_entry(self) -> None:
+        registry = {
+            "files": [
+                {
+                    "fingerprint": "sha256:abc",
+                    "status": "completed",
+                    "latest_run_id": "run_1",
+                },
+                {
+                    "fingerprint": "sha256:abc",
+                    "status": "completed",
+                    "latest_run_id": "run_2",
+                },
+            ]
+        }
+
+        entry = find_latest_completed_entry(registry, "sha256:abc")
+
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry["latest_run_id"], "run_2")
 
 
 if __name__ == "__main__":

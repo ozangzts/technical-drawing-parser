@@ -51,7 +51,20 @@ def should_process(
     return True, None
 
 
+def find_latest_completed_entry(
+    registry: dict[str, Any],
+    fingerprint: str,
+) -> dict[str, Any] | None:
+    entries = [
+        entry
+        for entry in find_entries_by_fingerprint(registry, fingerprint)
+        if entry.get("status") == "completed"
+    ]
+    if not entries:
+        return None
+    return entries[-1]
+
+
 def append_registry_entry(registry: dict[str, Any], entry: dict[str, Any]) -> None:
     registry.setdefault("schema_version", "0.1.0")
     registry.setdefault("files", []).append(entry)
-

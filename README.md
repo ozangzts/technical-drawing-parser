@@ -8,6 +8,12 @@ This project has a minimal CLI-based batch processor that reads drawings from `i
 
 ## Usage
 
+Show available commands:
+
+```bash
+python tdp.py --help
+```
+
 Process the default input directory:
 
 ```bash
@@ -25,6 +31,8 @@ Show registry status:
 ```bash
 python tdp.py status
 ```
+
+`process` is the command that starts drawing processing. The CLI uses command names because later actions such as `status`, `inspect`, or `clean` can live under the same `tdp.py` entry point.
 
 ## Key Locations
 

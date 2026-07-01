@@ -10,12 +10,24 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="tdp",
         description="Process technical drawings into traceable JSON outputs.",
+        epilog=(
+            "Examples:\n"
+            "  python tdp.py process\n"
+            "  python tdp.py process inputs/incoming\n"
+            "  python tdp.py process path/to/drawing.jpg --force\n"
+            "  python tdp.py status"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     subparsers = parser.add_subparsers(dest="command")
 
     process_parser = subparsers.add_parser(
         "process",
         help="Process drawings from an input file or directory.",
+        description=(
+            "Process new technical drawing files. Files with completed matching "
+            "SHA-256 fingerprints are skipped unless --force is used."
+        ),
     )
     process_parser.add_argument(
         "input_path",
@@ -42,6 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
     status_parser = subparsers.add_parser(
         "status",
         help="Show registry status.",
+        description="Show the current processing registry summary.",
     )
     status_parser.add_argument(
         "--outputs",
@@ -96,4 +109,3 @@ def print_summary(summary: dict[str, int | list[str]]) -> None:
         print()
         for message in messages:
             print(message)
-

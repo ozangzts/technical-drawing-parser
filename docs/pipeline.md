@@ -55,6 +55,18 @@ Default behavior:
 - `--force`: reprocess even if the file was already completed.
 - `--retry-failed`: reprocess previously failed files.
 
+## CLI Commands
+
+Use the local CLI wrapper:
+
+```bash
+python tdp.py --help
+python tdp.py process
+python tdp.py status
+```
+
+`process` is the command that starts drawing processing. Command names keep the CLI extensible as future actions are added.
+
 ## Current Minimal Pipeline Stages
 
 1. Discover input files.

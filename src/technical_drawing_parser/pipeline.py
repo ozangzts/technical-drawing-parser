@@ -8,7 +8,13 @@ from pathlib import Path
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
-from .registry import append_registry_entry, load_registry, save_registry, should_process
+from .registry import (
+    append_registry_entry,
+    find_latest_completed_entry,
+    load_registry,
+    save_registry,
+    should_process,
+)
 
 
 def process_inputs(
@@ -38,7 +44,7 @@ def process_inputs(
         )
         if not process:
             summary["skipped"] += 1
-            summary["messages"].append(f"SKIP {input_file} ({skip_reason})")
+            summary["messages"].append(build_skip_message(input_file, skip_reason, registry, fingerprint))
             continue
 
         try:
@@ -59,6 +65,24 @@ def process_inputs(
             summary["messages"].append(f"FAIL {input_file} ({error})")
 
     return summary
+
+
+def build_skip_message(
+    input_file: Path,
+    skip_reason: str | None,
+    registry: dict[str, object],
+    fingerprint: str,
+) -> str:
+    message = f"SKIP {input_file} ({skip_reason})"
+    completed_entry = find_latest_completed_entry(registry, fingerprint)
+    if completed_entry:
+        result_path = completed_entry.get("result_path")
+        run_id = completed_entry.get("latest_run_id")
+        if result_path:
+            message += f" -> {result_path}"
+        if run_id:
+            message += f" [run_id={run_id}]"
+    return message
 
 
 def create_run(
