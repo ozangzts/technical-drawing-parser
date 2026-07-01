@@ -1,0 +1,16 @@
+[project]
+name = "technical-drawing-parser"
+version = "0.1.0"
+description = "Extract structured JSON from technical drawings while preserving source evidence."
+requires-python = ">=3.11"
+
+[project.scripts]
+tdp = "technical_drawing_parser.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

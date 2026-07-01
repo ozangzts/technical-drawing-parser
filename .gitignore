@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+outputs/index.json
+outputs/runs/*
+!outputs/runs/.gitkeep
+
+inputs/incoming/*
+!inputs/incoming/.gitkeep
+
