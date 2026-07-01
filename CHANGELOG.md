@@ -36,6 +36,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Shortened generated output names by removing common filename noise and preferring brand/code style slugs.
 - Clarified the current MVP limitations and updated project TODOs toward VLM extraction.
 - Added `.env.example`, local `.env` loading, and default no-cost `none` extractor configuration.
+- Added `environment.yml` and documented Conda as the recommended setup path.
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.

@@ -147,6 +147,7 @@ Prefer explicit uncertainty:
 - Source input location: `inputs/incoming/`
 - Product JSON output location: `outputs/products/`
 - Developer/internal metadata output location: `outputs/internal/`
+- Recommended Conda environment file: `environment.yml`
 - Local configuration template: `.env.example`
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
@@ -173,6 +174,7 @@ Use these default behaviors:
 
 - Keep all repository content in English.
 - Do not commit real `.env` files or API keys. Keep `.env.example` updated when configuration changes.
+- Keep `environment.yml` updated when Python dependencies or supported Python versions change.
 - Update `AGENTS.md` when project structure, pipeline stages, extraction rules, schema strategy, or major assumptions change.
 - Update `CHANGELOG.md` for every meaningful project change.
 - Preserve original documents and coordinates whenever processing files.

@@ -10,6 +10,28 @@ Semantic extraction is not implemented yet. The next major step is connecting a 
 
 ## Usage
 
+## Setup
+
+Conda is the recommended setup path for this project.
+
+Create the environment:
+
+```bash
+conda env create -f environment.yml
+```
+
+Activate it:
+
+```bash
+conda activate technical-drawing-parser
+```
+
+Run tests:
+
+```bash
+python -m unittest discover -s tests
+```
+
 Optional local configuration:
 
 ```bash
@@ -22,6 +44,12 @@ Show available commands:
 
 ```bash
 python tdp.py --help
+```
+
+If the package was installed from `environment.yml`, this also works:
+
+```bash
+tdp --help
 ```
 
 Process the default input directory:
