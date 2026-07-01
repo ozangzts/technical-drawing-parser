@@ -144,7 +144,7 @@ Prefer explicit uncertainty:
 - Planned pipeline and processing registry: `docs/pipeline.md`
 - Initial JSON schema draft: `docs/schema.md`
 - Source input location: `inputs/incoming/`
-- Planned run output location: `outputs/runs/`
+- Product JSON output location: `outputs/products/`
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
@@ -155,12 +155,12 @@ When schema, pipeline, or folder conventions are introduced, update this section
 
 ## Processing Registry Rule
 
-The parser should not process the same file content repeatedly. It should maintain `outputs/index.json`, compute a SHA-256 fingerprint for each input file, and skip files that already have a completed registry entry with the same fingerprint.
+The parser should not process the same file content repeatedly. It should maintain `outputs/index.json`, compute a SHA-256 fingerprint for each input file, and skip files that already have a completed registry entry with the same fingerprint. At the MVP stage, each processed drawing should write one product JSON file under `outputs/products/`.
 
 Use these default behaviors:
 
 - Same content already completed: skip.
-- Same filename with changed content: create a new run.
+- Same filename with changed content: create or overwrite the product JSON.
 - Previous failed run: skip by default until retry behavior is implemented.
 - `--force`: process again even when completed.
 - `--retry-failed`: process failed entries again.

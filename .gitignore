@@ -3,9 +3,9 @@ __pycache__/
 .pytest_cache/
 
 outputs/index.json
-outputs/runs/*
-!outputs/runs/.gitkeep
+outputs/products/*
+!outputs/products/.gitkeep
+outputs/runs/
 
 inputs/incoming/*
 !inputs/incoming/.gitkeep
-

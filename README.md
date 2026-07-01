@@ -4,7 +4,7 @@ Extract structured JSON from technical drawings while preserving source evidence
 
 ## Current Status
 
-This project has a minimal CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes traceable outputs under `outputs/runs/`.
+This project has a minimal CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes product JSON files under `outputs/products/`.
 
 ## Usage
 
@@ -41,4 +41,4 @@ python tdp.py status
 - `docs/pipeline.md`: planned processing flow
 - `docs/schema.md`: initial JSON schema draft
 - `inputs/incoming/`: place source drawings here
-- `outputs/runs/`: processing outputs will be written here
+- `outputs/products/`: product JSON outputs will be written here

@@ -1,6 +1,5 @@
 # Samples
 
-Use this directory for curated sample drawings and expected outputs when test fixtures are introduced.
+Use this directory only for curated development samples and expected outputs when test fixtures are introduced.
 
-The current loose reference image remains at the repository root until the sample policy is finalized.
-
+Regular user input files should go in `inputs/incoming/`, not here.

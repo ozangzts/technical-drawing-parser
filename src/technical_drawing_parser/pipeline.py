@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -44,19 +43,21 @@ def process_inputs(
         )
         if not process:
             summary["skipped"] += 1
-            summary["messages"].append(build_skip_message(input_file, skip_reason, registry, fingerprint))
+            summary["messages"].append(
+                build_skip_message(input_file, skip_reason, registry, fingerprint)
+            )
             continue
 
         try:
-            run = create_run(
+            output = create_product_json(
                 input_file=input_file,
                 fingerprint=fingerprint,
                 outputs_root=outputs_root,
             )
-            append_registry_entry(registry, run["registry_entry"])
+            append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
             summary["processed"] += 1
-            summary["messages"].append(f"OK   {input_file} -> {run['run_dir']}")
+            summary["messages"].append(f"OK   {input_file} -> {output['result_path']}")
         except Exception as error:  # noqa: BLE001 - registry should capture failures.
             summary["failed"] += 1
             failed_entry = build_failed_entry(input_file, fingerprint, str(error))
@@ -77,92 +78,49 @@ def build_skip_message(
     completed_entry = find_latest_completed_entry(registry, fingerprint)
     if completed_entry:
         result_path = completed_entry.get("result_path")
-        run_id = completed_entry.get("latest_run_id")
         if result_path:
             message += f" -> {result_path}"
-        if run_id:
-            message += f" [run_id={run_id}]"
     return message
 
 
-def create_run(
+def create_product_json(
     input_file: Path,
     fingerprint: str,
     outputs_root: Path,
 ) -> dict[str, object]:
-    started_at = now_utc()
-    run_id = build_run_id(input_file, started_at)
-    run_dir = outputs_root / "runs" / run_id
-    input_dir = run_dir / "input"
-    regions_dir = run_dir / "regions"
+    products_dir = outputs_root / "products"
+    products_dir.mkdir(parents=True, exist_ok=True)
 
-    input_dir.mkdir(parents=True, exist_ok=False)
-    regions_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("pages", "crops", "debug", "ocr"):
-        (run_dir / name).mkdir(parents=True, exist_ok=True)
-
-    copied_input = input_dir / input_file.name
-    shutil.copy2(input_file, copied_input)
-
-    metadata = read_file_metadata(copied_input)
-    regions = build_initial_regions(copied_input, metadata)
-    write_json(regions_dir / "page_001_regions.json", {"regions": regions})
-
-    completed_at = now_utc()
-    manifest = {
-        "schema_version": "0.1.0",
-        "run_id": run_id,
-        "status": "completed",
-        "started_at": started_at,
-        "completed_at": completed_at,
-        "input": {
-            "original_path": str(input_file),
-            "copied_path": str(copied_input),
-            "original_filename": input_file.name,
-            "fingerprint": fingerprint,
-            "metadata": metadata,
-        },
-        "outputs": {
-            "result": "result.json",
-            "regions": "regions/page_001_regions.json",
-            "warnings": "warnings.json",
-        },
-    }
+    result_path = products_dir / f"{slugify(input_file.stem)}.json"
+    metadata = read_file_metadata(input_file)
+    regions = build_initial_regions(input_file, metadata)
+    processed_at = now_utc()
     result = build_initial_result(
         input_file=input_file,
         fingerprint=fingerprint,
         metadata=metadata,
         regions=regions,
+        processed_at=processed_at,
     )
-    warnings = {
-        "warnings": [
-            "OCR, PDF rendering, layout detection, and semantic extraction are not implemented yet."
-        ]
-    }
-
-    write_json(run_dir / "manifest.json", manifest)
-    write_json(run_dir / "result.json", result)
-    write_json(run_dir / "warnings.json", warnings)
+    write_json(result_path, result)
 
     registry_entry = {
         "input_path": str(input_file),
         "original_filename": input_file.name,
         "fingerprint": fingerprint,
         "status": "completed",
-        "latest_run_id": run_id,
-        "result_path": str(run_dir / "result.json"),
-        "processed_at": completed_at,
+        "result_path": str(result_path),
+        "processed_at": processed_at,
     }
 
     return {
-        "run_id": run_id,
-        "run_dir": str(run_dir),
+        "result_path": str(result_path),
         "registry_entry": registry_entry,
     }
 
 
 def build_initial_regions(
-    copied_input: Path,
+    input_file: Path,
     metadata: dict[str, object],
 ) -> list[dict[str, object]]:
     image = metadata.get("image")
@@ -184,7 +142,7 @@ def build_initial_regions(
             "type": "full_page",
             "page": 1,
             "bbox": bbox,
-            "source_ref": f"input/{copied_input.name}#page=1",
+            "source_ref": f"{input_file}#page=1",
             "crop_ref": None,
             "confidence": 1.0,
         }
@@ -196,15 +154,18 @@ def build_initial_result(
     fingerprint: str,
     metadata: dict[str, object],
     regions: list[dict[str, object]],
+    processed_at: str,
 ) -> dict[str, object]:
     return {
         "schema_version": "0.1.0",
         "document": {
+            "source_path": str(input_file),
             "original_filename": input_file.name,
             "fingerprint": fingerprint,
             "page_count": 1,
             "units": None,
             "metadata": metadata,
+            "processed_at": processed_at,
         },
         "title_block": {
             "product_name": None,
@@ -219,6 +180,9 @@ def build_initial_result(
         "notes": [],
         "regions": regions,
         "raw_ocr_blocks": [],
+        "warnings": [
+            "OCR, PDF rendering, layout detection, and semantic extraction are not implemented yet."
+        ],
         "uncertain_fields": [
             {
                 "field": "semantic_extraction",
@@ -246,14 +210,12 @@ def build_failed_entry(
     }
 
 
-def build_run_id(input_file: Path, timestamp: str) -> str:
-    safe_name = "".join(
+def slugify(value: str) -> str:
+    slug = "".join(
         character.lower() if character.isalnum() else "_"
-        for character in input_file.stem
+        for character in value
     ).strip("_")
-    safe_name = "_".join(part for part in safe_name.split("_") if part)
-    timestamp_prefix = timestamp.replace("-", "").replace(":", "")[:15] + "Z"
-    return f"{timestamp_prefix}_{safe_name}"
+    return "_".join(part for part in slug.split("_") if part) or "drawing"
 
 
 def now_utc() -> str:
