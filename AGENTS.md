@@ -182,12 +182,10 @@ Use these default behaviors:
 
 ## Open TODO
 
-- Define the first version of the normalized JSON schema.
-- Define the region metadata schema.
-- Decide the initial folder structure for inputs, outputs, crops, debug overlays, and samples.
-- Expand ingestion for image files beyond basic metadata.
+- Connect a real VLM provider to fill the product JSON from image inputs.
+- Validate VLM responses before writing product JSON.
+- Decide how API credentials and model selection should be configured.
 - Add PDF page rendering and PDF type detection.
-- Add initial OCR integration.
-- Add simple layout detection for title blocks, notes, tables, and large visual regions.
-- Add a sample output JSON for the initial DEICO drawing.
-- Add validation rules for required fields, uncertainty, and evidence references.
+- Add optional OCR only if it improves extraction reliability.
+- Add optional layout/crop/debug artifacts only when needed.
+- Add a curated sample fixture and expected product JSON once VLM extraction exists.

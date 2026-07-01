@@ -6,6 +6,8 @@ Extract structured JSON from technical drawings while preserving source evidence
 
 This project has a minimal CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes simple product JSON files under `outputs/products/`.
 
+Semantic extraction is not implemented yet. The next major step is connecting a vision-language model so product names, drawing metadata, dimensions, tolerances, and notes can be extracted from the drawing image.
+
 ## Usage
 
 Show available commands:
@@ -32,7 +34,7 @@ Show registry status:
 python tdp.py status
 ```
 
-`process` is the command that starts drawing processing. The CLI uses command names because later actions such as `status`, `inspect`, or `clean` can live under the same `tdp.py` entry point.
+`process` is the command that starts drawing processing. The CLI uses command names because later actions can live under the same `tdp.py` entry point without changing the basic usage pattern.
 
 ## Key Locations
 
