@@ -145,6 +145,7 @@ Prefer explicit uncertainty:
 - Initial JSON schema draft: `docs/schema.md`
 - Source input location: `inputs/incoming/`
 - Product JSON output location: `outputs/products/`
+- Developer/internal metadata output location: `outputs/internal/`
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
@@ -155,7 +156,7 @@ When schema, pipeline, or folder conventions are introduced, update this section
 
 ## Processing Registry Rule
 
-The parser should not process the same file content repeatedly. It should maintain `outputs/index.json`, compute a SHA-256 fingerprint for each input file, and skip files that already have a completed registry entry with the same fingerprint. At the MVP stage, each processed drawing should write one product JSON file under `outputs/products/`.
+The parser should not process the same file content repeatedly. It should maintain `outputs/index.json`, compute a SHA-256 fingerprint for each input file, and skip files that already have a completed registry entry with the same fingerprint. At the MVP stage, each processed drawing should write one simple product JSON file under `outputs/products/` and developer-facing metadata under `outputs/internal/`.
 
 Use these default behaviors:
 

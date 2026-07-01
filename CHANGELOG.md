@@ -31,6 +31,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added SHA-256 fingerprinting and `outputs/index.json` registry handling.
 - Added initial run output generation with copied input, `manifest.json`, `result.json`, `warnings.json`, and full-page region metadata.
 - Simplified the MVP output flow to write one product JSON per input under `outputs/products/` instead of per-run output directories.
+- Simplified product JSON to user-facing technical fields and moved developer metadata to `outputs/internal/`.
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.

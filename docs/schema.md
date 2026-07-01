@@ -4,36 +4,30 @@ This document sketches the first JSON output shape. It is intentionally small an
 
 ## Result JSON
 
-Product JSON files under `outputs/products/` should contain normalized extraction data plus evidence references.
+Product JSON files under `outputs/products/` are the user-facing extraction results. They should stay simple and readable.
 
 ```json
 {
-  "schema_version": "0.1.0",
-  "document": {
-    "source_path": "inputs/incoming/drawing.pdf",
-    "original_filename": "drawing.pdf",
-    "fingerprint": "sha256:...",
-    "page_count": 1,
-    "units": null,
-    "processed_at": "2026-07-01T10:00:00+00:00"
-  },
-  "title_block": {
-    "product_name": null,
-    "document_name": null,
-    "drawing_number": null,
-    "revision": null,
-    "revision_date": null,
-    "scale": null,
-    "sheet": null
-  },
+  "source_file": "drawing.pdf",
+  "product_name": null,
+  "document_name": null,
+  "drawing_number": null,
+  "revision": null,
+  "revision_date": null,
+  "scale": null,
+  "units": null,
   "dimensions": [],
+  "tolerances": [],
   "notes": [],
-  "regions": [],
-  "raw_ocr_blocks": [],
-  "warnings": [],
-  "uncertain_fields": []
+  "warnings": []
 }
 ```
+
+## Internal JSON
+
+Developer-facing metadata should be written separately under `outputs/internal/`.
+
+Internal JSON may include fingerprints, source paths, image metadata, regions, raw OCR blocks, and uncertainty details. These fields should not clutter the product JSON.
 
 ## Region Object
 
@@ -69,6 +63,7 @@ Product JSON files under `outputs/products/` should contain normalized extractio
 ## Design Notes
 
 - Keep normalized fields stable and readable.
-- Do not discard raw OCR or region metadata.
+- Do not put developer/debug fields in product JSON.
+- Store raw OCR, region metadata, fingerprints, and evidence details in internal JSON when needed.
 - Add new sections only when a real drawing needs them.
 - Preserve original text where normalization may lose important context.

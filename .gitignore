@@ -5,6 +5,8 @@ __pycache__/
 outputs/index.json
 outputs/products/*
 !outputs/products/.gitkeep
+outputs/internal/*
+!outputs/internal/.gitkeep
 outputs/runs/
 
 inputs/incoming/*

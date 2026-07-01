@@ -22,6 +22,12 @@ outputs/products/<input_or_product_code>.json
 
 At the current MVP stage, the output name is based on the input filename. Later, once title block extraction exists, the output name can use a detected product or drawing code.
 
+Developer-facing metadata is written separately:
+
+```text
+outputs/internal/<input_or_product_code>.internal.json
+```
+
 Debug artifacts, crops, and page images should only be added when they become necessary.
 
 ## Processing Registry
@@ -63,8 +69,9 @@ python tdp.py status
 3. Check `outputs/index.json`.
 4. Read basic file and image metadata.
 5. Create initial page and full-page region records.
-6. Write one product JSON file under `outputs/products/`.
-7. Update `outputs/index.json`.
+6. Write one simple product JSON file under `outputs/products/`.
+7. Write internal metadata under `outputs/internal/`.
+8. Update `outputs/index.json`.
 
 Later stages will add PDF rendering, OCR, layout detection, crops, debug overlays, and semantic extraction.
 

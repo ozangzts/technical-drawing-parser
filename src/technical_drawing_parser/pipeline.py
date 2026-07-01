@@ -89,20 +89,29 @@ def create_product_json(
     outputs_root: Path,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
+    internal_dir = outputs_root / "internal"
     products_dir.mkdir(parents=True, exist_ok=True)
+    internal_dir.mkdir(parents=True, exist_ok=True)
 
-    result_path = products_dir / f"{slugify(input_file.stem)}.json"
+    output_slug = slugify(input_file.stem)
+    result_path = products_dir / f"{output_slug}.json"
+    internal_path = internal_dir / f"{output_slug}.internal.json"
     metadata = read_file_metadata(input_file)
     regions = build_initial_regions(input_file, metadata)
     processed_at = now_utc()
     result = build_initial_result(
         input_file=input_file,
+    )
+    internal = build_internal_result(
+        input_file=input_file,
         fingerprint=fingerprint,
         metadata=metadata,
         regions=regions,
+        product_json_path=result_path,
         processed_at=processed_at,
     )
     write_json(result_path, result)
+    write_json(internal_path, internal)
 
     registry_entry = {
         "input_path": str(input_file),
@@ -110,6 +119,7 @@ def create_product_json(
         "fingerprint": fingerprint,
         "status": "completed",
         "result_path": str(result_path),
+        "internal_path": str(internal_path),
         "processed_at": processed_at,
     }
 
@@ -151,33 +161,43 @@ def build_initial_regions(
 
 def build_initial_result(
     input_file: Path,
+) -> dict[str, object]:
+    return {
+        "source_file": input_file.name,
+        "product_name": None,
+        "document_name": None,
+        "drawing_number": None,
+        "revision": None,
+        "revision_date": None,
+        "scale": None,
+        "units": None,
+        "dimensions": [],
+        "tolerances": [],
+        "notes": [],
+        "warnings": [
+            "Semantic extraction is not implemented yet."
+        ],
+    }
+
+
+def build_internal_result(
+    input_file: Path,
     fingerprint: str,
     metadata: dict[str, object],
     regions: list[dict[str, object]],
+    product_json_path: Path,
     processed_at: str,
 ) -> dict[str, object]:
     return {
         "schema_version": "0.1.0",
+        "product_json_path": str(product_json_path),
         "document": {
             "source_path": str(input_file),
             "original_filename": input_file.name,
             "fingerprint": fingerprint,
-            "page_count": 1,
-            "units": None,
             "metadata": metadata,
             "processed_at": processed_at,
         },
-        "title_block": {
-            "product_name": None,
-            "document_name": None,
-            "drawing_number": None,
-            "revision": None,
-            "revision_date": None,
-            "scale": None,
-            "sheet": None,
-        },
-        "dimensions": [],
-        "notes": [],
         "regions": regions,
         "raw_ocr_blocks": [],
         "warnings": [

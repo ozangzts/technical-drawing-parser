@@ -23,12 +23,16 @@ class PipelineTests(unittest.TestCase):
             second_summary = process_inputs(drawing, outputs)
 
             result_path = outputs / "products" / "example_drawing.json"
+            internal_path = outputs / "internal" / "example_drawing.internal.json"
             self.assertTrue(result_path.exists())
+            self.assertTrue(internal_path.exists())
             self.assertEqual(first_summary["processed"], 1)
             self.assertEqual(second_summary["skipped"], 1)
 
             result = json.loads(result_path.read_text(encoding="utf-8"))
-            self.assertEqual(result["document"]["original_filename"], drawing.name)
+            self.assertEqual(result["source_file"], drawing.name)
+            self.assertNotIn("fingerprint", result)
+            self.assertNotIn("regions", result)
 
 
 if __name__ == "__main__":
