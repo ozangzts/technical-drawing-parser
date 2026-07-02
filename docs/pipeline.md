@@ -29,7 +29,15 @@ outputs/internal/<input_or_product_code>.internal.json
 outputs/internal/<input_or_product_code>.vlm_prompt.txt
 ```
 
-Debug artifacts, crops, and page images should only be added when they become necessary.
+Additional debug artifacts and crops should only be added when they become necessary.
+
+PDF inputs are rendered to a first-page PNG under:
+
+```text
+outputs/internal/page_images/<name>_page_001.png
+```
+
+The original PDF remains the source document. The rendered page image is used as the VLM image input and is recorded in internal metadata.
 
 ## Processing Registry
 
@@ -81,13 +89,14 @@ TDP_MODEL=
 2. Compute file metadata and SHA-256 fingerprint.
 3. Check `outputs/index.json`.
 4. Read basic file and image metadata.
-5. Create initial page and full-page region records.
-6. Write one simple product JSON file under `outputs/products/`.
-7. Write internal metadata under `outputs/internal/`.
-8. Write the VLM extraction prompt under `outputs/internal/`.
-9. Update `outputs/index.json`.
+5. Render the first page when the input is a PDF.
+6. Create initial page and full-page region records.
+7. Write one simple product JSON file under `outputs/products/`.
+8. Write internal metadata under `outputs/internal/`.
+9. Write the VLM extraction prompt under `outputs/internal/`.
+10. Update `outputs/index.json`.
 
-Later stages will add PDF rendering, OCR, layout detection, crops, debug overlays, and semantic extraction.
+Later stages will add multi-page PDF handling, OCR, layout detection, crops, debug overlays, and region-specific semantic extraction.
 
 ## Traceability
 

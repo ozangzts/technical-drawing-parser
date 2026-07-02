@@ -3,6 +3,9 @@ name = "technical-drawing-parser"
 version = "0.1.0"
 description = "Extract structured JSON from technical drawings while preserving source evidence."
 requires-python = ">=3.11"
+dependencies = [
+    "PyMuPDF>=1.24",
+]
 
 [project.scripts]
 tdp = "technical_drawing_parser.cli:main"
@@ -13,4 +16,3 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-

@@ -21,6 +21,19 @@ Use a vision-language model as the main extractor. OCR can be added later as a s
 - Keep the product JSON readable for a non-developer.
 - Store developer/debug details separately under `outputs/internal/`.
 
+## Product JSON Normalization
+
+Extractor output is normalized with narrow deterministic rules before it is written as product JSON:
+
+- String placeholders such as `"null"`, empty strings, and `"N/A"` become JSON `null` for scalar fields.
+- Sheet sizes such as `A3` and `A4` belong in `size`, not `scale`.
+- Dimension objects are padded to the expected shape when fields are missing.
+- Known dimension type aliases such as `hole diameter`, `pad diameter`, and `pitch` are mapped to allowed schema values.
+- Unknown dimension types are set to `unknown` and recorded as warnings.
+- Obvious mojibake for the diameter symbol is repaired.
+
+These rules clean schema shape and common formatting errors only. They should not infer values that are not visible in the drawing.
+
 ## Product JSON Shape
 
 ```json

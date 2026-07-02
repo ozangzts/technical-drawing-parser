@@ -25,6 +25,29 @@ PRODUCT_FIELDS = {
     "warnings",
 }
 
+DIMENSION_FIELDS = [
+    "raw_text",
+    "value",
+    "unit",
+    "type",
+    "quantity",
+    "label",
+    "context",
+]
+
+ALLOWED_DIMENSION_TYPES = {
+    "linear",
+    "diameter",
+    "radius",
+    "angle",
+    "thread",
+    "pattern",
+    "unknown",
+}
+
+NULL_STRINGS = {"", "null", "none", "n/a", "na", "-"}
+SHEET_SIZES = {"A0", "A1", "A2", "A3", "A4", "A5"}
+
 
 def parse_product_json_response(response_text: str, source_file: Path) -> tuple[dict[str, Any], list[str]]:
     warnings: list[str] = []
@@ -46,15 +69,110 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
             result[field] = parsed[field]
 
     result["source_file"] = source_file.name
+    normalize_scalars(result)
+    normalize_size_and_scale(result, warnings)
     for list_field in ("dimensions", "tolerances", "notes", "warnings"):
         if not isinstance(result.get(list_field), list):
             warnings.append(f"`{list_field}` was not a list and was reset.")
             result[list_field] = []
+    result["dimensions"] = normalize_dimensions(result["dimensions"], warnings)
 
     if warnings:
         result["warnings"].extend(warnings)
 
     return result, warnings
+
+
+def normalize_scalars(result: dict[str, Any]) -> None:
+    for field in (
+        "product_name",
+        "document_name",
+        "drawing_number",
+        "revision",
+        "revision_date",
+        "size",
+        "scale",
+        "units",
+    ):
+        result[field] = normalize_scalar(result.get(field))
+
+
+def normalize_scalar(value: Any) -> Any:
+    if isinstance(value, str):
+        value = repair_text(value).strip()
+        if value.lower() in NULL_STRINGS:
+            return None
+    return value
+
+
+def normalize_size_and_scale(result: dict[str, Any], warnings: list[str]) -> None:
+    size = result.get("size")
+    scale = result.get("scale")
+
+    if is_sheet_size(scale) and size is None:
+        result["size"] = scale
+        result["scale"] = None
+        warnings.append("Moved sheet size value from `scale` to `size`.")
+
+
+def is_sheet_size(value: Any) -> bool:
+    return isinstance(value, str) and value.strip().upper() in SHEET_SIZES
+
+
+def normalize_dimensions(
+    dimensions: list[Any],
+    warnings: list[str],
+) -> list[dict[str, Any]]:
+    normalized = []
+    for index, dimension in enumerate(dimensions, start=1):
+        if not isinstance(dimension, dict):
+            warnings.append(f"Dimension {index} was not an object and was skipped.")
+            continue
+
+        normalized_dimension = {field: None for field in DIMENSION_FIELDS}
+        for field in DIMENSION_FIELDS:
+            if field in dimension:
+                normalized_dimension[field] = normalize_scalar(dimension[field])
+
+        normalized_dimension["type"] = normalize_dimension_type(
+            normalized_dimension.get("type"),
+            warnings,
+            index,
+        )
+        normalized.append(normalized_dimension)
+
+    return normalized
+
+
+def normalize_dimension_type(
+    value: Any,
+    warnings: list[str],
+    index: int,
+) -> str:
+    if not isinstance(value, str):
+        return "unknown"
+
+    dimension_type = value.strip().lower().replace(" ", "_")
+    type_aliases = {
+        "hole_diameter": "diameter",
+        "pad_diameter": "diameter",
+        "dia": "diameter",
+        "diam": "diameter",
+        "pitch": "pattern",
+    }
+    dimension_type = type_aliases.get(dimension_type, dimension_type)
+
+    if dimension_type not in ALLOWED_DIMENSION_TYPES:
+        warnings.append(
+            f"Dimension {index} type `{value}` is not allowed and was set to unknown."
+        )
+        return "unknown"
+
+    return dimension_type
+
+
+def repair_text(value: str) -> str:
+    return value.replace("Ã˜", "Ø")
 
 
 def extract_json_object(text: str) -> str:

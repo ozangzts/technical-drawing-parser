@@ -6,7 +6,7 @@ Extract structured JSON from technical drawings while preserving source evidence
 
 This project has a minimal CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes simple product JSON files under `outputs/products/`.
 
-Semantic extraction is not implemented yet. The next major step is connecting a vision-language model so product names, drawing metadata, dimensions, tolerances, and notes can be extracted from the drawing image.
+Opt-in VLM extraction through Ollama is available for image inputs. PDF inputs are rendered to first-page PNG images before extraction; multi-page PDF handling is not implemented yet.
 
 ## Usage
 

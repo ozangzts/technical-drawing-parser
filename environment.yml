@@ -4,6 +4,6 @@ channels:
 dependencies:
   - python=3.11
   - pip
+  - pymupdf
   - pip:
       - -e .
-

@@ -22,10 +22,24 @@ def read_file_metadata(path: Path) -> dict[str, object]:
         }
 
     if path.suffix.lower() == ".pdf":
-        metadata["pdf"] = {
-            "page_count": None,
-            "note": "PDF page rendering is not implemented yet.",
-        }
+        metadata["pdf"] = read_pdf_metadata(path)
+
+    return metadata
+
+
+def read_pdf_metadata(path: Path) -> dict[str, object]:
+    metadata: dict[str, object] = {
+        "page_count": None,
+    }
+    try:
+        import fitz
+    except ImportError:
+        metadata["note"] = "PyMuPDF is not installed; PDF page count was not read."
+        return metadata
+
+    with fitz.open(path) as document:
+        metadata["page_count"] = document.page_count
+        metadata["is_pdf"] = document.is_pdf
 
     return metadata
 

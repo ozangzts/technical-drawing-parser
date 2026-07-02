@@ -20,6 +20,7 @@ Rules:
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
 - If units are stated globally, use that unit for dimensions. If units are not visible, use null.
+- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 

@@ -152,6 +152,7 @@ Prefer explicit uncertainty:
 - Local CLI wrapper: `tdp.py`
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
+- PDF first-page rendering helper: `src/technical_drawing_parser/pdf.py`
 - Product extraction prompt: `src/technical_drawing_parser/extraction/prompt.py`
 - Registry helpers: `src/technical_drawing_parser/registry.py`
 - Reference sample drawing: `DEICO_DE8135_Technical_Drawing_page-0001.jpg`
@@ -188,7 +189,7 @@ Use these default behaviors:
 
 - Continue improving the opt-in Ollama extractor. Current model results: `gemma4:cloud` gives the best extraction so far; `minicpm-v4.6` runs locally and returns valid but imperfect JSON; `moondream` runs but is not useful for extraction; `qwen2.5vl:3b`, `qwen3-vl:2b`, and local `gemma4` crash with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
 - Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
-- Add PDF page rendering and PDF type detection.
+- Extend PDF handling beyond first-page rendering and add PDF type detection.
 - Add optional OCR only if it improves extraction reliability.
 - Add optional layout/crop/debug artifacts only when needed.
 - Add a curated sample fixture and expected product JSON once VLM extraction exists.

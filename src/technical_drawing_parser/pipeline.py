@@ -13,6 +13,7 @@ from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import build_vlm_prompt
 from .extraction.validator import parse_product_json_response
+from .pdf import render_pdf_first_page
 from .registry import (
     append_registry_entry,
     find_latest_completed_entry,
@@ -111,6 +112,19 @@ def create_product_json(
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
     raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
+    extraction_image_path = input_file
+    rendered_page = None
+    if input_file.suffix.lower() == ".pdf":
+        rendered_page_path = internal_dir / "page_images" / f"{output_slug}_page_001.png"
+        rendered_page = render_pdf_first_page(input_file, rendered_page_path)
+        metadata["rendered_pages"] = [rendered_page]
+        metadata["image"] = {
+            "width": rendered_page["width"],
+            "height": rendered_page["height"],
+            "derived_from": str(input_file),
+            "page": 1,
+        }
+        extraction_image_path = rendered_page_path
     regions = build_initial_regions(input_file, metadata)
     processed_at = now_utc()
     result = empty_product_result(input_file)
@@ -121,7 +135,7 @@ def create_product_json(
 
     if extractor == "ollama":
         extraction = extract_with_ollama(
-            image_path=input_file,
+            image_path=extraction_image_path,
             prompt=vlm_prompt,
             model=model or DEFAULT_OLLAMA_MODEL,
         )
@@ -149,6 +163,7 @@ def create_product_json(
         product_json_path=result_path,
         prompt_path=prompt_path,
         raw_response_path=raw_response_path if raw_response_path.exists() else None,
+        rendered_page=rendered_page,
         extractor=extractor,
         model=model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         extraction_status=extraction_status,
@@ -219,6 +234,7 @@ def build_internal_result(
     product_json_path: Path,
     prompt_path: Path,
     raw_response_path: Path | None,
+    rendered_page: dict[str, object] | None,
     extractor: str,
     model: str | None,
     extraction_status: str,
@@ -231,6 +247,7 @@ def build_internal_result(
         "product_json_path": str(product_json_path),
         "vlm_prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path else None,
+        "rendered_page": rendered_page,
         "extraction": {
             "extractor": extractor,
             "model": model,
@@ -248,7 +265,7 @@ def build_internal_result(
         "regions": regions,
         "raw_ocr_blocks": [],
         "warnings": [
-            "OCR, PDF rendering, layout detection, and semantic extraction are not implemented yet."
+            "OCR, layout detection, and region-specific semantic extraction are not implemented yet."
         ],
         "uncertain_fields": [
             {

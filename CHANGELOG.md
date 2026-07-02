@@ -46,6 +46,10 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.
+- Added product JSON normalization for common VLM output issues: string nulls, empty scalar values, sheet size values placed in `scale`, dimension type aliases, missing dimension fields, and mojibake diameter symbols.
+- Updated the VLM prompt to distinguish drawing sheet `size` from drawing `scale`.
+- Added first-page PDF rendering through PyMuPDF and routed PDF VLM extraction through the rendered PNG page image.
+- Recorded rendered PDF page metadata in internal outputs and documented the new `outputs/internal/page_images/` location.
 
 ### Notes
 
