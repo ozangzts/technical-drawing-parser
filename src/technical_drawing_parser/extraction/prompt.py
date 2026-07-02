@@ -1,3 +1,5 @@
+"""Prompt construction for VLM-based technical drawing extraction."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -27,4 +29,3 @@ Source file name:
 Schema:
 {product_schema_description()}
 """
-

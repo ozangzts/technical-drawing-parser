@@ -1,3 +1,5 @@
+"""Main batch-processing flow from input drawings to product JSON outputs."""
+
 from __future__ import annotations
 
 import json

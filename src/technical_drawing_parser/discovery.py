@@ -1,3 +1,5 @@
+"""Input discovery helpers for supported technical drawing files."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -23,4 +25,3 @@ def discover_inputs(input_path: Path) -> list[Path]:
 
 def is_supported_input(path: Path) -> bool:
     return path.suffix.lower() in SUPPORTED_EXTENSIONS
-

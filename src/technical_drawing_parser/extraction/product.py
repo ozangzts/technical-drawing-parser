@@ -1,3 +1,5 @@
+"""User-facing product JSON defaults and schema description."""
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -48,4 +50,3 @@ def product_schema_description() -> str:
   "notes": [],
   "warnings": []
 }"""
-

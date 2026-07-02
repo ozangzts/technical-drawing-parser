@@ -1,3 +1,5 @@
+"""Configuration loading for environment variables and optional `.env` files."""
+
 from __future__ import annotations
 
 import os
@@ -33,4 +35,3 @@ def read_config() -> AppConfig:
     extractor = os.getenv("TDP_EXTRACTOR", DEFAULT_EXTRACTOR).strip().lower() or DEFAULT_EXTRACTOR
     model = os.getenv("TDP_MODEL", "").strip() or None
     return AppConfig(extractor=extractor, model=model)
-

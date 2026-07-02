@@ -1,3 +1,5 @@
+"""Validation and cleanup for product JSON returned by extractors."""
+
 from __future__ import annotations
 
 import json
@@ -73,4 +75,3 @@ def strip_markdown_fence(text: str) -> str:
     if lines and lines[-1].strip() == "```":
         lines = lines[:-1]
     return "\n".join(lines).strip()
-

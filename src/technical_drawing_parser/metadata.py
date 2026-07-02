@@ -1,3 +1,5 @@
+"""Basic file and image metadata readers for parser inputs."""
+
 from __future__ import annotations
 
 import struct
@@ -97,4 +99,3 @@ def read_jpeg_size(path: Path) -> tuple[int, int] | None:
                 return int(width), int(height)
 
             file.seek(segment_length - 2, 1)
-

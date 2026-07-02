@@ -1,3 +1,5 @@
+"""Processing registry helpers for `outputs/index.json`."""
+
 from __future__ import annotations
 
 import json

@@ -1,3 +1,5 @@
+"""Command-line interface for processing drawings and checking registry status."""
+
 from __future__ import annotations
 
 import argparse

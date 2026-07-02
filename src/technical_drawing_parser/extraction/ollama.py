@@ -1,3 +1,5 @@
+"""Opt-in local VLM extraction through the Ollama HTTP API."""
+
 from __future__ import annotations
 
 import base64
@@ -59,4 +61,3 @@ def extract_with_ollama(
 
 def encode_image(path: Path) -> str:
     return base64.b64encode(path.read_bytes()).decode("ascii")
-
