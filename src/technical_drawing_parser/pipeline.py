@@ -7,8 +7,10 @@ from pathlib import Path
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
+from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import build_vlm_prompt
+from .extraction.validator import parse_product_json_response
 from .registry import (
     append_registry_entry,
     find_latest_completed_entry,
@@ -105,11 +107,38 @@ def create_product_json(
     result_path = products_dir / f"{output_slug}.json"
     internal_path = internal_dir / f"{output_slug}.internal.json"
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
+    raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
     regions = build_initial_regions(input_file, metadata)
     processed_at = now_utc()
     result = empty_product_result(input_file)
     vlm_prompt = build_vlm_prompt(input_file)
+    extraction_status = "not_run"
+    extraction_error = None
+    validation_warnings: list[str] = []
+
+    if extractor == "ollama":
+        extraction = extract_with_ollama(
+            image_path=input_file,
+            prompt=vlm_prompt,
+            model=model or DEFAULT_OLLAMA_MODEL,
+        )
+        extraction_status = extraction.status
+        extraction_error = extraction.error
+        if extraction.raw_response is not None:
+            write_text(raw_response_path, extraction.raw_response)
+            if extraction.status == "completed":
+                result, validation_warnings = parse_product_json_response(
+                    extraction.raw_response,
+                    input_file,
+                )
+                if validation_warnings:
+                    extraction_status = "validation_failed"
+        if extraction.status != "completed":
+            result["warnings"] = [
+                f"Ollama extraction failed: {extraction.error or 'unknown error'}"
+            ]
+
     internal = build_internal_result(
         input_file=input_file,
         fingerprint=fingerprint,
@@ -117,8 +146,12 @@ def create_product_json(
         regions=regions,
         product_json_path=result_path,
         prompt_path=prompt_path,
+        raw_response_path=raw_response_path if raw_response_path.exists() else None,
         extractor=extractor,
-        model=model,
+        model=model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
+        extraction_status=extraction_status,
+        extraction_error=extraction_error,
+        validation_warnings=validation_warnings,
         processed_at=processed_at,
     )
     write_json(result_path, result)
@@ -133,8 +166,10 @@ def create_product_json(
         "result_path": str(result_path),
         "internal_path": str(internal_path),
         "prompt_path": str(prompt_path),
+        "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
-        "model": model,
+        "model": model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
+        "extraction_status": extraction_status,
         "processed_at": processed_at,
     }
 
@@ -181,18 +216,25 @@ def build_internal_result(
     regions: list[dict[str, object]],
     product_json_path: Path,
     prompt_path: Path,
+    raw_response_path: Path | None,
     extractor: str,
     model: str | None,
+    extraction_status: str,
+    extraction_error: str | None,
+    validation_warnings: list[str],
     processed_at: str,
 ) -> dict[str, object]:
     return {
         "schema_version": "0.1.0",
         "product_json_path": str(product_json_path),
         "vlm_prompt_path": str(prompt_path),
+        "raw_response_path": str(raw_response_path) if raw_response_path else None,
         "extraction": {
             "extractor": extractor,
             "model": model,
-            "status": "not_run",
+            "status": extraction_status,
+            "error": extraction_error,
+            "validation_warnings": validation_warnings,
         },
         "document": {
             "source_path": str(input_file),

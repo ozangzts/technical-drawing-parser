@@ -97,15 +97,22 @@ Current local test context:
 - Ollama is installed and `ollama --version` works.
 - `llama3.2:1b` runs successfully in Ollama.
 - `moondream` runs successfully in Ollama.
+- The first `moondream` extractor pipeline call completed, but the response did not validate as product JSON. Treat `moondream` as a connectivity baseline, not a proven extraction-quality model.
 - `qwen2.5vl:3b` crashed on `ollama run` with `llama-server process has terminated: exit status 0xe06d7363`.
 - The development machine has 8 GB RAM and a GTX 1050, so larger local VLMs may be slow or unstable.
 
 Recommended next local steps:
 
-1. Add an `ollama` extractor as an explicit opt-in provider.
+1. Use the `ollama` extractor as an explicit opt-in provider.
 2. Start with `moondream` because it runs on the current machine.
 3. Keep `none` as the default extractor.
-4. Store local model name and extraction status in internal metadata.
+4. Store local model name, raw response, and extraction status in internal metadata.
 5. If local quality is insufficient, compare with hosted providers such as Groq or Gemini later.
+
+Example:
+
+```bash
+python tdp.py process --extractor ollama --model moondream --force
+```
 
 Do not assume OCR is enough for this project. Technical drawing dimensions require visual context, so OCR should remain optional support unless testing proves otherwise.

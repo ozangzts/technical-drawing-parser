@@ -38,6 +38,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added `.env.example`, local `.env` loading, and default no-cost `none` extractor configuration.
 - Added `environment.yml` and documented Conda as the recommended setup path.
 - Documented local Ollama/VLM test results and added Python package metadata ignores.
+- Added an opt-in Ollama extractor with raw response capture and product JSON validation.
+- Marked completed extractor calls with invalid product JSON as `validation_failed` in internal metadata.
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.

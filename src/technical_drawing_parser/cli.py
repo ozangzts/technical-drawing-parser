@@ -17,6 +17,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
+            "  python tdp.py process --extractor ollama --model moondream --force\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
             "  python tdp.py status"
         ),
@@ -56,7 +57,7 @@ def build_parser() -> argparse.ArgumentParser:
     process_parser.add_argument(
         "--extractor",
         default=config.extractor,
-        choices=[DEFAULT_EXTRACTOR],
+        choices=[DEFAULT_EXTRACTOR, "ollama"],
         help="Extraction provider to use. Defaults to TDP_EXTRACTOR or none.",
     )
     process_parser.add_argument(
