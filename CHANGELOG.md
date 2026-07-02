@@ -40,6 +40,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Documented local Ollama/VLM test results and added Python package metadata ignores.
 - Added an opt-in Ollama extractor with raw response capture and product JSON validation.
 - Marked completed extractor calls with invalid product JSON as `validation_failed` in internal metadata.
+- Documented model trial results: `gemma4:cloud` is the best current extractor, `minicpm-v4.6` is the local baseline, and several local Qwen/Gemma models crash on the current machine.
+- Added `size` to the documented product JSON shape so sheet size is not confused with drawing scale.
 - Added basic JPG and PNG image size detection using the Python standard library.
 - Added standard-library unit tests for input discovery and registry skip behavior.
 - Added `.gitignore` rules for Python cache files and generated runtime outputs.

@@ -16,6 +16,7 @@ PRODUCT_FIELDS = {
     "drawing_number",
     "revision",
     "revision_date",
+    "size",
     "scale",
     "units",
     "dimensions",

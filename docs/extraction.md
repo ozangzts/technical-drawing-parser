@@ -31,6 +31,7 @@ Use a vision-language model as the main extractor. OCR can be added later as a s
   "drawing_number": null,
   "revision": null,
   "revision_date": null,
+  "size": null,
   "scale": null,
   "units": null,
   "dimensions": [
@@ -98,21 +99,27 @@ Current local test context:
 - `llama3.2:1b` runs successfully in Ollama.
 - `moondream` runs successfully in Ollama.
 - The first `moondream` extractor pipeline call completed, but the response did not validate as product JSON. Treat `moondream` as a connectivity baseline, not a proven extraction-quality model.
+- `minicpm-v4.6` runs locally and returns valid product JSON, but it made visible reading mistakes on the DEICO sample. Treat it as the current local baseline.
 - `qwen2.5vl:3b` crashed on `ollama run` with `llama-server process has terminated: exit status 0xe06d7363`.
+- `qwen3-vl:2b` crashed with the same `0xe06d7363` load failure on this Windows / GTX 1050 machine.
+- Local `gemma4` variants also hit the same load failure on this machine.
+- `gemma4:cloud` produced the best result so far for the DEICO sample: valid JSON, most key dimensions, title block information, and units. It still confused `size` and `scale`, so schema/prompt/validator improvements are needed.
 - The development machine has 8 GB RAM and a GTX 1050, so larger local VLMs may be slow or unstable.
 
 Recommended next local steps:
 
 1. Use the `ollama` extractor as an explicit opt-in provider.
-2. Start with `moondream` because it runs on the current machine.
-3. Keep `none` as the default extractor.
-4. Store local model name, raw response, and extraction status in internal metadata.
-5. If local quality is insufficient, compare with hosted providers such as Groq or Gemini later.
+2. Use `gemma4:cloud` for quality checks when cloud use is acceptable.
+3. Use `minicpm-v4.6` as the current local baseline when cloud use is not acceptable.
+4. Keep `none` as the default extractor.
+5. Store local/cloud model name, raw response, and extraction status in internal metadata.
+6. Improve schema/prompt/validator around `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
+7. If full-page extraction quality is insufficient, move to title-block and region crop extraction.
 
 Example:
 
 ```bash
-python tdp.py process --extractor ollama --model moondream --force
+python tdp.py process --extractor ollama --model gemma4:cloud --force
 ```
 
 Do not assume OCR is enough for this project. Technical drawing dimensions require visual context, so OCR should remain optional support unless testing proves otherwise.

@@ -119,7 +119,7 @@ Use these as a starting vocabulary. Add new types as real samples require them.
 Use a two-layer JSON design:
 
 1. Normalized extraction layer
-   - Clean, consumer-friendly fields such as `product_name`, `document_name`, `revision`, `scale`, `units`, `dimensions`, and `notes`.
+   - Clean, consumer-friendly fields such as `product_name`, `document_name`, `revision`, `size`, `scale`, `units`, `dimensions`, and `notes`.
 
 2. Evidence layer
    - `source_regions`, `raw_ocr_blocks`, `uncertain_fields`, and field-level references that explain where each value came from.
@@ -186,10 +186,8 @@ Use these default behaviors:
 
 ## Open TODO
 
-- Connect a real VLM provider to fill the product JSON from image inputs.
-- Continue improving the opt-in local Ollama extractor. Current local tests: `llama3.2:1b` and `moondream` run; the first `moondream` extraction call completed but failed product JSON validation; `qwen2.5vl:3b` crashes with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
-- Validate VLM responses before writing product JSON.
-- Decide how API credentials and model selection should be configured.
+- Continue improving the opt-in Ollama extractor. Current model results: `gemma4:cloud` gives the best extraction so far; `minicpm-v4.6` runs locally and returns valid but imperfect JSON; `moondream` runs but is not useful for extraction; `qwen2.5vl:3b`, `qwen3-vl:2b`, and local `gemma4` crash with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
+- Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
 - Add PDF page rendering and PDF type detection.
 - Add optional OCR only if it improves extraction reliability.
 - Add optional layout/crop/debug artifacts only when needed.

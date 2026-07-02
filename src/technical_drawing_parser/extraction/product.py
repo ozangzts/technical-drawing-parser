@@ -14,6 +14,7 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
         "drawing_number": None,
         "revision": None,
         "revision_date": None,
+        "size": None,
         "scale": None,
         "units": None,
         "dimensions": [],
@@ -33,6 +34,7 @@ def product_schema_description() -> str:
   "drawing_number": "string or null",
   "revision": "string or null",
   "revision_date": "string or null",
+  "size": "string or null",
   "scale": "string or null",
   "units": "string or null",
   "dimensions": [
