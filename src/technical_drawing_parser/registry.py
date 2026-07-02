@@ -38,17 +38,13 @@ def should_process(
     force: bool,
     retry_failed: bool,
 ) -> tuple[bool, str | None]:
+    _ = retry_failed
     if force:
         return True, None
 
     entries = find_entries_by_fingerprint(registry, fingerprint)
     if any(entry.get("status") == "completed" for entry in entries):
         return False, "already completed"
-
-    if entries and all(entry.get("status") == "failed" for entry in entries):
-        if retry_failed:
-            return True, None
-        return False, "previously failed"
 
     return True, None
 

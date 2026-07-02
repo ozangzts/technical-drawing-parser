@@ -50,6 +50,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Updated the VLM prompt to distinguish drawing sheet `size` from drawing `scale`.
 - Added first-page PDF rendering through PyMuPDF and routed PDF VLM extraction through the rendered PNG page image.
 - Recorded rendered PDF page metadata in internal outputs and documented the new `outputs/internal/page_images/` location.
+- Changed registry behavior so failed files are retried by default while completed matching fingerprints are still skipped.
 
 ### Notes
 

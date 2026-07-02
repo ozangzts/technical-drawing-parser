@@ -48,6 +48,26 @@ class RegistryTests(unittest.TestCase):
         self.assertTrue(should_run)
         self.assertIsNone(reason)
 
+    def test_should_process_failed_fingerprint_by_default(self) -> None:
+        registry = {
+            "files": [
+                {
+                    "fingerprint": "sha256:abc",
+                    "status": "failed",
+                }
+            ]
+        }
+
+        should_run, reason = should_process(
+            registry=registry,
+            fingerprint="sha256:abc",
+            force=False,
+            retry_failed=False,
+        )
+
+        self.assertTrue(should_run)
+        self.assertIsNone(reason)
+
     def test_find_latest_completed_entry_returns_last_completed_entry(self) -> None:
         registry = {
             "files": [

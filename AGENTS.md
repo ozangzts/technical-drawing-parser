@@ -167,9 +167,9 @@ Use these default behaviors:
 
 - Same content already completed: skip.
 - Same filename with changed content: create or overwrite the product JSON.
-- Previous failed run: skip by default until retry behavior is implemented.
+- Previous failed run without a completed entry: process again.
 - `--force`: process again even when completed.
-- `--retry-failed`: process failed entries again.
+- `--retry-failed`: kept as a compatibility option; failed entries are retried by default.
 
 ## Development Rules For Future Agents
 

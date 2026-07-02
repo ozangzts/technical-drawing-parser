@@ -55,9 +55,9 @@ Default behavior:
 
 - Same file content already completed: skip.
 - Same filename with changed content: create or overwrite the product JSON.
-- Previous failed run: skip by default until retry behavior is implemented.
+- Previous failed run without a completed entry: process again.
 - `--force`: reprocess even if the file was already completed.
-- `--retry-failed`: reprocess previously failed files.
+- `--retry-failed`: kept as a compatibility option; failed files are retried by default.
 
 ## CLI Commands
 

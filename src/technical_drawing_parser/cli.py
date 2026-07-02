@@ -54,7 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
     process_parser.add_argument(
         "--retry-failed",
         action="store_true",
-        help="Process files that have a previous failed registry entry.",
+        help="Compatibility option; failed files are retried by default.",
     )
     process_parser.add_argument(
         "--extractor",
