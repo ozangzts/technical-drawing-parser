@@ -137,7 +137,7 @@ Prefer explicit uncertainty:
 
 ## Where To Look
 
-- New agents should start by reading `AGENTS.md`, then `README.md`, `CHANGELOG.md`, `docs/pipeline.md`, and `docs/schema.md` before making project-level changes.
+- New agents should start by reading `AGENTS.md`. This file is the entry point: after reading it, the agent must also read the required context files listed in this section before making project-level changes.
 - Project orientation and agent rules: `AGENTS.md`
 - Change history and implementation order: `CHANGELOG.md`
 - Current user-facing summary: `README.md`
