@@ -31,6 +31,7 @@ Extractor output is normalized with narrow deterministic rules before it is writ
 - Known dimension type aliases such as `hole diameter`, `pad diameter`, and `pitch` are mapped to allowed schema values.
 - Unknown dimension types are set to `unknown` and recorded as warnings.
 - Obvious mojibake for the diameter symbol is repaired.
+- Suspicious but plausible symbol misreads, such as `#` in a diameter dimension, are recorded as warnings without changing `raw_text`.
 
 These rules clean schema shape and common formatting errors only. They should not infer values that are not visible in the drawing.
 

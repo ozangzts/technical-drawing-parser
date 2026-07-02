@@ -139,6 +139,11 @@ def normalize_dimensions(
             warnings,
             index,
         )
+        warn_about_suspicious_dimension_symbols(
+            normalized_dimension,
+            warnings,
+            index,
+        )
         normalized.append(normalized_dimension)
 
     return normalized
@@ -173,6 +178,31 @@ def normalize_dimension_type(
 
 def repair_text(value: str) -> str:
     return value.replace("Ã˜", "Ø")
+
+
+def warn_about_suspicious_dimension_symbols(
+    dimension: dict[str, Any],
+    warnings: list[str],
+    index: int,
+) -> None:
+    raw_text = dimension.get("raw_text")
+    label = dimension.get("label")
+    context = dimension.get("context")
+    text_context = " ".join(
+        value for value in (label, context) if isinstance(value, str)
+    ).lower()
+
+    if (
+        isinstance(raw_text, str)
+        and "#" in raw_text
+        and (
+            dimension.get("type") == "diameter"
+            or "diameter" in text_context
+        )
+    ):
+        warnings.append(
+            f"Dimension {index} may contain a misread diameter symbol in raw_text."
+        )
 
 
 def extract_json_object(text: str) -> str:

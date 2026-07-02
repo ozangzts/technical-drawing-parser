@@ -78,6 +78,33 @@ class ValidatorTests(unittest.TestCase):
             any("Dimension 3 type `made up`" in warning for warning in warnings)
         )
 
+    def test_parse_product_json_response_warns_about_suspicious_diameter_symbol(self) -> None:
+        response = """{
+  "dimensions": [
+    {
+      "raw_text": "(x7) #1,83 (PAD DIAMETER)",
+      "value": "1.83",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 7,
+      "label": "PAD DIAMETER"
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(
+            result["dimensions"][0]["raw_text"],
+            "(x7) #1,83 (PAD DIAMETER)",
+        )
+        self.assertTrue(
+            any("misread diameter symbol" in warning for warning in warnings)
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
