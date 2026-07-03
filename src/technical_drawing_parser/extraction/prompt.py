@@ -65,3 +65,66 @@ Crop context:
 Schema:
 {product_schema_description()}
 """
+
+
+def build_ocr_target_refinement_prompt(
+    source_file: Path,
+    target: dict[str, Any],
+) -> str:
+    target_id = target.get("id", "unknown_target")
+    page = target.get("page", 1)
+    bbox = target.get("bbox")
+    ocr_text = target.get("text")
+    ocr_bbox = target.get("ocr_bbox")
+    return f"""You are reviewing a small OCR-targeted crop from a technical drawing.
+
+Return only valid JSON. Do not include markdown fences or explanations.
+
+Goal:
+- Classify what this crop shows.
+- If it contains a product dimension, extract that dimension.
+- If it shows metadata such as scale, date, sheet number, title block text, or other non-dimension information, classify it as metadata.
+- If it is unclear, mark it uncertain.
+
+Rules:
+- Use the image content as the source of truth. OCR text is only a hint.
+- Do not guess missing or unclear values.
+- Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Do not treat title-block metadata as a product dimension.
+- Add warnings for cropped, ambiguous, or unreadable information.
+- Do not include coordinates except the provided target ids and page number.
+
+Source file name:
+{source_file.name}
+
+Target context:
+- target_id: {target_id}
+- page: {page}
+- page_space_bbox: {bbox}
+- ocr_text_hint: {ocr_text}
+- ocr_bbox: {ocr_bbox}
+
+Schema:
+{{
+  "target_id": "{target_id}",
+  "page": {page},
+  "classification": "dimension | metadata | note | uncertain | irrelevant",
+  "is_product_dimension": true,
+  "raw_text": null,
+  "dimension": {{
+    "raw_text": null,
+    "value": null,
+    "unit": null,
+    "type": "linear | diameter | radius | angle | thread | pattern | unknown",
+    "quantity": null,
+    "label": null,
+    "context": null
+  }},
+  "metadata": {{
+    "field": null,
+    "value": null
+  }},
+  "confidence": 0.0,
+  "warnings": []
+}}
+"""

@@ -63,6 +63,10 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added a compact `<name>.tile_summary.json` review artifact with strong/weak duplicate and tile-only classifications.
 - Added optional local OCR with RapidOCR via `--ocr`, storing coordinate-aware raw OCR blocks and filtered numeric OCR candidates internally.
 - Added `--ocr-engine rapidocr` so future OCR engines can be compared behind the same internal OCR schema.
+- Added `--generate-ocr-target-crops` for confidence-driven OCR target crops around high-confidence numeric candidates missed by full-page extraction.
+- Kept OCR target selection general by filtering only weak single-number fragments while leaving semantic crop classification to future refinement; OCR/full-page comparison still uses loose matching keys for quantity prefixes and diameter symbols without changing extracted text.
+- Added opt-in OCR target VLM refinement with `--refine-ocr-targets`, storing crop classifications and structured refinement JSON internally without merging into product JSON.
+- Added an internal OCR target refinement summary with classification counts and review-only product dimension merge candidates.
 
 ### Notes
 

@@ -11,11 +11,23 @@ from .dedupe import build_tile_extraction_summary
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
-from .ocr import DEFAULT_OCR_ENGINE, build_ocr_candidates, run_ocr_pages
+from .ocr import (
+    DEFAULT_OCR_ENGINE,
+    build_ocr_candidates,
+    build_ocr_target_crops,
+    run_ocr_pages,
+)
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
-from .extraction.prompt import build_tile_vlm_prompt, build_vlm_prompt
-from .extraction.validator import parse_product_json_response
+from .extraction.prompt import (
+    build_ocr_target_refinement_prompt,
+    build_tile_vlm_prompt,
+    build_vlm_prompt,
+)
+from .extraction.validator import (
+    parse_ocr_target_refinement_response,
+    parse_product_json_response,
+)
 from .pdf import render_pdf_pages
 from .registry import (
     append_registry_entry,
@@ -37,6 +49,8 @@ def process_inputs(
     extract_crops: bool = False,
     run_ocr: bool = False,
     ocr_engine: str = DEFAULT_OCR_ENGINE,
+    generate_ocr_target_crops: bool = False,
+    refine_ocr_targets: bool = False,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -73,8 +87,11 @@ def process_inputs(
                 model=model,
                 generate_crops=generate_crops,
                 extract_crops=extract_crops,
-                run_ocr=run_ocr,
+                run_ocr=run_ocr or generate_ocr_target_crops or refine_ocr_targets,
                 ocr_engine=ocr_engine,
+                generate_ocr_target_crops=generate_ocr_target_crops
+                or refine_ocr_targets,
+                refine_ocr_targets=refine_ocr_targets,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -115,7 +132,11 @@ def create_product_json(
     extract_crops: bool = False,
     run_ocr: bool = False,
     ocr_engine: str = DEFAULT_OCR_ENGINE,
+    generate_ocr_target_crops: bool = False,
+    refine_ocr_targets: bool = False,
 ) -> dict[str, object]:
+    generate_ocr_target_crops = generate_ocr_target_crops or refine_ocr_targets
+    run_ocr = run_ocr or generate_ocr_target_crops
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
     products_dir.mkdir(parents=True, exist_ok=True)
@@ -149,10 +170,11 @@ def create_product_json(
                 "PDF has multiple pages; product JSON uses page 1 until merge behavior is implemented."
             )
     regions = build_initial_regions(input_file, metadata)
+    page_source_images = build_tile_source_images(input_file, metadata)
     raw_ocr_blocks: list[dict[str, object]] = []
     if run_ocr:
         raw_ocr_blocks = run_ocr_pages(
-            build_tile_source_images(input_file, metadata),
+            page_source_images,
             engine_name=ocr_engine,
         )
     tiles: list[dict[str, object]] = []
@@ -171,6 +193,7 @@ def create_product_json(
     validation_warnings: list[str] = []
     page_extractions: list[dict[str, object]] = []
     tile_extractions: list[dict[str, object]] = []
+    ocr_target_refinements: list[dict[str, object]] = []
 
     if extractor == "ollama":
         extraction_inputs = build_extraction_inputs(
@@ -217,6 +240,27 @@ def create_product_json(
         )
     result["warnings"].extend(processing_warnings)
     ocr_candidates = build_ocr_candidates(raw_ocr_blocks, result)
+    ocr_target_crops: list[dict[str, object]] = []
+    if generate_ocr_target_crops:
+        ocr_target_crops = build_ocr_target_crops(
+            ocr_candidates=ocr_candidates,
+            page_images=page_source_images,
+            output_dir=internal_dir / "ocr_target_crops",
+            output_slug=output_slug,
+        )
+    if refine_ocr_targets:
+        if extractor == "ollama":
+            ocr_target_refinements = run_ollama_ocr_target_refinements(
+                targets=ocr_target_crops,
+                source_file=input_file,
+                internal_dir=internal_dir,
+                output_slug=output_slug,
+                model=model or DEFAULT_OLLAMA_MODEL,
+            )
+        else:
+            processing_warnings.append(
+                "OCR target refinement was requested but skipped because no VLM extractor is enabled."
+            )
 
     internal = build_internal_result(
         input_file=input_file,
@@ -225,6 +269,8 @@ def create_product_json(
         regions=regions,
         raw_ocr_blocks=raw_ocr_blocks,
         ocr_candidates=ocr_candidates,
+        ocr_target_crops=ocr_target_crops,
+        ocr_target_refinements=ocr_target_refinements,
         tiles=tiles,
         product_json_path=result_path,
         tile_summary_path=tile_summary_path,
@@ -258,6 +304,8 @@ def create_product_json(
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
         "ocr_engine": ocr_engine if run_ocr else None,
+        "ocr_target_crops": generate_ocr_target_crops,
+        "ocr_target_refinements": refine_ocr_targets,
         "model": model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         "extraction_status": extraction_status,
         "processed_at": processed_at,
@@ -495,12 +543,86 @@ def run_ollama_tile_extractions(
     return tile_extractions
 
 
+def run_ollama_ocr_target_refinements(
+    targets: list[dict[str, object]],
+    source_file: Path,
+    internal_dir: Path,
+    output_slug: str,
+    model: str,
+) -> list[dict[str, object]]:
+    refinements = []
+    for target in targets:
+        crop_ref = target.get("crop_ref")
+        target_id = target.get("id")
+        if not isinstance(crop_ref, str) or not isinstance(target_id, str):
+            continue
+
+        raw_response_path = build_ocr_target_raw_response_path(
+            internal_dir=internal_dir,
+            output_slug=output_slug,
+            target_id=target_id,
+        )
+        prompt = build_ocr_target_refinement_prompt(source_file, target)
+        extraction = extract_with_ollama(
+            image_path=Path(crop_ref),
+            prompt=prompt,
+            model=model,
+        )
+        validation_warnings: list[str] = []
+        refinement_json = None
+        status = extraction.status
+
+        if extraction.raw_response is not None:
+            write_text(raw_response_path, extraction.raw_response)
+            if extraction.status == "completed":
+                refinement_json, validation_warnings = (
+                    parse_ocr_target_refinement_response(
+                        extraction.raw_response,
+                        target,
+                    )
+                )
+                if validation_warnings:
+                    status = "validation_failed"
+
+        refinements.append(
+            {
+                "target_id": target_id,
+                "page": target.get("page"),
+                "bbox": target.get("bbox"),
+                "ocr_bbox": target.get("ocr_bbox"),
+                "ocr_text": target.get("text"),
+                "crop_ref": crop_ref,
+                "raw_response_path": str(raw_response_path)
+                if extraction.raw_response is not None
+                else None,
+                "status": status,
+                "error": extraction.error,
+                "validation_warnings": validation_warnings,
+                "refinement_json": refinement_json,
+            }
+        )
+
+    return refinements
+
+
 def build_tile_raw_response_path(
     internal_dir: Path,
     output_slug: str,
     tile_id: str,
 ) -> Path:
     return internal_dir / "tile_responses" / f"{output_slug}_{tile_id}.raw_response.txt"
+
+
+def build_ocr_target_raw_response_path(
+    internal_dir: Path,
+    output_slug: str,
+    target_id: str,
+) -> Path:
+    return (
+        internal_dir
+        / "ocr_target_responses"
+        / f"{output_slug}_{target_id}.raw_response.txt"
+    )
 
 
 def build_internal_result(
@@ -510,6 +632,8 @@ def build_internal_result(
     regions: list[dict[str, object]],
     raw_ocr_blocks: list[dict[str, object]],
     ocr_candidates: list[dict[str, object]],
+    ocr_target_crops: list[dict[str, object]],
+    ocr_target_refinements: list[dict[str, object]],
     tiles: list[dict[str, object]],
     product_json_path: Path,
     tile_summary_path: Path,
@@ -527,7 +651,7 @@ def build_internal_result(
     processed_at: str,
 ) -> dict[str, object]:
     warnings = [
-        "OCR, layout detection, and region-specific semantic extraction are not implemented yet."
+        "Layout detection, product merge from refinement results, and region-specific semantic extraction are not implemented yet."
     ]
     warnings.extend(processing_warnings)
     tile_extraction_summary = build_tile_extraction_summary(
@@ -549,6 +673,9 @@ def build_internal_result(
         "page_extractions": page_extractions,
         "tile_extractions": tile_extractions,
         "tile_extraction_summary": tile_extraction_summary,
+        "ocr_target_refinement_summary": build_ocr_target_refinement_summary(
+            ocr_target_refinements
+        ),
         "extraction": {
             "extractor": extractor,
             "model": model,
@@ -567,17 +694,67 @@ def build_internal_result(
         "tiles": tiles,
         "raw_ocr_blocks": raw_ocr_blocks,
         "ocr_candidates": ocr_candidates,
+        "ocr_target_crops": ocr_target_crops,
+        "ocr_target_refinements": ocr_target_refinements,
         "warnings": warnings,
         "uncertain_fields": [
             {
                 "field": "semantic_extraction",
                 "value": None,
-                "reason": "OCR and semantic extraction are not implemented yet.",
+                "reason": "Product JSON merge from OCR target refinement and region-specific semantic extraction are not implemented yet.",
                 "evidence": [],
                 "confidence": 0.0,
             }
         ],
     }
+
+
+def build_ocr_target_refinement_summary(
+    refinements: list[dict[str, object]],
+) -> dict[str, object]:
+    summary = {
+        "targets": len(refinements),
+        "dimensions": 0,
+        "metadata": 0,
+        "notes": 0,
+        "uncertain": 0,
+        "irrelevant": 0,
+        "failed": 0,
+        "merge_candidates": [],
+    }
+
+    for refinement in refinements:
+        if refinement.get("status") not in {"completed", "validation_failed"}:
+            summary["failed"] += 1
+            continue
+
+        refinement_json = refinement.get("refinement_json")
+        if not isinstance(refinement_json, dict):
+            summary["uncertain"] += 1
+            continue
+
+        classification = refinement_json.get("classification")
+        if classification == "dimension":
+            summary["dimensions"] += 1
+            if refinement_json.get("is_product_dimension") is True:
+                summary["merge_candidates"].append(
+                    {
+                        "target_id": refinement.get("target_id"),
+                        "ocr_text": refinement.get("ocr_text"),
+                        "dimension": refinement_json.get("dimension"),
+                        "confidence": refinement_json.get("confidence"),
+                    }
+                )
+        elif classification == "metadata":
+            summary["metadata"] += 1
+        elif classification == "note":
+            summary["notes"] += 1
+        elif classification == "irrelevant":
+            summary["irrelevant"] += 1
+        else:
+            summary["uncertain"] += 1
+
+    return summary
 
 
 def build_failed_entry(

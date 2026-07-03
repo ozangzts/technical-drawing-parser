@@ -44,6 +44,13 @@ ALLOWED_DIMENSION_TYPES = {
     "pattern",
     "unknown",
 }
+ALLOWED_REFINEMENT_CLASSIFICATIONS = {
+    "dimension",
+    "metadata",
+    "note",
+    "uncertain",
+    "irrelevant",
+}
 
 NULL_STRINGS = {"", "null", "none", "n/a", "na", "-"}
 SHEET_SIZES = {"A0", "A1", "A2", "A3", "A4", "A5"}
@@ -81,6 +88,109 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
         result["warnings"].extend(warnings)
 
     return result, warnings
+
+
+def parse_ocr_target_refinement_response(
+    response_text: str,
+    target: dict[str, Any],
+) -> tuple[dict[str, Any], list[str]]:
+    warnings: list[str] = []
+    try:
+        parsed = json.loads(extract_json_object(response_text))
+    except ValueError as error:
+        result = empty_ocr_target_refinement(target)
+        warning = f"Refinement response was not valid JSON: {error}"
+        result["warnings"].append(warning)
+        return result, [warning]
+
+    if not isinstance(parsed, dict):
+        result = empty_ocr_target_refinement(target)
+        warning = "Refinement response JSON was not an object."
+        result["warnings"].append(warning)
+        return result, [warning]
+
+    result = empty_ocr_target_refinement(target)
+    for field in (
+        "target_id",
+        "page",
+        "classification",
+        "is_product_dimension",
+        "raw_text",
+        "dimension",
+        "metadata",
+        "confidence",
+        "warnings",
+    ):
+        if field in parsed:
+            result[field] = parsed[field]
+
+    normalize_ocr_target_refinement(result, warnings)
+    if warnings:
+        result["warnings"].extend(warnings)
+    return result, warnings
+
+
+def empty_ocr_target_refinement(target: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "target_id": target.get("id"),
+        "page": target.get("page"),
+        "classification": "uncertain",
+        "is_product_dimension": None,
+        "raw_text": None,
+        "dimension": None,
+        "metadata": None,
+        "confidence": 0.0,
+        "warnings": [],
+    }
+
+
+def normalize_ocr_target_refinement(
+    result: dict[str, Any],
+    warnings: list[str],
+) -> None:
+    classification = result.get("classification")
+    if not isinstance(classification, str):
+        result["classification"] = "uncertain"
+        warnings.append("Refinement classification was missing and was set to uncertain.")
+    else:
+        normalized_classification = classification.strip().lower()
+        if normalized_classification not in ALLOWED_REFINEMENT_CLASSIFICATIONS:
+            result["classification"] = "uncertain"
+            warnings.append(
+                f"Refinement classification `{classification}` is not allowed and was set to uncertain."
+            )
+        else:
+            result["classification"] = normalized_classification
+
+    if not isinstance(result.get("warnings"), list):
+        result["warnings"] = []
+        warnings.append("Refinement warnings were not a list and were reset.")
+
+    confidence = result.get("confidence")
+    if not isinstance(confidence, (int, float)):
+        result["confidence"] = 0.0
+        warnings.append("Refinement confidence was missing and was set to 0.0.")
+
+    raw_text = result.get("raw_text")
+    result["raw_text"] = normalize_scalar(raw_text)
+
+    dimension = result.get("dimension")
+    if isinstance(dimension, dict):
+        normalized_dimensions = normalize_dimensions([dimension], warnings)
+        result["dimension"] = normalized_dimensions[0] if normalized_dimensions else None
+    elif dimension is not None:
+        result["dimension"] = None
+        warnings.append("Refinement dimension was not an object and was reset.")
+
+    metadata = result.get("metadata")
+    if isinstance(metadata, dict):
+        result["metadata"] = {
+            "field": normalize_scalar(metadata.get("field")),
+            "value": normalize_scalar(metadata.get("value")),
+        }
+    elif metadata is not None:
+        result["metadata"] = None
+        warnings.append("Refinement metadata was not an object and was reset.")
 
 
 def normalize_scalars(result: dict[str, Any]) -> None:

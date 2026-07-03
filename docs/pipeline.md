@@ -60,6 +60,24 @@ The original PDF remains the source document. Rendered page images are recorded 
 
 When `--ocr` is used, the selected local OCR engine runs on page images and writes coordinate-aware `raw_ocr_blocks` plus filtered numeric `ocr_candidates` into internal metadata. OCR candidates are cross-checked against full-page VLM dimensions when VLM extraction is enabled. OCR output does not change product JSON. The initial supported engine is `rapidocr`.
 
+When `--generate-ocr-target-crops` is used, OCR is run and high-confidence numeric OCR candidates that were not found in the full-page extraction are written as padded crops under:
+
+```text
+outputs/internal/ocr_target_crops/<name>_page_001_ocr_target_001.png
+```
+
+These crops are targeted evidence/refinement inputs only. They do not change product JSON, and only very weak single-number OCR fragments are filtered out before target crop generation. OCR/full-page comparison uses loose matching keys for quantity prefixes and diameter symbols, but extracted text is preserved as read. Semantic decisions such as whether a crop is a dimension, scale, title-block value, or unrelated metadata should be left to a later refinement step instead of hard-coded into target selection.
+
+When `--refine-ocr-targets` is used with `--extractor ollama`, OCR target crops are generated if needed and each target crop is sent to the VLM with a focused refinement prompt. Results are stored in internal `ocr_target_refinements` and raw responses are written under:
+
+```text
+outputs/internal/ocr_target_responses/<name>_page_001_ocr_target_001.raw_response.txt
+```
+
+OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. These results do not merge into the product JSON yet.
+
+Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review.
+
 ## Processing Registry
 
 The parser should maintain a registry at:
@@ -89,6 +107,8 @@ python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
 python tdp.py process --ocr --ocr-engine rapidocr
+python tdp.py process --generate-ocr-target-crops
+python tdp.py process --extractor ollama --model gemma4:cloud --refine-ocr-targets --force
 python tdp.py process --generate-crops
 python tdp.py process --extractor ollama --model gemma4:cloud --extract-crops --force
 python tdp.py status
@@ -120,11 +140,13 @@ TDP_MODEL=
 9. Write the VLM extraction prompt under `outputs/internal/`.
 10. For PDF inputs with VLM extraction enabled, extract each rendered page into internal `page_extractions`.
 11. Optionally run local OCR and write coordinate-aware `raw_ocr_blocks` and `ocr_candidates` when `--ocr` is used.
-12. Optionally generate overlapping page tiles when `--generate-crops` or `--extract-crops` is used.
-13. Optionally extract generated tiles into internal `tile_extractions` when `--extract-crops` and a VLM extractor are enabled.
-14. Update `outputs/index.json`.
+12. Optionally generate OCR-driven target crops when `--generate-ocr-target-crops` is used.
+13. Optionally refine OCR target crops into internal `ocr_target_refinements` when `--refine-ocr-targets` and a VLM extractor are enabled.
+14. Optionally generate overlapping page tiles when `--generate-crops` or `--extract-crops` is used.
+15. Optionally extract generated tiles into internal `tile_extractions` when `--extract-crops` and a VLM extractor are enabled.
+16. Update `outputs/index.json`.
 
-Later stages will add page-level merge behavior, OCR, layout detection, crop extraction, debug overlays, and region-specific semantic extraction.
+Later stages will add page-level merge behavior, OCR-target VLM refinement, layout detection, crop extraction merge behavior, debug overlays, and region-specific semantic extraction.
 
 ## Crop And Dedupe Direction
 

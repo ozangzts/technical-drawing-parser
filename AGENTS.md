@@ -23,6 +23,8 @@ Preserve evidence before interpretation.
 
 The parser must not treat cropped regions or OCR text as the only source of truth. Every extracted value should be traceable back to the original document, page number, source coordinates, and, when available, a region crop.
 
+The project goal is a general technical drawing parser, not a set of fixes tuned to the current sample files. Avoid sample-specific rules such as hard-coded coordinates, product names, title-block layouts, or vendor-specific assumptions. Prefer reusable evidence, confidence, and refinement stages where OCR proposes locations, VLMs interpret visual context, and uncertain cases remain explicit instead of being silently forced into the current examples.
+
 Recommended evidence fields:
 
 ```json
@@ -153,10 +155,10 @@ Prefer explicit uncertainty:
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
 - PDF page rendering helper: `src/technical_drawing_parser/pdf.py`
-- Optional OCR helper: `src/technical_drawing_parser/ocr.py`
+- Optional OCR and OCR-target crop helper: `src/technical_drawing_parser/ocr.py`
 - Overlapping tile crop helper: `src/technical_drawing_parser/crops.py`
 - Tile extraction duplicate summary helper: `src/technical_drawing_parser/dedupe.py`
-- Product extraction prompt: `src/technical_drawing_parser/extraction/prompt.py`
+- Product, crop, and OCR target refinement prompts: `src/technical_drawing_parser/extraction/prompt.py`
 - Registry helpers: `src/technical_drawing_parser/registry.py`
 - Reference sample drawing: `DEICO_DE8135_Technical_Drawing_page-0001.jpg`
 
@@ -194,7 +196,7 @@ Use these default behaviors:
 - Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
 - Add merge behavior for multi-page PDF page-level extraction.
 - Add PDF type detection.
-- Use OCR candidates for confidence-driven targeted crop/refinement experiments.
+- Evaluate OCR target refinement quality before merging any refinement result into product JSON.
 - Add crop extraction merge and dedupe using page-space tile coordinates.
 - Add layout detection only when needed.
 - Add a curated sample fixture and expected product JSON once VLM extraction exists.

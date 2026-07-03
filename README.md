@@ -76,6 +76,18 @@ Run local OCR for coordinate-aware text evidence:
 python tdp.py process --ocr --ocr-engine rapidocr
 ```
 
+Generate small OCR-driven target crops for high-confidence numeric candidates that full-page extraction missed:
+
+```bash
+python tdp.py process --generate-ocr-target-crops
+```
+
+Refine OCR target crops with the selected VLM without merging them into the product JSON:
+
+```bash
+python tdp.py process --extractor ollama --model gemma4:cloud --refine-ocr-targets --force
+```
+
 Extract generated crops into internal metadata without merging them into the product JSON:
 
 ```bash
