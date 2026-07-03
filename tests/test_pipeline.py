@@ -109,7 +109,9 @@ class PipelineTests(unittest.TestCase):
 
             result_path = outputs / "products" / "example.json"
             internal_path = outputs / "internal" / "example.internal.json"
+            tile_summary_path = outputs / "internal" / "example.tile_summary.json"
             internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            tile_summary = json.loads(tile_summary_path.read_text(encoding="utf-8"))
             result = json.loads(result_path.read_text(encoding="utf-8"))
 
             self.assertEqual(summary["processed"], 1)
@@ -131,6 +133,11 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(
                 len(internal["tile_extraction_summary"]["duplicate_candidate_groups"]),
                 1,
+            )
+            self.assertEqual(tile_summary["dimensions_found"], 2)
+            self.assertEqual(
+                internal["tile_summary_path"],
+                str(tile_summary_path),
             )
             self.assertEqual(
                 len(internal["tile_extraction_summary"]["full_page_supported_candidates"]),

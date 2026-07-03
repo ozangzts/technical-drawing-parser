@@ -21,6 +21,7 @@ class DedupeTests(unittest.TestCase):
                             "value": "1,83",
                             "type": "diameter",
                             "label": "PAD DIAMETER",
+                            "quantity": 1,
                         }
                     ]
                 },
@@ -36,6 +37,7 @@ class DedupeTests(unittest.TestCase):
                             "value": "1.83",
                             "type": "diameter",
                             "label": "PAD DIAMETER",
+                            "quantity": 1,
                         }
                     ]
                 },
@@ -51,6 +53,7 @@ class DedupeTests(unittest.TestCase):
                             "value": "1.83",
                             "type": "diameter",
                             "label": "PAD DIAMETER",
+                            "quantity": 1,
                         }
                     ]
                 },
@@ -78,6 +81,14 @@ class DedupeTests(unittest.TestCase):
         self.assertEqual(summary["dimensions_found"], 3)
         self.assertEqual(len(summary["duplicate_candidate_groups"]), 1)
         self.assertEqual(summary["duplicate_candidate_groups"][0]["candidate_count"], 2)
+        self.assertEqual(
+            summary["duplicate_candidate_groups"][0]["classification"],
+            "strong_duplicate",
+        )
+        self.assertEqual(
+            summary["review_summary"]["strong_duplicate_groups"],
+            1,
+        )
         self.assertEqual(len(summary["full_page_supported_candidates"]), 3)
         self.assertEqual(len(summary["tile_only_candidates"]), 0)
         self.assertEqual(len(summary["unique_dimension_candidates"]), 1)

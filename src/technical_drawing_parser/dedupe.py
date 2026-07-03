@@ -27,6 +27,12 @@ def build_tile_extraction_summary(
         if candidate["candidate_id"] not in duplicate_ids
     ]
 
+    review_summary = build_review_summary(
+        duplicate_groups=duplicate_groups,
+        supported_candidates=supported_candidates,
+        tile_only_candidates=tile_only_candidates,
+    )
+
     return {
         "tiles_processed": len(tile_extractions),
         "dimensions_found": len(dimension_candidates),
@@ -34,6 +40,7 @@ def build_tile_extraction_summary(
         "full_page_supported_candidates": supported_candidates,
         "tile_only_candidates": tile_only_candidates,
         "unique_dimension_candidates": unique_candidates,
+        "review_summary": review_summary,
     }
 
 
@@ -158,11 +165,18 @@ def build_duplicate_candidate_groups(
             continue
 
         first = related_candidates[0]
+        score, classification, review_action, score_reasons = score_duplicate_group(
+            related_candidates
+        )
         duplicate_groups.append(
             {
                 "dedupe_key": first["dedupe_key"],
                 "candidate_count": len(related_candidates),
                 "reason": "same page/value/type/label with overlapping source tile bboxes",
+                "score": score,
+                "classification": classification,
+                "review_action": review_action,
+                "score_reasons": score_reasons,
                 "candidates": related_candidates,
             }
         )
@@ -187,13 +201,121 @@ def classify_full_page_support(
                 {
                     "candidate": candidate,
                     "matching_full_page_candidates": matches,
+                    "classification": "full_page_supported",
+                    "review_action": "use_as_supporting_evidence",
                     "support_reason": "same page/value/type/label/quantity as full-page extraction",
                 }
             )
         else:
-            tile_only.append(candidate)
+            tile_only.append(classify_tile_only_candidate(candidate))
 
     return supported, tile_only
+
+
+def score_duplicate_group(
+    candidates: list[dict[str, Any]],
+) -> tuple[int, str, str, list[str]]:
+    first = candidates[0]
+    key = first.get("dedupe_key", {})
+    score = 40
+    reasons = ["same page/value/type"]
+
+    if key.get("label"):
+        score += 20
+        reasons.append("same label")
+    else:
+        score -= 15
+        reasons.append("missing label")
+
+    if key.get("quantity"):
+        score += 15
+        reasons.append("same quantity")
+
+    raw_texts = {normalize_text_key(candidate.get("raw_text")) for candidate in candidates}
+    raw_texts.discard(None)
+    if len(raw_texts) == 1:
+        score += 15
+        reasons.append("same raw_text")
+
+    if len(candidates) > 2:
+        score += 5
+        reasons.append("seen in more than two overlapping tiles")
+
+    if score >= 75:
+        return score, "strong_duplicate", "merge_evidence_only", reasons
+    return score, "weak_duplicate", "review_before_merge", reasons
+
+
+def classify_tile_only_candidate(candidate: dict[str, Any]) -> dict[str, Any]:
+    value = candidate.get("value")
+    dimension_type = normalize_text_key(candidate.get("type"))
+    raw_text = normalize_text_key(candidate.get("raw_text"))
+    context = normalize_text_key(candidate.get("context"))
+    label = normalize_text_key(candidate.get("label"))
+
+    non_product_signals = [
+        dimension_type == "pattern" and isinstance(value, str) and ":" in value,
+        raw_text is not None and raw_text.startswith("r") and raw_text[1:].isdigit(),
+        context is not None and "transformer" in context,
+    ]
+    weak_signals = [
+        label is None,
+        raw_text in {"1", "2", "3", "4"},
+    ]
+
+    if any(non_product_signals):
+        classification = "non_product_candidate"
+        review_action = "do_not_merge_without_manual_review"
+    elif any(weak_signals):
+        classification = "weak_tile_only"
+        review_action = "review_tile_only"
+    else:
+        classification = "tile_only_candidate"
+        review_action = "review_as_possible_new_dimension"
+
+    classified = dict(candidate)
+    classified["classification"] = classification
+    classified["review_action"] = review_action
+    return classified
+
+
+def build_review_summary(
+    duplicate_groups: list[dict[str, Any]],
+    supported_candidates: list[dict[str, Any]],
+    tile_only_candidates: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "strong_duplicate_groups": count_by_classification(
+            duplicate_groups,
+            "strong_duplicate",
+        ),
+        "weak_duplicate_groups": count_by_classification(
+            duplicate_groups,
+            "weak_duplicate",
+        ),
+        "full_page_supported_candidates": len(supported_candidates),
+        "tile_only_candidates": len(tile_only_candidates),
+        "tile_only_review_candidates": sum(
+            1
+            for candidate in tile_only_candidates
+            if candidate.get("review_action") == "review_as_possible_new_dimension"
+        ),
+        "weak_tile_only_candidates": count_by_classification(
+            tile_only_candidates,
+            "weak_tile_only",
+        ),
+        "non_product_candidates": count_by_classification(
+            tile_only_candidates,
+            "non_product_candidate",
+        ),
+    }
+
+
+def count_by_classification(
+    items: list[dict[str, Any]],
+    classification: str,
+) -> int:
+    return sum(1 for item in items if item.get("classification") == classification)
 
 
 def candidates_match(left: dict[str, Any], right: dict[str, Any]) -> bool:

@@ -117,6 +117,7 @@ def create_product_json(
     output_slug = build_output_slug(input_file.stem)
     result_path = products_dir / f"{output_slug}.json"
     internal_path = internal_dir / f"{output_slug}.internal.json"
+    tile_summary_path = internal_dir / f"{output_slug}.tile_summary.json"
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
     raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
@@ -210,6 +211,7 @@ def create_product_json(
         regions=regions,
         tiles=tiles,
         product_json_path=result_path,
+        tile_summary_path=tile_summary_path,
         prompt_path=prompt_path,
         raw_response_path=raw_response_path if raw_response_path.exists() else None,
         rendered_pages=rendered_pages,
@@ -225,6 +227,7 @@ def create_product_json(
     )
     write_json(result_path, result)
     write_json(internal_path, internal)
+    write_json(tile_summary_path, internal["tile_extraction_summary"])
     write_text(prompt_path, vlm_prompt)
 
     registry_entry = {
@@ -234,6 +237,7 @@ def create_product_json(
         "status": "completed",
         "result_path": str(result_path),
         "internal_path": str(internal_path),
+        "tile_summary_path": str(tile_summary_path),
         "prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
@@ -489,6 +493,7 @@ def build_internal_result(
     regions: list[dict[str, object]],
     tiles: list[dict[str, object]],
     product_json_path: Path,
+    tile_summary_path: Path,
     prompt_path: Path,
     raw_response_path: Path | None,
     rendered_pages: list[dict[str, object]],
@@ -517,6 +522,7 @@ def build_internal_result(
     return {
         "schema_version": "0.1.0",
         "product_json_path": str(product_json_path),
+        "tile_summary_path": str(tile_summary_path),
         "vlm_prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path else None,
         "rendered_page": rendered_pages[0] if rendered_pages else None,

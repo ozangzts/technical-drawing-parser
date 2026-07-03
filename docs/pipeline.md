@@ -27,6 +27,7 @@ Developer-facing metadata is written separately:
 ```text
 outputs/internal/<input_or_product_code>.internal.json
 outputs/internal/<input_or_product_code>.vlm_prompt.txt
+outputs/internal/<input_or_product_code>.tile_summary.json
 outputs/internal/<input_or_product_code>.raw_response.txt
 outputs/internal/<input_or_product_code>_page_002.raw_response.txt
 outputs/internal/tile_responses/<input_or_product_code>_page_001_tile_001.raw_response.txt
@@ -45,6 +46,8 @@ Tile crops are evidence/debug artifacts and do not change the product JSON. Each
 When `--extract-crops` is used with `--extractor ollama`, crops are generated if needed and each tile is extracted into internal `tile_extractions`. Tile extraction does not merge into the product JSON yet.
 
 Internal output also includes `tile_extraction_summary`, which counts tile dimensions, reports duplicate candidate groups using normalized dimension values and overlapping source tile bboxes, and classifies tile dimensions as full-page-supported or tile-only candidates.
+
+The same summary is also written to `<input_or_product_code>.tile_summary.json` so candidate review does not require reading the full internal JSON.
 
 PDF inputs are rendered at 300 DPI to page PNGs under:
 
@@ -143,6 +146,8 @@ Before any product merge, tile dimensions should be compared with full-page extr
 - `full_page_supported_candidates`: tile dimensions that match full-page dimensions by page, value, type, and non-conflicting label or quantity.
 - `tile_only_candidates`: tile dimensions not seen in full-page extraction. These may be new useful evidence or crop-only false positives.
 - `duplicate_candidate_groups`: tile dimensions that look repeated across overlapping source tiles.
+
+Duplicate groups are classified as `strong_duplicate` when label/quantity evidence is strong enough, otherwise `weak_duplicate`. Tile-only candidates are classified as `tile_only_candidate`, `weak_tile_only`, or `non_product_candidate` to make manual review smaller and safer.
 
 ## Traceability
 
