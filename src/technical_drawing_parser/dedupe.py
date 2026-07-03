@@ -34,6 +34,7 @@ def build_tile_extraction_summary(
     )
 
     return {
+        "summary_notes": build_summary_notes(),
         "tiles_processed": len(tile_extractions),
         "dimensions_found": len(dimension_candidates),
         "duplicate_candidate_groups": duplicate_groups,
@@ -41,6 +42,20 @@ def build_tile_extraction_summary(
         "tile_only_candidates": tile_only_candidates,
         "unique_dimension_candidates": unique_candidates,
         "review_summary": review_summary,
+    }
+
+
+def build_summary_notes() -> dict[str, str]:
+    return {
+        "purpose": "Internal review aid for crop/tile extraction results; it does not change product JSON.",
+        "duplicate_candidate_groups": "Dimensions that may be repeated because the same visible measurement was extracted from overlapping tiles.",
+        "strong_duplicate": "A duplicate group with stronger matching evidence such as label or quantity; merge evidence only after review.",
+        "weak_duplicate": "A duplicate group with limited matching evidence, usually missing label or quantity; review carefully.",
+        "full_page_supported_candidates": "Tile dimensions that match a dimension found by full-page extraction.",
+        "tile_only_candidates": "Tile dimensions not found in full-page extraction; they may be useful new evidence or crop-only false positives.",
+        "tile_only_review_candidates": "Count of tile-only candidates that look potentially useful enough for manual review.",
+        "weak_tile_only": "Tile-only candidates with weak evidence, such as missing labels or very short raw text.",
+        "non_product_candidate": "Tile-only candidates that look like schematic ratios, reference labels, or other information that should not automatically become product dimensions.",
     }
 
 
