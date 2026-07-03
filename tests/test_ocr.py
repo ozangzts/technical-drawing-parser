@@ -8,6 +8,7 @@ from technical_drawing_parser.ocr import (
     build_ocr_block,
     build_ocr_candidates,
     normalize_ocr_value,
+    run_ocr_pages,
 )
 
 
@@ -70,6 +71,10 @@ class OcrTests(unittest.TestCase):
         self.assertEqual(candidates[0]["classification"], "diameter_candidate")
         self.assertEqual(candidates[0]["full_page_status"], "supported")
         self.assertEqual(normalize_ocr_value("#1,83"), "Ø1.83")
+
+    def test_run_ocr_pages_rejects_unknown_engine(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Unsupported OCR engine"):
+            run_ocr_pages([], engine_name="paddleocr")
 
 
 if __name__ == "__main__":

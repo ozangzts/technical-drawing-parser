@@ -73,7 +73,7 @@ python tdp.py process --generate-crops
 Run local OCR for coordinate-aware text evidence:
 
 ```bash
-python tdp.py process --ocr
+python tdp.py process --ocr --ocr-engine rapidocr
 ```
 
 Extract generated crops into internal metadata without merging them into the product JSON:

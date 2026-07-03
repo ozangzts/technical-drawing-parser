@@ -11,7 +11,7 @@ from .dedupe import build_tile_extraction_summary
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
-from .ocr import build_ocr_candidates, run_rapidocr_pages
+from .ocr import DEFAULT_OCR_ENGINE, build_ocr_candidates, run_ocr_pages
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import build_tile_vlm_prompt, build_vlm_prompt
@@ -36,6 +36,7 @@ def process_inputs(
     generate_crops: bool = False,
     extract_crops: bool = False,
     run_ocr: bool = False,
+    ocr_engine: str = DEFAULT_OCR_ENGINE,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -73,6 +74,7 @@ def process_inputs(
                 generate_crops=generate_crops,
                 extract_crops=extract_crops,
                 run_ocr=run_ocr,
+                ocr_engine=ocr_engine,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -112,6 +114,7 @@ def create_product_json(
     generate_crops: bool = False,
     extract_crops: bool = False,
     run_ocr: bool = False,
+    ocr_engine: str = DEFAULT_OCR_ENGINE,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
@@ -148,8 +151,9 @@ def create_product_json(
     regions = build_initial_regions(input_file, metadata)
     raw_ocr_blocks: list[dict[str, object]] = []
     if run_ocr:
-        raw_ocr_blocks = run_rapidocr_pages(
-            build_tile_source_images(input_file, metadata)
+        raw_ocr_blocks = run_ocr_pages(
+            build_tile_source_images(input_file, metadata),
+            engine_name=ocr_engine,
         )
     tiles: list[dict[str, object]] = []
     if generate_crops or extract_crops:
@@ -253,6 +257,7 @@ def create_product_json(
         "prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
+        "ocr_engine": ocr_engine if run_ocr else None,
         "model": model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         "extraction_status": extraction_status,
         "processed_at": processed_at,

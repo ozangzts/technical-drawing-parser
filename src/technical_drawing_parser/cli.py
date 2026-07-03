@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 from .config import DEFAULT_EXTRACTOR, load_dotenv, read_config
+from .ocr import DEFAULT_OCR_ENGINE, SUPPORTED_OCR_ENGINES
 from .pipeline import process_inputs
 
 
@@ -19,7 +20,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
-            "  python tdp.py process --ocr\n"
+            "  python tdp.py process --ocr --ocr-engine rapidocr\n"
             "  python tdp.py process --generate-crops\n"
             "  python tdp.py process --extractor ollama --model moondream --extract-crops --force\n"
             "  python tdp.py process --extractor ollama --model moondream --force\n"
@@ -70,6 +71,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Run optional local OCR and store raw OCR blocks internally.",
     )
     process_parser.add_argument(
+        "--ocr-engine",
+        default=DEFAULT_OCR_ENGINE,
+        choices=sorted(SUPPORTED_OCR_ENGINES),
+        help="OCR engine to use when --ocr is enabled. Defaults to rapidocr.",
+    )
+    process_parser.add_argument(
         "--extract-crops",
         action="store_true",
         help="Run opt-in VLM extraction for generated crops and store internal tile_extractions.",
@@ -118,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
             generate_crops=getattr(args, "generate_crops", False),
             extract_crops=getattr(args, "extract_crops", False),
             run_ocr=getattr(args, "ocr", False),
+            ocr_engine=getattr(args, "ocr_engine", DEFAULT_OCR_ENGINE),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

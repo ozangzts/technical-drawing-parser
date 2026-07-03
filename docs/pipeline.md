@@ -58,7 +58,7 @@ outputs/internal/page_images/<name>_page_002.png
 
 The original PDF remains the source document. Rendered page images are recorded in internal metadata. When VLM extraction is enabled, each rendered page is extracted and stored in `page_extractions`. The current product JSON still uses page 1 until merge behavior is implemented, so multi-page PDFs get a product warning.
 
-When `--ocr` is used, local RapidOCR runs on page images and writes coordinate-aware `raw_ocr_blocks` plus filtered numeric `ocr_candidates` into internal metadata. OCR candidates are cross-checked against full-page VLM dimensions when VLM extraction is enabled. OCR output does not change product JSON.
+When `--ocr` is used, the selected local OCR engine runs on page images and writes coordinate-aware `raw_ocr_blocks` plus filtered numeric `ocr_candidates` into internal metadata. OCR candidates are cross-checked against full-page VLM dimensions when VLM extraction is enabled. OCR output does not change product JSON. The initial supported engine is `rapidocr`.
 
 ## Processing Registry
 
@@ -88,7 +88,7 @@ Use the local CLI wrapper:
 python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
-python tdp.py process --ocr
+python tdp.py process --ocr --ocr-engine rapidocr
 python tdp.py process --generate-crops
 python tdp.py process --extractor ollama --model gemma4:cloud --extract-crops --force
 python tdp.py status

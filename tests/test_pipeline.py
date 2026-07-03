@@ -90,7 +90,7 @@ class PipelineTests(unittest.TestCase):
             ]
 
             with patch(
-                "technical_drawing_parser.pipeline.run_rapidocr_pages",
+                "technical_drawing_parser.pipeline.run_ocr_pages",
                 return_value=ocr_blocks,
             ):
                 summary = process_inputs(drawing, outputs, run_ocr=True)

@@ -62,6 +62,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added full-page-supported versus tile-only classification to `tile_extraction_summary` to prepare for safer crop merge behavior.
 - Added a compact `<name>.tile_summary.json` review artifact with strong/weak duplicate and tile-only classifications.
 - Added optional local OCR with RapidOCR via `--ocr`, storing coordinate-aware raw OCR blocks and filtered numeric OCR candidates internally.
+- Added `--ocr-engine rapidocr` so future OCR engines can be compared behind the same internal OCR schema.
 
 ### Notes
 

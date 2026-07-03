@@ -12,6 +12,19 @@ OCR_CANDIDATE_PATTERN = re.compile(
 )
 
 
+DEFAULT_OCR_ENGINE = "rapidocr"
+SUPPORTED_OCR_ENGINES = {DEFAULT_OCR_ENGINE}
+
+
+def run_ocr_pages(
+    page_images: list[dict[str, object]],
+    engine_name: str = DEFAULT_OCR_ENGINE,
+) -> list[dict[str, Any]]:
+    if engine_name != DEFAULT_OCR_ENGINE:
+        raise ValueError(f"Unsupported OCR engine: {engine_name}")
+    return run_rapidocr_pages(page_images)
+
+
 def run_rapidocr_pages(
     page_images: list[dict[str, object]],
 ) -> list[dict[str, Any]]:
