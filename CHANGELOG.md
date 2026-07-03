@@ -52,6 +52,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Recorded rendered PDF page metadata in internal outputs and documented the new `outputs/internal/page_images/` location.
 - Changed registry behavior so failed files are retried by default while completed matching fingerprints are still skipped.
 - Added a validator warning for suspicious `#` symbols in diameter dimensions while preserving the original `raw_text`.
+- Extended PDF rendering to write every page image and record page-level full-page regions while keeping one product JSON per input.
+- Added internal page-level VLM extraction records for rendered PDF pages while keeping the product JSON based on page 1 until merge behavior is implemented.
 
 ### Notes
 

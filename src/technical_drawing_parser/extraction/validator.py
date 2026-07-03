@@ -142,7 +142,6 @@ def normalize_dimensions(
         warn_about_suspicious_dimension_symbols(
             normalized_dimension,
             warnings,
-            index,
         )
         normalized.append(normalized_dimension)
 
@@ -183,7 +182,6 @@ def repair_text(value: str) -> str:
 def warn_about_suspicious_dimension_symbols(
     dimension: dict[str, Any],
     warnings: list[str],
-    index: int,
 ) -> None:
     raw_text = dimension.get("raw_text")
     label = dimension.get("label")
@@ -201,7 +199,7 @@ def warn_about_suspicious_dimension_symbols(
         )
     ):
         warnings.append(
-            f"Dimension {index} may contain a misread diameter symbol in raw_text."
+            f"Suspicious diameter symbol in raw_text: `{raw_text}`."
         )
 
 

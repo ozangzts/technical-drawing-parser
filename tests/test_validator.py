@@ -102,7 +102,11 @@ class ValidatorTests(unittest.TestCase):
             "(x7) #1,83 (PAD DIAMETER)",
         )
         self.assertTrue(
-            any("misread diameter symbol" in warning for warning in warnings)
+            any(
+                "Suspicious diameter symbol in raw_text: `(x7) #1,83 (PAD DIAMETER)`."
+                in warning
+                for warning in warnings
+            )
         )
 
 

@@ -6,7 +6,7 @@ Extract structured JSON from technical drawings while preserving source evidence
 
 This project has a minimal CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes simple product JSON files under `outputs/products/`.
 
-Opt-in VLM extraction through Ollama is available for image inputs. PDF inputs are rendered to first-page PNG images before extraction; multi-page PDF handling is not implemented yet.
+Opt-in VLM extraction through Ollama is available for image inputs. PDF inputs are rendered to page PNG images; page-level extraction is stored internally, while the current product JSON uses page 1 until merge behavior is implemented.
 
 ## Usage
 

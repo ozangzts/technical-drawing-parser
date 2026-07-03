@@ -27,17 +27,20 @@ Developer-facing metadata is written separately:
 ```text
 outputs/internal/<input_or_product_code>.internal.json
 outputs/internal/<input_or_product_code>.vlm_prompt.txt
+outputs/internal/<input_or_product_code>.raw_response.txt
+outputs/internal/<input_or_product_code>_page_002.raw_response.txt
 ```
 
 Additional debug artifacts and crops should only be added when they become necessary.
 
-PDF inputs are rendered to a first-page PNG under:
+PDF inputs are rendered to page PNGs under:
 
 ```text
 outputs/internal/page_images/<name>_page_001.png
+outputs/internal/page_images/<name>_page_002.png
 ```
 
-The original PDF remains the source document. The rendered page image is used as the VLM image input and is recorded in internal metadata.
+The original PDF remains the source document. Rendered page images are recorded in internal metadata. When VLM extraction is enabled, each rendered page is extracted and stored in `page_extractions`. The current product JSON still uses page 1 until merge behavior is implemented, so multi-page PDFs get a product warning.
 
 ## Processing Registry
 
@@ -89,14 +92,15 @@ TDP_MODEL=
 2. Compute file metadata and SHA-256 fingerprint.
 3. Check `outputs/index.json`.
 4. Read basic file and image metadata.
-5. Render the first page when the input is a PDF.
+5. Render every page when the input is a PDF.
 6. Create initial page and full-page region records.
 7. Write one simple product JSON file under `outputs/products/`.
 8. Write internal metadata under `outputs/internal/`.
 9. Write the VLM extraction prompt under `outputs/internal/`.
-10. Update `outputs/index.json`.
+10. For PDF inputs with VLM extraction enabled, extract each rendered page into internal `page_extractions`.
+11. Update `outputs/index.json`.
 
-Later stages will add multi-page PDF handling, OCR, layout detection, crops, debug overlays, and region-specific semantic extraction.
+Later stages will add page-level merge behavior, OCR, layout detection, crops, debug overlays, and region-specific semantic extraction.
 
 ## Traceability
 

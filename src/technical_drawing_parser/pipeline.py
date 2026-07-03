@@ -13,7 +13,7 @@ from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import build_vlm_prompt
 from .extraction.validator import parse_product_json_response
-from .pdf import render_pdf_first_page
+from .pdf import render_pdf_pages
 from .registry import (
     append_registry_entry,
     find_latest_completed_entry,
@@ -113,18 +113,27 @@ def create_product_json(
     raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
     extraction_image_path = input_file
-    rendered_page = None
+    rendered_pages: list[dict[str, object]] = []
+    processing_warnings: list[str] = []
     if input_file.suffix.lower() == ".pdf":
-        rendered_page_path = internal_dir / "page_images" / f"{output_slug}_page_001.png"
-        rendered_page = render_pdf_first_page(input_file, rendered_page_path)
-        metadata["rendered_pages"] = [rendered_page]
+        rendered_pages = render_pdf_pages(
+            input_file,
+            internal_dir / "page_images",
+            output_slug,
+        )
+        first_rendered_page = rendered_pages[0]
+        metadata["rendered_pages"] = rendered_pages
         metadata["image"] = {
-            "width": rendered_page["width"],
-            "height": rendered_page["height"],
+            "width": first_rendered_page["width"],
+            "height": first_rendered_page["height"],
             "derived_from": str(input_file),
             "page": 1,
         }
-        extraction_image_path = rendered_page_path
+        extraction_image_path = Path(str(first_rendered_page["path"]))
+        if len(rendered_pages) > 1:
+            processing_warnings.append(
+                "PDF has multiple pages; product JSON uses page 1 until merge behavior is implemented."
+            )
     regions = build_initial_regions(input_file, metadata)
     processed_at = now_utc()
     result = empty_product_result(input_file)
@@ -132,28 +141,40 @@ def create_product_json(
     extraction_status = "not_run"
     extraction_error = None
     validation_warnings: list[str] = []
+    page_extractions: list[dict[str, object]] = []
 
     if extractor == "ollama":
-        extraction = extract_with_ollama(
-            image_path=extraction_image_path,
-            prompt=vlm_prompt,
-            model=model or DEFAULT_OLLAMA_MODEL,
+        extraction_inputs = build_extraction_inputs(
+            input_file=input_file,
+            rendered_pages=rendered_pages,
         )
-        extraction_status = extraction.status
-        extraction_error = extraction.error
-        if extraction.raw_response is not None:
-            write_text(raw_response_path, extraction.raw_response)
-            if extraction.status == "completed":
-                result, validation_warnings = parse_product_json_response(
-                    extraction.raw_response,
-                    input_file,
-                )
-                if validation_warnings:
-                    extraction_status = "validation_failed"
-        if extraction.status != "completed":
+        for extraction_input in extraction_inputs:
+            page_extraction = run_ollama_page_extraction(
+                image_path=extraction_input["image_path"],
+                page=int(extraction_input["page"]),
+                prompt=vlm_prompt,
+                input_file=input_file,
+                raw_response_path=build_page_raw_response_path(
+                    raw_response_path,
+                    int(extraction_input["page"]),
+                ),
+                model=model or DEFAULT_OLLAMA_MODEL,
+            )
+            page_extractions.append(page_extraction)
+
+            if page_extraction["page"] == 1:
+                extraction_status = str(page_extraction["status"])
+                extraction_error = page_extraction.get("error")
+                validation_warnings = list(page_extraction["validation_warnings"])
+                parsed_result = page_extraction.get("product_json")
+                if isinstance(parsed_result, dict):
+                    result = parsed_result
+
+        if extraction_status not in {"completed", "validation_failed"}:
             result["warnings"] = [
-                f"Ollama extraction failed: {extraction.error or 'unknown error'}"
+                f"Ollama extraction failed: {extraction_error or 'unknown error'}"
             ]
+    result["warnings"].extend(processing_warnings)
 
     internal = build_internal_result(
         input_file=input_file,
@@ -163,12 +184,14 @@ def create_product_json(
         product_json_path=result_path,
         prompt_path=prompt_path,
         raw_response_path=raw_response_path if raw_response_path.exists() else None,
-        rendered_page=rendered_page,
+        rendered_pages=rendered_pages,
+        page_extractions=page_extractions,
         extractor=extractor,
         model=model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         extraction_status=extraction_status,
         extraction_error=extraction_error,
         validation_warnings=validation_warnings,
+        processing_warnings=processing_warnings,
         processed_at=processed_at,
     )
     write_json(result_path, result)
@@ -200,9 +223,30 @@ def build_initial_regions(
     input_file: Path,
     metadata: dict[str, object],
 ) -> list[dict[str, object]]:
+    rendered_pages = metadata.get("rendered_pages")
+    if isinstance(rendered_pages, list) and rendered_pages:
+        return [
+            build_full_page_region(input_file, rendered_page)
+            for rendered_page in rendered_pages
+            if isinstance(rendered_page, dict)
+        ]
+
     image = metadata.get("image")
-    width = image.get("width") if isinstance(image, dict) else None
-    height = image.get("height") if isinstance(image, dict) else None
+    return [build_full_page_region(input_file, {"page": 1, "image": image})]
+
+
+def build_full_page_region(
+    input_file: Path,
+    page_metadata: dict[str, object],
+) -> dict[str, object]:
+    page = page_metadata.get("page")
+    page_number = page if isinstance(page, int) else 1
+    width = page_metadata.get("width")
+    height = page_metadata.get("height")
+    image = page_metadata.get("image")
+    if isinstance(image, dict):
+        width = image.get("width")
+        height = image.get("height")
 
     bbox = None
     if isinstance(width, int) and isinstance(height, int):
@@ -213,17 +257,88 @@ def build_initial_regions(
             "height": height,
         }
 
+    return {
+        "id": f"page_{page_number:03d}_region_001",
+        "type": "full_page",
+        "page": page_number,
+        "bbox": bbox,
+        "source_ref": f"{input_file}#page={page_number}",
+        "crop_ref": None,
+        "confidence": 1.0,
+    }
+
+
+def build_extraction_inputs(
+    input_file: Path,
+    rendered_pages: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    if rendered_pages:
+        return [
+            {
+                "page": rendered_page.get("page", 1),
+                "image_path": Path(str(rendered_page["path"])),
+            }
+            for rendered_page in rendered_pages
+            if "path" in rendered_page
+        ]
+
     return [
         {
-            "id": "page_001_region_001",
-            "type": "full_page",
             "page": 1,
-            "bbox": bbox,
-            "source_ref": f"{input_file}#page=1",
-            "crop_ref": None,
-            "confidence": 1.0,
+            "image_path": input_file,
         }
     ]
+
+
+def build_page_raw_response_path(raw_response_path: Path, page: int) -> Path:
+    if page == 1:
+        return raw_response_path
+    base_stem = raw_response_path.stem
+    if base_stem.endswith(".raw_response"):
+        base_stem = base_stem.removesuffix(".raw_response")
+    return raw_response_path.with_name(
+        f"{base_stem}_page_{page:03d}.raw_response{raw_response_path.suffix}"
+    )
+
+
+def run_ollama_page_extraction(
+    image_path: Path,
+    page: int,
+    prompt: str,
+    input_file: Path,
+    raw_response_path: Path,
+    model: str,
+) -> dict[str, object]:
+    extraction = extract_with_ollama(
+        image_path=image_path,
+        prompt=prompt,
+        model=model,
+    )
+    validation_warnings: list[str] = []
+    product_json = None
+    status = extraction.status
+
+    if extraction.raw_response is not None:
+        write_text(raw_response_path, extraction.raw_response)
+        if extraction.status == "completed":
+            product_json, validation_warnings = parse_product_json_response(
+                extraction.raw_response,
+                input_file,
+            )
+            if validation_warnings:
+                status = "validation_failed"
+
+    return {
+        "page": page,
+        "image_path": str(image_path),
+        "raw_response_path": str(raw_response_path)
+        if extraction.raw_response is not None
+        else None,
+        "status": status,
+        "error": extraction.error,
+        "validation_warnings": validation_warnings,
+        "product_json": product_json,
+    }
 
 
 def build_internal_result(
@@ -234,20 +349,29 @@ def build_internal_result(
     product_json_path: Path,
     prompt_path: Path,
     raw_response_path: Path | None,
-    rendered_page: dict[str, object] | None,
+    rendered_pages: list[dict[str, object]],
+    page_extractions: list[dict[str, object]],
     extractor: str,
     model: str | None,
     extraction_status: str,
     extraction_error: str | None,
     validation_warnings: list[str],
+    processing_warnings: list[str],
     processed_at: str,
 ) -> dict[str, object]:
+    warnings = [
+        "OCR, layout detection, and region-specific semantic extraction are not implemented yet."
+    ]
+    warnings.extend(processing_warnings)
+
     return {
         "schema_version": "0.1.0",
         "product_json_path": str(product_json_path),
         "vlm_prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path else None,
-        "rendered_page": rendered_page,
+        "rendered_page": rendered_pages[0] if rendered_pages else None,
+        "rendered_pages": rendered_pages,
+        "page_extractions": page_extractions,
         "extraction": {
             "extractor": extractor,
             "model": model,
@@ -264,9 +388,7 @@ def build_internal_result(
         },
         "regions": regions,
         "raw_ocr_blocks": [],
-        "warnings": [
-            "OCR, layout detection, and region-specific semantic extraction are not implemented yet."
-        ],
+        "warnings": warnings,
         "uncertain_fields": [
             {
                 "field": "semantic_extraction",

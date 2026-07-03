@@ -3,6 +3,8 @@ import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -45,6 +47,102 @@ class PipelineTests(unittest.TestCase):
             build_output_slug("DEICO_DE8135_Technical_Drawing_page-0001"),
             "deico_de8135",
         )
+
+    def test_process_pdf_renders_all_pages_but_writes_one_product_json(self) -> None:
+        try:
+            import fitz
+        except ImportError:
+            self.skipTest("PyMuPDF is not installed.")
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.pdf"
+
+            document = fitz.open()
+            document.new_page(width=100, height=100)
+            document.new_page(width=200, height=100)
+            document.save(drawing)
+            document.close()
+
+            summary = process_inputs(drawing, outputs)
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            self.assertEqual(summary["processed"], 1)
+            self.assertTrue(result_path.exists())
+            self.assertTrue((outputs / "internal" / "page_images" / "example_page_001.png").exists())
+            self.assertTrue((outputs / "internal" / "page_images" / "example_page_002.png").exists())
+
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            self.assertEqual(result["source_file"], drawing.name)
+            self.assertEqual(len(internal["rendered_pages"]), 2)
+            self.assertEqual(len(internal["regions"]), 2)
+            self.assertEqual(internal["regions"][1]["page"], 2)
+            self.assertIn("product JSON uses page 1", result["warnings"][1])
+
+    def test_process_pdf_runs_page_level_ollama_extraction(self) -> None:
+        try:
+            import fitz
+        except ImportError:
+            self.skipTest("PyMuPDF is not installed.")
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.pdf"
+
+            document = fitz.open()
+            document.new_page(width=100, height=100)
+            document.new_page(width=100, height=100)
+            document.save(drawing)
+            document.close()
+
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Page 1", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Page 2", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                side_effect=responses,
+            ) as extractor:
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            page_2_raw_path = outputs / "internal" / "example_page_002.raw_response.txt"
+
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(extractor.call_count, 2)
+            self.assertEqual(result["product_name"], "Page 1")
+            self.assertTrue(page_2_raw_path.exists())
+            self.assertEqual(len(internal["page_extractions"]), 2)
+            self.assertEqual(
+                internal["page_extractions"][1]["raw_response_path"],
+                str(page_2_raw_path),
+            )
+            self.assertEqual(
+                internal["page_extractions"][1]["product_json"]["product_name"],
+                "Page 2",
+            )
 
 
 if __name__ == "__main__":
