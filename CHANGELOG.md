@@ -57,6 +57,9 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Increased PDF rendering to 300 DPI for better small text visibility.
 - Added opt-in overlapping page tile generation with `--generate-crops` and internal tile metadata for future crop extraction and dedupe.
 - Documented the crop dedupe direction: use page-space tile coordinates as the primary signal and optional VLM position hints as supporting evidence.
+- Added opt-in crop VLM extraction with `--extract-crops`; tile results are stored in internal `tile_extractions` and are not merged into product JSON yet.
+- Added internal `tile_extraction_summary` duplicate-candidate reporting for crop dimensions using normalized values and overlapping tile bboxes.
+- Added full-page-supported versus tile-only classification to `tile_extraction_summary` to prepare for safer crop merge behavior.
 
 ### Notes
 

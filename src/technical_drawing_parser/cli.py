@@ -20,6 +20,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
             "  python tdp.py process --generate-crops\n"
+            "  python tdp.py process --extractor ollama --model moondream --extract-crops --force\n"
             "  python tdp.py process --extractor ollama --model moondream --force\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
             "  python tdp.py status"
@@ -63,6 +64,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Generate overlapping page tiles under outputs/internal/crops.",
     )
     process_parser.add_argument(
+        "--extract-crops",
+        action="store_true",
+        help="Run opt-in VLM extraction for generated crops and store internal tile_extractions.",
+    )
+    process_parser.add_argument(
         "--extractor",
         default=config.extractor,
         choices=[DEFAULT_EXTRACTOR, "ollama"],
@@ -104,6 +110,7 @@ def main(argv: list[str] | None = None) -> int:
             extractor=getattr(args, "extractor", DEFAULT_EXTRACTOR),
             model=getattr(args, "model", None),
             generate_crops=getattr(args, "generate_crops", False),
+            extract_crops=getattr(args, "extract_crops", False),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

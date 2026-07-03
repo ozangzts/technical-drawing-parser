@@ -68,6 +68,79 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(internal["tiles"][0]["bbox"]["x"], 0)
             self.assertTrue(Path(internal["tiles"][0]["crop_ref"]).exists())
 
+    def test_process_can_extract_generated_crops_internally(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Full Page", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Tile 1", "dimensions": [{"raw_text": "1,83", "value": "1,83", "unit": "mm", "type": "diameter", "quantity": 1, "label": "PAD DIAMETER", "context": null}], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Tile 2", "dimensions": [{"raw_text": "1.83", "value": "1.83", "unit": "mm", "type": "diameter", "quantity": 1, "label": "PAD DIAMETER", "context": null}], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                side_effect=responses,
+            ) as extractor:
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                    extract_crops=True,
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(extractor.call_count, 3)
+            self.assertEqual(result["product_name"], "Full Page")
+            self.assertEqual(len(internal["tiles"]), 2)
+            self.assertEqual(len(internal["tile_extractions"]), 2)
+            self.assertEqual(
+                internal["tile_extractions"][0]["product_json"]["product_name"],
+                "Tile 1",
+            )
+            self.assertTrue(
+                Path(internal["tile_extractions"][0]["raw_response_path"]).exists()
+            )
+            self.assertEqual(
+                internal["tile_extraction_summary"]["dimensions_found"],
+                2,
+            )
+            self.assertEqual(
+                len(internal["tile_extraction_summary"]["duplicate_candidate_groups"]),
+                1,
+            )
+            self.assertEqual(
+                len(internal["tile_extraction_summary"]["full_page_supported_candidates"]),
+                0,
+            )
+            self.assertEqual(
+                len(internal["tile_extraction_summary"]["tile_only_candidates"]),
+                2,
+            )
+
     def test_process_pdf_renders_all_pages_but_writes_one_product_json(self) -> None:
         try:
             import fitz

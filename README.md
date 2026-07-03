@@ -70,6 +70,12 @@ Generate overlapping page crops for visual review:
 python tdp.py process --generate-crops
 ```
 
+Extract generated crops into internal metadata without merging them into the product JSON:
+
+```bash
+python tdp.py process --extractor ollama --model gemma4:cloud --extract-crops --force
+```
+
 Process a specific file or directory:
 
 ```bash

@@ -7,12 +7,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .crops import generate_overlapping_tiles
+from .dedupe import build_tile_extraction_summary
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
-from .extraction.prompt import build_vlm_prompt
+from .extraction.prompt import build_tile_vlm_prompt, build_vlm_prompt
 from .extraction.validator import parse_product_json_response
 from .pdf import render_pdf_pages
 from .registry import (
@@ -32,6 +33,7 @@ def process_inputs(
     extractor: str = "none",
     model: str | None = None,
     generate_crops: bool = False,
+    extract_crops: bool = False,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -67,6 +69,7 @@ def process_inputs(
                 extractor=extractor,
                 model=model,
                 generate_crops=generate_crops,
+                extract_crops=extract_crops,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -104,6 +107,7 @@ def create_product_json(
     extractor: str = "none",
     model: str | None = None,
     generate_crops: bool = False,
+    extract_crops: bool = False,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
@@ -138,7 +142,7 @@ def create_product_json(
             )
     regions = build_initial_regions(input_file, metadata)
     tiles: list[dict[str, object]] = []
-    if generate_crops:
+    if generate_crops or extract_crops:
         tiles = build_page_tiles(
             input_file=input_file,
             output_slug=output_slug,
@@ -152,6 +156,7 @@ def create_product_json(
     extraction_error = None
     validation_warnings: list[str] = []
     page_extractions: list[dict[str, object]] = []
+    tile_extractions: list[dict[str, object]] = []
 
     if extractor == "ollama":
         extraction_inputs = build_extraction_inputs(
@@ -184,6 +189,18 @@ def create_product_json(
             result["warnings"] = [
                 f"Ollama extraction failed: {extraction_error or 'unknown error'}"
             ]
+        if extract_crops:
+            tile_extractions = run_ollama_tile_extractions(
+                tiles=tiles,
+                source_file=input_file,
+                internal_dir=internal_dir,
+                output_slug=output_slug,
+                model=model or DEFAULT_OLLAMA_MODEL,
+            )
+    elif extract_crops:
+        processing_warnings.append(
+            "Crop extraction was requested but skipped because no VLM extractor is enabled."
+        )
     result["warnings"].extend(processing_warnings)
 
     internal = build_internal_result(
@@ -197,6 +214,7 @@ def create_product_json(
         raw_response_path=raw_response_path if raw_response_path.exists() else None,
         rendered_pages=rendered_pages,
         page_extractions=page_extractions,
+        tile_extractions=tile_extractions,
         extractor=extractor,
         model=model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         extraction_status=extraction_status,
@@ -398,6 +416,72 @@ def run_ollama_page_extraction(
     }
 
 
+def run_ollama_tile_extractions(
+    tiles: list[dict[str, object]],
+    source_file: Path,
+    internal_dir: Path,
+    output_slug: str,
+    model: str,
+) -> list[dict[str, object]]:
+    tile_extractions = []
+    for tile in tiles:
+        crop_ref = tile.get("crop_ref")
+        tile_id = tile.get("id")
+        if not isinstance(crop_ref, str) or not isinstance(tile_id, str):
+            continue
+
+        raw_response_path = build_tile_raw_response_path(
+            internal_dir=internal_dir,
+            output_slug=output_slug,
+            tile_id=tile_id,
+        )
+        prompt = build_tile_vlm_prompt(source_file, tile)
+        extraction = extract_with_ollama(
+            image_path=Path(crop_ref),
+            prompt=prompt,
+            model=model,
+        )
+        validation_warnings: list[str] = []
+        product_json = None
+        status = extraction.status
+
+        if extraction.raw_response is not None:
+            write_text(raw_response_path, extraction.raw_response)
+            if extraction.status == "completed":
+                product_json, validation_warnings = parse_product_json_response(
+                    extraction.raw_response,
+                    source_file,
+                )
+                if validation_warnings:
+                    status = "validation_failed"
+
+        tile_extractions.append(
+            {
+                "tile_id": tile_id,
+                "page": tile.get("page"),
+                "bbox": tile.get("bbox"),
+                "crop_ref": crop_ref,
+                "raw_response_path": str(raw_response_path)
+                if extraction.raw_response is not None
+                else None,
+                "status": status,
+                "error": extraction.error,
+                "validation_warnings": validation_warnings,
+                "product_json": product_json,
+            }
+        )
+
+    return tile_extractions
+
+
+def build_tile_raw_response_path(
+    internal_dir: Path,
+    output_slug: str,
+    tile_id: str,
+) -> Path:
+    return internal_dir / "tile_responses" / f"{output_slug}_{tile_id}.raw_response.txt"
+
+
 def build_internal_result(
     input_file: Path,
     fingerprint: str,
@@ -409,6 +493,7 @@ def build_internal_result(
     raw_response_path: Path | None,
     rendered_pages: list[dict[str, object]],
     page_extractions: list[dict[str, object]],
+    tile_extractions: list[dict[str, object]],
     extractor: str,
     model: str | None,
     extraction_status: str,
@@ -421,6 +506,13 @@ def build_internal_result(
         "OCR, layout detection, and region-specific semantic extraction are not implemented yet."
     ]
     warnings.extend(processing_warnings)
+    tile_extraction_summary = build_tile_extraction_summary(
+        tile_extractions,
+        full_page_product_json=page_extractions[0]["product_json"]
+        if page_extractions
+        and isinstance(page_extractions[0].get("product_json"), dict)
+        else None,
+    )
 
     return {
         "schema_version": "0.1.0",
@@ -430,6 +522,8 @@ def build_internal_result(
         "rendered_page": rendered_pages[0] if rendered_pages else None,
         "rendered_pages": rendered_pages,
         "page_extractions": page_extractions,
+        "tile_extractions": tile_extractions,
+        "tile_extraction_summary": tile_extraction_summary,
         "extraction": {
             "extractor": extractor,
             "model": model,
@@ -524,5 +618,6 @@ def write_json(path: Path, data: object) -> None:
 
 
 def write_text(path: Path, data: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file:
         file.write(data)

@@ -29,6 +29,7 @@ outputs/internal/<input_or_product_code>.internal.json
 outputs/internal/<input_or_product_code>.vlm_prompt.txt
 outputs/internal/<input_or_product_code>.raw_response.txt
 outputs/internal/<input_or_product_code>_page_002.raw_response.txt
+outputs/internal/tile_responses/<input_or_product_code>_page_001_tile_001.raw_response.txt
 ```
 
 Additional debug artifacts and crops should only be added when they become necessary.
@@ -40,6 +41,10 @@ outputs/internal/crops/<name>_page_001_tile_001.png
 ```
 
 Tile crops are evidence/debug artifacts and do not change the product JSON. Each tile keeps the original page-space bbox, source page, crop path, tile size, and overlap pixels so later crop extraction can be deduplicated against page coordinates.
+
+When `--extract-crops` is used with `--extractor ollama`, crops are generated if needed and each tile is extracted into internal `tile_extractions`. Tile extraction does not merge into the product JSON yet.
+
+Internal output also includes `tile_extraction_summary`, which counts tile dimensions, reports duplicate candidate groups using normalized dimension values and overlapping source tile bboxes, and classifies tile dimensions as full-page-supported or tile-only candidates.
 
 PDF inputs are rendered at 300 DPI to page PNGs under:
 
@@ -79,6 +84,7 @@ python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
 python tdp.py process --generate-crops
+python tdp.py process --extractor ollama --model gemma4:cloud --extract-crops --force
 python tdp.py status
 ```
 
@@ -107,8 +113,9 @@ TDP_MODEL=
 8. Write internal metadata under `outputs/internal/`.
 9. Write the VLM extraction prompt under `outputs/internal/`.
 10. For PDF inputs with VLM extraction enabled, extract each rendered page into internal `page_extractions`.
-11. Optionally generate overlapping page tiles when `--generate-crops` is used.
-12. Update `outputs/index.json`.
+11. Optionally generate overlapping page tiles when `--generate-crops` or `--extract-crops` is used.
+12. Optionally extract generated tiles into internal `tile_extractions` when `--extract-crops` and a VLM extractor are enabled.
+13. Update `outputs/index.json`.
 
 Later stages will add page-level merge behavior, OCR, layout detection, crop extraction, debug overlays, and region-specific semantic extraction.
 
@@ -122,7 +129,7 @@ Default crop settings:
 - Overlap: 25 percent
 - Minimum edge tile: 384 px
 
-Future crop extraction should keep tile results internal until merge behavior is proven. Duplicate candidates can be detected with:
+Current crop extraction keeps tile results internal until merge behavior is proven. Duplicate candidates can be detected with:
 
 - same page
 - same normalized text, value, type, or label
@@ -130,6 +137,12 @@ Future crop extraction should keep tile results internal until merge behavior is
 - optional VLM position hints such as `left_edge`, `right_edge`, `top_edge`, `bottom_edge`, `center`, or `unknown`
 
 Position hints should be treated as supporting evidence only. Page-space tile coordinates are the primary deterministic dedupe signal.
+
+Before any product merge, tile dimensions should be compared with full-page extraction:
+
+- `full_page_supported_candidates`: tile dimensions that match full-page dimensions by page, value, type, and non-conflicting label or quantity.
+- `tile_only_candidates`: tile dimensions not seen in full-page extraction. These may be new useful evidence or crop-only false positives.
+- `duplicate_candidate_groups`: tile dimensions that look repeated across overlapping source tiles.
 
 ## Traceability
 
