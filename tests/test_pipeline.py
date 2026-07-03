@@ -68,6 +68,44 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(internal["tiles"][0]["bbox"]["x"], 0)
             self.assertTrue(Path(internal["tiles"][0]["crop_ref"]).exists())
 
+    def test_process_can_run_ocr_internally(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            ocr_blocks = [
+                {
+                    "id": "page_001_ocr_001",
+                    "page": 1,
+                    "text": "Ø1,83",
+                    "bbox": {"x": 10, "y": 20, "width": 30, "height": 12},
+                    "source_ref": str(drawing) + "#page=1",
+                    "engine": "test",
+                    "confidence": 0.9,
+                }
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.run_rapidocr_pages",
+                return_value=ocr_blocks,
+            ):
+                summary = process_inputs(drawing, outputs, run_ocr=True)
+
+            internal_path = outputs / "internal" / "example.internal.json"
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(internal["raw_ocr_blocks"], ocr_blocks)
+            self.assertEqual(len(internal["ocr_candidates"]), 1)
+            self.assertEqual(
+                internal["ocr_candidates"][0]["full_page_status"],
+                "not_found_in_full_page",
+            )
+
     def test_process_can_extract_generated_crops_internally(self) -> None:
         from PIL import Image
 

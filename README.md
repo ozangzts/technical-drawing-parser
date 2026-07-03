@@ -70,6 +70,12 @@ Generate overlapping page crops for visual review:
 python tdp.py process --generate-crops
 ```
 
+Run local OCR for coordinate-aware text evidence:
+
+```bash
+python tdp.py process --ocr
+```
+
 Extract generated crops into internal metadata without merging them into the product JSON:
 
 ```bash

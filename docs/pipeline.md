@@ -58,6 +58,8 @@ outputs/internal/page_images/<name>_page_002.png
 
 The original PDF remains the source document. Rendered page images are recorded in internal metadata. When VLM extraction is enabled, each rendered page is extracted and stored in `page_extractions`. The current product JSON still uses page 1 until merge behavior is implemented, so multi-page PDFs get a product warning.
 
+When `--ocr` is used, local RapidOCR runs on page images and writes coordinate-aware `raw_ocr_blocks` plus filtered numeric `ocr_candidates` into internal metadata. OCR candidates are cross-checked against full-page VLM dimensions when VLM extraction is enabled. OCR output does not change product JSON.
+
 ## Processing Registry
 
 The parser should maintain a registry at:
@@ -86,6 +88,7 @@ Use the local CLI wrapper:
 python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
+python tdp.py process --ocr
 python tdp.py process --generate-crops
 python tdp.py process --extractor ollama --model gemma4:cloud --extract-crops --force
 python tdp.py status
@@ -116,9 +119,10 @@ TDP_MODEL=
 8. Write internal metadata under `outputs/internal/`.
 9. Write the VLM extraction prompt under `outputs/internal/`.
 10. For PDF inputs with VLM extraction enabled, extract each rendered page into internal `page_extractions`.
-11. Optionally generate overlapping page tiles when `--generate-crops` or `--extract-crops` is used.
-12. Optionally extract generated tiles into internal `tile_extractions` when `--extract-crops` and a VLM extractor are enabled.
-13. Update `outputs/index.json`.
+11. Optionally run local OCR and write coordinate-aware `raw_ocr_blocks` and `ocr_candidates` when `--ocr` is used.
+12. Optionally generate overlapping page tiles when `--generate-crops` or `--extract-crops` is used.
+13. Optionally extract generated tiles into internal `tile_extractions` when `--extract-crops` and a VLM extractor are enabled.
+14. Update `outputs/index.json`.
 
 Later stages will add page-level merge behavior, OCR, layout detection, crop extraction, debug overlays, and region-specific semantic extraction.
 

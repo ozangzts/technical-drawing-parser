@@ -11,6 +11,7 @@ from .dedupe import build_tile_extraction_summary
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
+from .ocr import build_ocr_candidates, run_rapidocr_pages
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import build_tile_vlm_prompt, build_vlm_prompt
@@ -34,6 +35,7 @@ def process_inputs(
     model: str | None = None,
     generate_crops: bool = False,
     extract_crops: bool = False,
+    run_ocr: bool = False,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -70,6 +72,7 @@ def process_inputs(
                 model=model,
                 generate_crops=generate_crops,
                 extract_crops=extract_crops,
+                run_ocr=run_ocr,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -108,6 +111,7 @@ def create_product_json(
     model: str | None = None,
     generate_crops: bool = False,
     extract_crops: bool = False,
+    run_ocr: bool = False,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
@@ -142,6 +146,11 @@ def create_product_json(
                 "PDF has multiple pages; product JSON uses page 1 until merge behavior is implemented."
             )
     regions = build_initial_regions(input_file, metadata)
+    raw_ocr_blocks: list[dict[str, object]] = []
+    if run_ocr:
+        raw_ocr_blocks = run_rapidocr_pages(
+            build_tile_source_images(input_file, metadata)
+        )
     tiles: list[dict[str, object]] = []
     if generate_crops or extract_crops:
         tiles = build_page_tiles(
@@ -203,12 +212,15 @@ def create_product_json(
             "Crop extraction was requested but skipped because no VLM extractor is enabled."
         )
     result["warnings"].extend(processing_warnings)
+    ocr_candidates = build_ocr_candidates(raw_ocr_blocks, result)
 
     internal = build_internal_result(
         input_file=input_file,
         fingerprint=fingerprint,
         metadata=metadata,
         regions=regions,
+        raw_ocr_blocks=raw_ocr_blocks,
+        ocr_candidates=ocr_candidates,
         tiles=tiles,
         product_json_path=result_path,
         tile_summary_path=tile_summary_path,
@@ -491,6 +503,8 @@ def build_internal_result(
     fingerprint: str,
     metadata: dict[str, object],
     regions: list[dict[str, object]],
+    raw_ocr_blocks: list[dict[str, object]],
+    ocr_candidates: list[dict[str, object]],
     tiles: list[dict[str, object]],
     product_json_path: Path,
     tile_summary_path: Path,
@@ -546,7 +560,8 @@ def build_internal_result(
         },
         "regions": regions,
         "tiles": tiles,
-        "raw_ocr_blocks": [],
+        "raw_ocr_blocks": raw_ocr_blocks,
+        "ocr_candidates": ocr_candidates,
         "warnings": warnings,
         "uncertain_fields": [
             {

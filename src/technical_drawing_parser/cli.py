@@ -19,6 +19,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
+            "  python tdp.py process --ocr\n"
             "  python tdp.py process --generate-crops\n"
             "  python tdp.py process --extractor ollama --model moondream --extract-crops --force\n"
             "  python tdp.py process --extractor ollama --model moondream --force\n"
@@ -62,6 +63,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--generate-crops",
         action="store_true",
         help="Generate overlapping page tiles under outputs/internal/crops.",
+    )
+    process_parser.add_argument(
+        "--ocr",
+        action="store_true",
+        help="Run optional local OCR and store raw OCR blocks internally.",
     )
     process_parser.add_argument(
         "--extract-crops",
@@ -111,6 +117,7 @@ def main(argv: list[str] | None = None) -> int:
             model=getattr(args, "model", None),
             generate_crops=getattr(args, "generate_crops", False),
             extract_crops=getattr(args, "extract_crops", False),
+            run_ocr=getattr(args, "ocr", False),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

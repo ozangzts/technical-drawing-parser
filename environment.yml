@@ -8,3 +8,4 @@ dependencies:
   - pymupdf
   - pip:
       - -e .
+      - rapidocr-onnxruntime>=1.4

@@ -153,6 +153,7 @@ Prefer explicit uncertainty:
 - CLI entry point: `src/technical_drawing_parser/cli.py`
 - Minimal pipeline implementation: `src/technical_drawing_parser/pipeline.py`
 - PDF page rendering helper: `src/technical_drawing_parser/pdf.py`
+- Optional OCR helper: `src/technical_drawing_parser/ocr.py`
 - Overlapping tile crop helper: `src/technical_drawing_parser/crops.py`
 - Tile extraction duplicate summary helper: `src/technical_drawing_parser/dedupe.py`
 - Product extraction prompt: `src/technical_drawing_parser/extraction/prompt.py`
@@ -193,7 +194,7 @@ Use these default behaviors:
 - Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
 - Add merge behavior for multi-page PDF page-level extraction.
 - Add PDF type detection.
+- Use OCR candidates for confidence-driven targeted crop/refinement experiments.
 - Add crop extraction merge and dedupe using page-space tile coordinates.
-- Add optional OCR only if it improves extraction reliability.
 - Add layout detection only when needed.
 - Add a curated sample fixture and expected product JSON once VLM extraction exists.
