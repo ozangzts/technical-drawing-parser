@@ -6,6 +6,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .crops import generate_overlapping_tiles
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
 from .metadata import read_file_metadata
@@ -30,6 +31,7 @@ def process_inputs(
     retry_failed: bool = False,
     extractor: str = "none",
     model: str | None = None,
+    generate_crops: bool = False,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -64,6 +66,7 @@ def process_inputs(
                 outputs_root=outputs_root,
                 extractor=extractor,
                 model=model,
+                generate_crops=generate_crops,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -100,6 +103,7 @@ def create_product_json(
     outputs_root: Path,
     extractor: str = "none",
     model: str | None = None,
+    generate_crops: bool = False,
 ) -> dict[str, object]:
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
@@ -112,7 +116,6 @@ def create_product_json(
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
     raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
-    extraction_image_path = input_file
     rendered_pages: list[dict[str, object]] = []
     processing_warnings: list[str] = []
     if input_file.suffix.lower() == ".pdf":
@@ -129,12 +132,19 @@ def create_product_json(
             "derived_from": str(input_file),
             "page": 1,
         }
-        extraction_image_path = Path(str(first_rendered_page["path"]))
         if len(rendered_pages) > 1:
             processing_warnings.append(
                 "PDF has multiple pages; product JSON uses page 1 until merge behavior is implemented."
             )
     regions = build_initial_regions(input_file, metadata)
+    tiles: list[dict[str, object]] = []
+    if generate_crops:
+        tiles = build_page_tiles(
+            input_file=input_file,
+            output_slug=output_slug,
+            internal_dir=internal_dir,
+            metadata=metadata,
+        )
     processed_at = now_utc()
     result = empty_product_result(input_file)
     vlm_prompt = build_vlm_prompt(input_file)
@@ -181,6 +191,7 @@ def create_product_json(
         fingerprint=fingerprint,
         metadata=metadata,
         regions=regions,
+        tiles=tiles,
         product_json_path=result_path,
         prompt_path=prompt_path,
         raw_response_path=raw_response_path if raw_response_path.exists() else None,
@@ -233,6 +244,52 @@ def build_initial_regions(
 
     image = metadata.get("image")
     return [build_full_page_region(input_file, {"page": 1, "image": image})]
+
+
+def build_page_tiles(
+    input_file: Path,
+    output_slug: str,
+    internal_dir: Path,
+    metadata: dict[str, object],
+) -> list[dict[str, object]]:
+    page_images = build_tile_source_images(input_file, metadata)
+    tiles: list[dict[str, object]] = []
+    for page_image in page_images:
+        tiles.extend(
+            generate_overlapping_tiles(
+                image_path=Path(str(page_image["image_path"])),
+                output_dir=internal_dir / "crops",
+                output_slug=output_slug,
+                page=int(page_image["page"]),
+                source_ref=str(page_image["source_ref"]),
+            )
+        )
+    return tiles
+
+
+def build_tile_source_images(
+    input_file: Path,
+    metadata: dict[str, object],
+) -> list[dict[str, object]]:
+    rendered_pages = metadata.get("rendered_pages")
+    if isinstance(rendered_pages, list) and rendered_pages:
+        return [
+            {
+                "page": rendered_page.get("page", 1),
+                "image_path": rendered_page["path"],
+                "source_ref": f"{input_file}#page={rendered_page.get('page', 1)}",
+            }
+            for rendered_page in rendered_pages
+            if isinstance(rendered_page, dict) and "path" in rendered_page
+        ]
+
+    return [
+        {
+            "page": 1,
+            "image_path": input_file,
+            "source_ref": f"{input_file}#page=1",
+        }
+    ]
 
 
 def build_full_page_region(
@@ -346,6 +403,7 @@ def build_internal_result(
     fingerprint: str,
     metadata: dict[str, object],
     regions: list[dict[str, object]],
+    tiles: list[dict[str, object]],
     product_json_path: Path,
     prompt_path: Path,
     raw_response_path: Path | None,
@@ -387,6 +445,7 @@ def build_internal_result(
             "processed_at": processed_at,
         },
         "regions": regions,
+        "tiles": tiles,
         "raw_ocr_blocks": [],
         "warnings": warnings,
         "uncertain_fields": [

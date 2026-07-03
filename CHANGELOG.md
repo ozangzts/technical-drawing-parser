@@ -54,6 +54,9 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added a validator warning for suspicious `#` symbols in diameter dimensions while preserving the original `raw_text`.
 - Extended PDF rendering to write every page image and record page-level full-page regions while keeping one product JSON per input.
 - Added internal page-level VLM extraction records for rendered PDF pages while keeping the product JSON based on page 1 until merge behavior is implemented.
+- Increased PDF rendering to 300 DPI for better small text visibility.
+- Added opt-in overlapping page tile generation with `--generate-crops` and internal tile metadata for future crop extraction and dedupe.
+- Documented the crop dedupe direction: use page-space tile coordinates as the primary signal and optional VLM position hints as supporting evidence.
 
 ### Notes
 

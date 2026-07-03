@@ -64,6 +64,12 @@ Process with explicit defaults:
 python tdp.py process --extractor none
 ```
 
+Generate overlapping page crops for visual review:
+
+```bash
+python tdp.py process --generate-crops
+```
+
 Process a specific file or directory:
 
 ```bash

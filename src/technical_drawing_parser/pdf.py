@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_PDF_DPI = 200
+DEFAULT_PDF_DPI = 300
 
 
 def render_pdf_first_page(

@@ -33,7 +33,15 @@ outputs/internal/<input_or_product_code>_page_002.raw_response.txt
 
 Additional debug artifacts and crops should only be added when they become necessary.
 
-PDF inputs are rendered to page PNGs under:
+When `--generate-crops` is used, overlapping page tiles are written under:
+
+```text
+outputs/internal/crops/<name>_page_001_tile_001.png
+```
+
+Tile crops are evidence/debug artifacts and do not change the product JSON. Each tile keeps the original page-space bbox, source page, crop path, tile size, and overlap pixels so later crop extraction can be deduplicated against page coordinates.
+
+PDF inputs are rendered at 300 DPI to page PNGs under:
 
 ```text
 outputs/internal/page_images/<name>_page_001.png
@@ -70,6 +78,7 @@ Use the local CLI wrapper:
 python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
+python tdp.py process --generate-crops
 python tdp.py status
 ```
 
@@ -98,9 +107,29 @@ TDP_MODEL=
 8. Write internal metadata under `outputs/internal/`.
 9. Write the VLM extraction prompt under `outputs/internal/`.
 10. For PDF inputs with VLM extraction enabled, extract each rendered page into internal `page_extractions`.
-11. Update `outputs/index.json`.
+11. Optionally generate overlapping page tiles when `--generate-crops` is used.
+12. Update `outputs/index.json`.
 
-Later stages will add page-level merge behavior, OCR, layout detection, crops, debug overlays, and region-specific semantic extraction.
+Later stages will add page-level merge behavior, OCR, layout detection, crop extraction, debug overlays, and region-specific semantic extraction.
+
+## Crop And Dedupe Direction
+
+The initial crop strategy is deterministic overlapping tiles, not whitespace-based segmentation. Whitespace can carry visual relationships in technical drawings, such as leader lines, dimension arrows, table boundaries, and schematic connections.
+
+Default crop settings:
+
+- Tile size: 1024 px
+- Overlap: 25 percent
+- Minimum edge tile: 384 px
+
+Future crop extraction should keep tile results internal until merge behavior is proven. Duplicate candidates can be detected with:
+
+- same page
+- same normalized text, value, type, or label
+- overlapping or neighboring source tile bboxes
+- optional VLM position hints such as `left_edge`, `right_edge`, `top_edge`, `bottom_edge`, `center`, or `unknown`
+
+Position hints should be treated as supporting evidence only. Page-space tile coordinates are the primary deterministic dedupe signal.
 
 ## Traceability
 

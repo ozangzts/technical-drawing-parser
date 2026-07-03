@@ -19,6 +19,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
+            "  python tdp.py process --generate-crops\n"
             "  python tdp.py process --extractor ollama --model moondream --force\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
             "  python tdp.py status"
@@ -55,6 +56,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--retry-failed",
         action="store_true",
         help="Compatibility option; failed files are retried by default.",
+    )
+    process_parser.add_argument(
+        "--generate-crops",
+        action="store_true",
+        help="Generate overlapping page tiles under outputs/internal/crops.",
     )
     process_parser.add_argument(
         "--extractor",
@@ -97,6 +103,7 @@ def main(argv: list[str] | None = None) -> int:
             retry_failed=getattr(args, "retry_failed", False),
             extractor=getattr(args, "extractor", DEFAULT_EXTRACTOR),
             model=getattr(args, "model", None),
+            generate_crops=getattr(args, "generate_crops", False),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

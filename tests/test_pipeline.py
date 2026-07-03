@@ -48,6 +48,26 @@ class PipelineTests(unittest.TestCase):
             "deico_de8135",
         )
 
+    def test_process_can_generate_overlapping_crops(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            summary = process_inputs(drawing, outputs, generate_crops=True)
+
+            internal_path = outputs / "internal" / "example.internal.json"
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(len(internal["tiles"]), 2)
+            self.assertEqual(internal["tiles"][0]["type"], "tile")
+            self.assertEqual(internal["tiles"][0]["bbox"]["x"], 0)
+            self.assertTrue(Path(internal["tiles"][0]["crop_ref"]).exists())
+
     def test_process_pdf_renders_all_pages_but_writes_one_product_json(self) -> None:
         try:
             import fitz
