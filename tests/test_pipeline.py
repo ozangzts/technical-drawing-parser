@@ -119,6 +119,64 @@ class PipelineTests(unittest.TestCase):
             "page_001_ocr_target_002",
         )
 
+    def test_ocr_target_refinement_summary_marks_metadata_conflicts(self) -> None:
+        refinements = [
+            {
+                "target_id": "page_001_ocr_target_001",
+                "ocr_text": "05.09.2025",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "metadata",
+                    "metadata": {
+                        "field": "REVISION DATE",
+                        "value": "05.09.2025",
+                    },
+                    "confidence": 1.0,
+                },
+            },
+            {
+                "target_id": "page_001_ocr_target_002",
+                "ocr_text": "A3",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "metadata",
+                    "metadata": {
+                        "field": "sheet size",
+                        "value": "A3",
+                    },
+                    "confidence": 0.9,
+                },
+            },
+        ]
+        product_json = {
+            "revision_date": "09.09.2021",
+            "size": "A3",
+        }
+
+        summary = build_ocr_target_refinement_summary(
+            refinements,
+            full_page_product_json=product_json,
+        )
+
+        self.assertEqual(summary["metadata"], 2)
+        self.assertEqual(len(summary["metadata_review_candidates"]), 2)
+        self.assertEqual(
+            summary["metadata_review_candidates"][0]["field"],
+            "revision_date",
+        )
+        self.assertEqual(
+            summary["metadata_review_candidates"][0]["status"],
+            "conflict",
+        )
+        self.assertEqual(
+            summary["metadata_review_candidates"][1]["field"],
+            "size",
+        )
+        self.assertEqual(
+            summary["metadata_review_candidates"][1]["status"],
+            "supported",
+        )
+
     def test_process_can_generate_overlapping_crops(self) -> None:
         from PIL import Image
 

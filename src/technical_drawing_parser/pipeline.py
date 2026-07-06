@@ -735,6 +735,7 @@ def build_ocr_target_refinement_summary(
         "covered_by_dimensions": [],
         "covered_by_dimension_tables": [],
         "new_dimension_candidates": [],
+        "metadata_review_candidates": [],
     }
 
     for refinement in refinements:
@@ -765,6 +766,13 @@ def build_ocr_target_refinement_summary(
                     summary["new_dimension_candidates"].append(candidate)
         elif classification == "metadata":
             summary["metadata"] += 1
+            metadata_candidate = build_metadata_review_candidate(
+                refinement,
+                refinement_json,
+                full_page_product_json,
+            )
+            if metadata_candidate:
+                summary["metadata_review_candidates"].append(metadata_candidate)
         elif classification == "note":
             summary["notes"] += 1
         elif classification == "irrelevant":
@@ -773,6 +781,77 @@ def build_ocr_target_refinement_summary(
             summary["uncertain"] += 1
 
     return summary
+
+
+def build_metadata_review_candidate(
+    refinement: dict[str, object],
+    refinement_json: dict[str, object],
+    product_json: dict[str, object] | None,
+) -> dict[str, object] | None:
+    metadata = refinement_json.get("metadata")
+    if not isinstance(metadata, dict):
+        return None
+
+    field = normalize_metadata_field(metadata.get("field"))
+    value = metadata.get("value")
+    if field is None or value is None:
+        return None
+
+    product_value = product_json.get(field) if isinstance(product_json, dict) else None
+    normalized_refinement_value = normalize_metadata_value(value)
+    normalized_product_value = normalize_metadata_value(product_value)
+    status = (
+        "supported"
+        if normalized_product_value
+        and normalized_refinement_value == normalized_product_value
+        else "conflict"
+        if normalized_product_value
+        else "missing_in_product"
+    )
+
+    return {
+        "target_id": refinement.get("target_id"),
+        "ocr_text": refinement.get("ocr_text"),
+        "field": field,
+        "product_value": product_value,
+        "refinement_value": value,
+        "confidence": refinement_json.get("confidence"),
+        "status": status,
+    }
+
+
+def normalize_metadata_field(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+
+    normalized = value.strip().lower()
+    normalized = normalized.replace(".", "")
+    normalized = normalized.replace("_", " ")
+    normalized = " ".join(normalized.split())
+    field_aliases = {
+        "scale": "scale",
+        "drawing scale": "scale",
+        "size": "size",
+        "sheet size": "size",
+        "revision": "revision",
+        "rev": "revision",
+        "revision date": "revision_date",
+        "rev date": "revision_date",
+        "date": "revision_date",
+        "sheet": "sheet",
+        "sheet number": "sheet",
+        "sheet no": "sheet",
+    }
+    return field_aliases.get(normalized)
+
+
+def normalize_metadata_value(value: object) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip().lower()
+    normalized = normalized.replace(",", ".")
+    normalized = " ".join(normalized.split())
+    return normalized or None
 
 
 def build_refinement_merge_candidate(

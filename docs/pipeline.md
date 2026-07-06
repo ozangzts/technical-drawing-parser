@@ -80,6 +80,8 @@ OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `
 
 Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review. Merge candidates are split into values already covered by flat `dimensions`, values already covered by `dimension_tables`, and truly new `new_dimension_candidates`.
 
+Metadata refinements are summarized as `metadata_review_candidates`. These compare OCR-target metadata values such as `scale`, `revision_date`, `size`, and `sheet` against the product JSON and mark them as `supported`, `conflict`, or `missing_in_product` without changing the product JSON automatically.
+
 ## Processing Registry
 
 The parser should maintain a registry at:
