@@ -109,6 +109,33 @@ class ValidatorTests(unittest.TestCase):
             )
         )
 
+    def test_parse_product_json_response_preserves_dimension_tables(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [
+    {
+      "title": "Cabinet sizes",
+      "context": "visible table",
+      "columns": ["Width", "Depth"],
+      "rows": [
+        {
+          "label": "Single",
+          "values": ["600", "800"]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["dimension_tables"][0]["title"], "Cabinet sizes")
+        self.assertEqual(result["dimension_tables"][0]["rows"][0]["values"], ["600", "800"])
+
 
 if __name__ == "__main__":
     unittest.main()

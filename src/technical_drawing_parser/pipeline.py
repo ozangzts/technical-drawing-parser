@@ -13,8 +13,10 @@ from .fingerprint import sha256_file
 from .metadata import read_file_metadata
 from .ocr import (
     DEFAULT_OCR_ENGINE,
+    build_comparison_values,
     build_ocr_candidates,
     build_ocr_target_crops,
+    normalize_ocr_value,
     run_ocr_pages,
 )
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
@@ -661,6 +663,12 @@ def build_internal_result(
         and isinstance(page_extractions[0].get("product_json"), dict)
         else None,
     )
+    full_page_product_json = (
+        page_extractions[0]["product_json"]
+        if page_extractions
+        and isinstance(page_extractions[0].get("product_json"), dict)
+        else None
+    )
 
     return {
         "schema_version": "0.1.0",
@@ -674,7 +682,8 @@ def build_internal_result(
         "tile_extractions": tile_extractions,
         "tile_extraction_summary": tile_extraction_summary,
         "ocr_target_refinement_summary": build_ocr_target_refinement_summary(
-            ocr_target_refinements
+            ocr_target_refinements,
+            full_page_product_json=full_page_product_json,
         ),
         "extraction": {
             "extractor": extractor,
@@ -711,7 +720,9 @@ def build_internal_result(
 
 def build_ocr_target_refinement_summary(
     refinements: list[dict[str, object]],
+    full_page_product_json: dict[str, object] | None = None,
 ) -> dict[str, object]:
+    product_coverage = build_product_dimension_coverage(full_page_product_json)
     summary = {
         "targets": len(refinements),
         "dimensions": 0,
@@ -721,6 +732,9 @@ def build_ocr_target_refinement_summary(
         "irrelevant": 0,
         "failed": 0,
         "merge_candidates": [],
+        "covered_by_dimensions": [],
+        "covered_by_dimension_tables": [],
+        "new_dimension_candidates": [],
     }
 
     for refinement in refinements:
@@ -737,14 +751,18 @@ def build_ocr_target_refinement_summary(
         if classification == "dimension":
             summary["dimensions"] += 1
             if refinement_json.get("is_product_dimension") is True:
-                summary["merge_candidates"].append(
-                    {
-                        "target_id": refinement.get("target_id"),
-                        "ocr_text": refinement.get("ocr_text"),
-                        "dimension": refinement_json.get("dimension"),
-                        "confidence": refinement_json.get("confidence"),
-                    }
+                candidate = build_refinement_merge_candidate(
+                    refinement,
+                    refinement_json,
+                    product_coverage,
                 )
+                summary["merge_candidates"].append(candidate)
+                if candidate["coverage"] == "dimensions":
+                    summary["covered_by_dimensions"].append(candidate)
+                elif candidate["coverage"] == "dimension_tables":
+                    summary["covered_by_dimension_tables"].append(candidate)
+                else:
+                    summary["new_dimension_candidates"].append(candidate)
         elif classification == "metadata":
             summary["metadata"] += 1
         elif classification == "note":
@@ -755,6 +773,84 @@ def build_ocr_target_refinement_summary(
             summary["uncertain"] += 1
 
     return summary
+
+
+def build_refinement_merge_candidate(
+    refinement: dict[str, object],
+    refinement_json: dict[str, object],
+    product_coverage: dict[str, set[str]],
+) -> dict[str, object]:
+    dimension = refinement_json.get("dimension")
+    candidate_values = collect_dimension_comparison_values(dimension)
+    if candidate_values.intersection(product_coverage["dimensions"]):
+        coverage = "dimensions"
+    elif candidate_values.intersection(product_coverage["dimension_tables"]):
+        coverage = "dimension_tables"
+    else:
+        coverage = "new"
+
+    return {
+        "target_id": refinement.get("target_id"),
+        "ocr_text": refinement.get("ocr_text"),
+        "dimension": dimension,
+        "confidence": refinement_json.get("confidence"),
+        "coverage": coverage,
+    }
+
+
+def build_product_dimension_coverage(
+    product_json: dict[str, object] | None,
+) -> dict[str, set[str]]:
+    coverage = {
+        "dimensions": set(),
+        "dimension_tables": set(),
+    }
+    if not isinstance(product_json, dict):
+        return coverage
+
+    dimensions = product_json.get("dimensions")
+    if isinstance(dimensions, list):
+        for dimension in dimensions:
+            coverage["dimensions"].update(
+                collect_dimension_comparison_values(dimension)
+            )
+
+    dimension_tables = product_json.get("dimension_tables")
+    if isinstance(dimension_tables, list):
+        for table in dimension_tables:
+            if not isinstance(table, dict):
+                continue
+            rows = table.get("rows")
+            if not isinstance(rows, list):
+                continue
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                values = row.get("values")
+                if not isinstance(values, list):
+                    continue
+                for value in values:
+                    coverage["dimension_tables"].update(
+                        collect_scalar_comparison_values(value)
+                    )
+
+    return coverage
+
+
+def collect_dimension_comparison_values(dimension: object) -> set[str]:
+    values: set[str] = set()
+    if not isinstance(dimension, dict):
+        return values
+
+    for field in ("raw_text", "value"):
+        values.update(collect_scalar_comparison_values(dimension.get(field)))
+    return values
+
+
+def collect_scalar_comparison_values(value: object) -> set[str]:
+    if value is None:
+        return set()
+    return build_comparison_values(normalize_ocr_value(str(value)))
 
 
 def build_failed_entry(

@@ -23,6 +23,8 @@ Rules:
 - If units are stated globally, use that unit for dimensions. If units are not visible, use null.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
+- Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
+- Put table-derived measurements in dimension_tables with their row and column context instead of flattening them into dimensions when the table context is needed to understand the value.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 
 Source file name:
@@ -52,6 +54,7 @@ Rules:
 - If units are stated globally in this crop, use that unit for dimensions. If units are not visible, use null.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
+- Extract visible table-derived measurements into dimension_tables when row or column context is needed.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 
 Source file name:

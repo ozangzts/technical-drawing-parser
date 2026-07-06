@@ -18,6 +18,7 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
         "scale": None,
         "units": None,
         "dimensions": [],
+        "dimension_tables": [],
         "tolerances": [],
         "notes": [],
         "warnings": [
@@ -46,6 +47,19 @@ def product_schema_description() -> str:
       "quantity": "number or null",
       "label": "string or null",
       "context": "string or null"
+    }
+  ],
+  "dimension_tables": [
+    {
+      "title": "string or null",
+      "context": "string or null",
+      "columns": ["string"],
+      "rows": [
+        {
+          "label": "string or null",
+          "values": ["string"]
+        }
+      ]
     }
   ],
   "tolerances": [],

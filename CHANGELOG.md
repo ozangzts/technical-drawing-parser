@@ -67,6 +67,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Kept OCR target selection general by filtering only weak single-number fragments while leaving semantic crop classification to future refinement; OCR/full-page comparison still uses loose matching keys for quantity prefixes and diameter symbols without changing extracted text.
 - Added opt-in OCR target VLM refinement with `--refine-ocr-targets`, storing crop classifications and structured refinement JSON internally without merging into product JSON.
 - Added an internal OCR target refinement summary with classification counts and review-only product dimension merge candidates.
+- Added `dimension_tables` to the product schema and prompt so tabular measurements can be extracted with row and column context instead of being ignored or flattened into ambiguous dimensions.
+- Updated OCR target refinement summaries to distinguish new dimension candidates from values already covered by flat dimensions or dimension tables.
 
 ### Notes
 

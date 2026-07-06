@@ -22,6 +22,8 @@ outputs/products/<input_or_product_code>.json
 
 At the current MVP stage, the output name is derived from the input filename and cleaned to prefer a short brand/code style name when possible. For example, `DEICO_DE8135_Technical_Drawing_page-0001.jpg` becomes `deico_de8135.json`. Later, once title block extraction exists, the output name can use a detected product or drawing code.
 
+Product JSON includes flat `dimensions` for direct drawing callouts and `dimension_tables` for tabular measurements where row and column context is required to understand values.
+
 Developer-facing metadata is written separately:
 
 ```text
@@ -76,7 +78,7 @@ outputs/internal/ocr_target_responses/<name>_page_001_ocr_target_001.raw_respons
 
 OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. These results do not merge into the product JSON yet.
 
-Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review.
+Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review. Merge candidates are split into values already covered by flat `dimensions`, values already covered by `dimension_tables`, and truly new `new_dimension_candidates`.
 
 ## Processing Registry
 

@@ -8,7 +8,11 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from technical_drawing_parser.pipeline import build_output_slug, process_inputs
+from technical_drawing_parser.pipeline import (
+    build_ocr_target_refinement_summary,
+    build_output_slug,
+    process_inputs,
+)
 
 
 class PipelineTests(unittest.TestCase):
@@ -36,6 +40,7 @@ class PipelineTests(unittest.TestCase):
             result = json.loads(result_path.read_text(encoding="utf-8"))
             internal = json.loads(internal_path.read_text(encoding="utf-8"))
             self.assertEqual(result["source_file"], drawing.name)
+            self.assertEqual(result["dimension_tables"], [])
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
             self.assertEqual(internal["extraction"]["extractor"], "none")
@@ -46,6 +51,72 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(
             build_output_slug("DEICO_DE8135_Technical_Drawing_page-0001"),
             "deico_de8135",
+        )
+
+    def test_ocr_target_refinement_summary_marks_dimension_table_coverage(self) -> None:
+        refinements = [
+            {
+                "target_id": "page_001_ocr_target_001",
+                "ocr_text": "800",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "dimension",
+                    "is_product_dimension": True,
+                    "dimension": {
+                        "raw_text": "800",
+                        "value": "800",
+                        "unit": "mm",
+                        "type": "linear",
+                    },
+                    "confidence": 0.95,
+                },
+            },
+            {
+                "target_id": "page_001_ocr_target_002",
+                "ocr_text": "950",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "dimension",
+                    "is_product_dimension": True,
+                    "dimension": {
+                        "raw_text": "950",
+                        "value": "950",
+                        "unit": "mm",
+                        "type": "linear",
+                    },
+                    "confidence": 0.9,
+                },
+            },
+        ]
+        product_json = {
+            "dimensions": [],
+            "dimension_tables": [
+                {
+                    "rows": [
+                        {
+                            "label": "DE12000",
+                            "values": ["DE12000", "20U", "800", "SINGLE"],
+                        }
+                    ]
+                }
+            ],
+        }
+
+        summary = build_ocr_target_refinement_summary(
+            refinements,
+            full_page_product_json=product_json,
+        )
+
+        self.assertEqual(summary["dimensions"], 2)
+        self.assertEqual(len(summary["covered_by_dimension_tables"]), 1)
+        self.assertEqual(
+            summary["covered_by_dimension_tables"][0]["target_id"],
+            "page_001_ocr_target_001",
+        )
+        self.assertEqual(len(summary["new_dimension_candidates"]), 1)
+        self.assertEqual(
+            summary["new_dimension_candidates"][0]["target_id"],
+            "page_001_ocr_target_002",
         )
 
     def test_process_can_generate_overlapping_crops(self) -> None:

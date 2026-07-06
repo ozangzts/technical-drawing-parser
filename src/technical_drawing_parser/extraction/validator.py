@@ -20,6 +20,7 @@ PRODUCT_FIELDS = {
     "scale",
     "units",
     "dimensions",
+    "dimension_tables",
     "tolerances",
     "notes",
     "warnings",
@@ -78,7 +79,13 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
     result["source_file"] = source_file.name
     normalize_scalars(result)
     normalize_size_and_scale(result, warnings)
-    for list_field in ("dimensions", "tolerances", "notes", "warnings"):
+    for list_field in (
+        "dimensions",
+        "dimension_tables",
+        "tolerances",
+        "notes",
+        "warnings",
+    ):
         if not isinstance(result.get(list_field), list):
             warnings.append(f"`{list_field}` was not a list and was reset.")
             result[list_field] = []
