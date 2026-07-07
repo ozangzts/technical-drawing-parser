@@ -36,6 +36,7 @@ class ValidatorTests(unittest.TestCase):
         response = """{
   "product_name": " Example ",
   "revision": "null",
+  "sheet": " 1/1 ",
   "size": "",
   "scale": "A3",
   "units": "mm",
@@ -65,6 +66,7 @@ class ValidatorTests(unittest.TestCase):
 
         self.assertEqual(result["product_name"], "Example")
         self.assertIsNone(result["revision"])
+        self.assertEqual(result["sheet"], "1/1")
         self.assertEqual(result["size"], "A3")
         self.assertIsNone(result["scale"])
         self.assertEqual(result["dimensions"][0]["raw_text"], "(x11) Ø1,22")

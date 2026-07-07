@@ -73,6 +73,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added compact review JSON artifacts under `outputs/internal/reviews/` for quick inspection without reading the full internal audit JSON.
 - Simplified review JSON coverage to counts only so compact reviews stay focused on actionable issues.
 - Clarified prompts so single-letter symbolic references are not extracted as dimensions unless a numeric value is visible with the reference.
+- Added `sheet` to the product schema for title-block sheet information such as `1/1`.
 
 ### Notes
 

@@ -21,6 +21,7 @@ Rules:
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
 - If units are stated globally, use that unit for dimensions. If units are not visible, use null.
+- Extract title-block sheet information such as 1/1 into sheet when visible.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
@@ -53,6 +54,7 @@ Rules:
 - Use empty arrays when no values are visible.
 - Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
 - If units are stated globally in this crop, use that unit for dimensions. If units are not visible, use null.
+- Extract title-block sheet information such as 1/1 into sheet when visible.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract visible table-derived measurements into dimension_tables when row or column context is needed.

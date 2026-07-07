@@ -825,6 +825,7 @@ def build_review_result(
             "document_name": product_json.get("document_name"),
             "revision": product_json.get("revision"),
             "revision_date": product_json.get("revision_date"),
+            "sheet": product_json.get("sheet"),
             "size": product_json.get("size"),
             "scale": product_json.get("scale"),
             "units": product_json.get("units"),

@@ -14,6 +14,7 @@ Product JSON files under `outputs/products/` are the user-facing extraction resu
   "drawing_number": null,
   "revision": null,
   "revision_date": null,
+  "sheet": null,
   "size": null,
   "scale": null,
   "units": null,

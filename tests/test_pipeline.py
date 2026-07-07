@@ -43,6 +43,7 @@ class PipelineTests(unittest.TestCase):
             internal = json.loads(internal_path.read_text(encoding="utf-8"))
             review = json.loads(review_path.read_text(encoding="utf-8"))
             self.assertEqual(result["source_file"], drawing.name)
+            self.assertIsNone(result["sheet"])
             self.assertEqual(result["dimension_tables"], [])
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
