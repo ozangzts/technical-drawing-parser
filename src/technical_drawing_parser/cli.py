@@ -20,12 +20,10 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process\n"
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
-            "  python tdp.py process --ocr --ocr-engine rapidocr\n"
-            "  python tdp.py process --generate-ocr-target-crops\n"
-            "  python tdp.py process --extractor ollama --refine-ocr-targets --force\n"
+            "  python tdp.py process --extractor ollama --model gemma4:cloud\n"
+            "  python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force\n"
             "  python tdp.py process --generate-crops\n"
             "  python tdp.py process --extractor ollama --model moondream --extract-crops --force\n"
-            "  python tdp.py process --extractor ollama --model moondream --force\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
             "  python tdp.py status"
         ),
@@ -70,29 +68,17 @@ def build_parser() -> argparse.ArgumentParser:
     process_parser.add_argument(
         "--ocr",
         action="store_true",
-        help="Run optional local OCR and store raw OCR blocks internally.",
+        help=(
+            "Run the OCR-assisted pipeline: local OCR, missed-value candidates, "
+            "target crops, VLM target refinement when an extractor is enabled, "
+            "and compact review output."
+        ),
     )
     process_parser.add_argument(
         "--ocr-engine",
         default=DEFAULT_OCR_ENGINE,
         choices=sorted(SUPPORTED_OCR_ENGINES),
         help="OCR engine to use when --ocr is enabled. Defaults to rapidocr.",
-    )
-    process_parser.add_argument(
-        "--generate-ocr-target-crops",
-        action="store_true",
-        help=(
-            "Run OCR and create padded crops around high-confidence numeric OCR "
-            "candidates missed by full-page extraction."
-        ),
-    )
-    process_parser.add_argument(
-        "--refine-ocr-targets",
-        action="store_true",
-        help=(
-            "Run OCR target crop generation and VLM refinement for each target "
-            "crop. Results are stored internally and are not merged into product JSON."
-        ),
     )
     process_parser.add_argument(
         "--extract-crops",
@@ -144,12 +130,6 @@ def main(argv: list[str] | None = None) -> int:
             extract_crops=getattr(args, "extract_crops", False),
             run_ocr=getattr(args, "ocr", False),
             ocr_engine=getattr(args, "ocr_engine", DEFAULT_OCR_ENGINE),
-            generate_ocr_target_crops=getattr(
-                args,
-                "generate_ocr_target_crops",
-                False,
-            ),
-            refine_ocr_targets=getattr(args, "refine_ocr_targets", False),
         )
         print_summary(summary)
         return 0 if summary["failed"] == 0 else 1

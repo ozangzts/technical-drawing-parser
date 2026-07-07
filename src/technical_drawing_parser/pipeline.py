@@ -51,8 +51,6 @@ def process_inputs(
     extract_crops: bool = False,
     run_ocr: bool = False,
     ocr_engine: str = DEFAULT_OCR_ENGINE,
-    generate_ocr_target_crops: bool = False,
-    refine_ocr_targets: bool = False,
 ) -> dict[str, int | list[str]]:
     registry_path = outputs_root / "index.json"
     registry = load_registry(registry_path)
@@ -89,11 +87,8 @@ def process_inputs(
                 model=model,
                 generate_crops=generate_crops,
                 extract_crops=extract_crops,
-                run_ocr=run_ocr or generate_ocr_target_crops or refine_ocr_targets,
+                run_ocr=run_ocr,
                 ocr_engine=ocr_engine,
-                generate_ocr_target_crops=generate_ocr_target_crops
-                or refine_ocr_targets,
-                refine_ocr_targets=refine_ocr_targets,
             )
             append_registry_entry(registry, output["registry_entry"])
             save_registry(registry_path, registry)
@@ -134,11 +129,7 @@ def create_product_json(
     extract_crops: bool = False,
     run_ocr: bool = False,
     ocr_engine: str = DEFAULT_OCR_ENGINE,
-    generate_ocr_target_crops: bool = False,
-    refine_ocr_targets: bool = False,
 ) -> dict[str, object]:
-    generate_ocr_target_crops = generate_ocr_target_crops or refine_ocr_targets
-    run_ocr = run_ocr or generate_ocr_target_crops
     products_dir = outputs_root / "products"
     internal_dir = outputs_root / "internal"
     products_dir.mkdir(parents=True, exist_ok=True)
@@ -241,29 +232,27 @@ def create_product_json(
         processing_warnings.append(
             "Crop extraction was requested but skipped because no VLM extractor is enabled."
         )
-    result["warnings"].extend(processing_warnings)
     ocr_candidates = build_ocr_candidates(raw_ocr_blocks, result)
     ocr_target_crops: list[dict[str, object]] = []
-    if generate_ocr_target_crops:
+    if run_ocr and extractor == "ollama":
         ocr_target_crops = build_ocr_target_crops(
             ocr_candidates=ocr_candidates,
             page_images=page_source_images,
             output_dir=internal_dir / "ocr_target_crops",
             output_slug=output_slug,
         )
-    if refine_ocr_targets:
-        if extractor == "ollama":
-            ocr_target_refinements = run_ollama_ocr_target_refinements(
-                targets=ocr_target_crops,
-                source_file=input_file,
-                internal_dir=internal_dir,
-                output_slug=output_slug,
-                model=model or DEFAULT_OLLAMA_MODEL,
-            )
-        else:
-            processing_warnings.append(
-                "OCR target refinement was requested but skipped because no VLM extractor is enabled."
-            )
+        ocr_target_refinements = run_ollama_ocr_target_refinements(
+            targets=ocr_target_crops,
+            source_file=input_file,
+            internal_dir=internal_dir,
+            output_slug=output_slug,
+            model=model or DEFAULT_OLLAMA_MODEL,
+        )
+    elif run_ocr:
+        processing_warnings.append(
+            "OCR target refinement was skipped because no VLM extractor is enabled."
+        )
+    result["warnings"].extend(processing_warnings)
 
     internal = build_internal_result(
         input_file=input_file,
@@ -309,8 +298,8 @@ def create_product_json(
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
         "ocr_engine": ocr_engine if run_ocr else None,
-        "ocr_target_crops": generate_ocr_target_crops,
-        "ocr_target_refinements": refine_ocr_targets,
+        "ocr_target_crops": bool(ocr_target_crops),
+        "ocr_target_refinements": bool(ocr_target_refinements),
         "model": model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
         "extraction_status": extraction_status,
         "processed_at": processed_at,

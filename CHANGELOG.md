@@ -76,6 +76,11 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added `sheet` to the product schema for title-block sheet information such as `1/1`.
 - Added a general `tables` field for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
 
+### Changed
+
+- Simplified OCR CLI behavior so `--ocr` now runs the OCR-assisted pipeline: local OCR, missed-value candidate detection, target crop generation, VLM target refinement when an extractor is enabled, and compact review output.
+- Removed the separate `--generate-ocr-target-crops` and `--refine-ocr-targets` commands from the active CLI surface.
+
 ### Notes
 
 - The initial reference sample is `DEICO_DE8135_Technical_Drawing_page-0001.jpg`.

@@ -246,58 +246,12 @@ class PipelineTests(unittest.TestCase):
                 internal["ocr_candidates"][0]["full_page_status"],
                 "not_found_in_full_page",
             )
-
-    def test_process_can_generate_ocr_target_crops(self) -> None:
-        from PIL import Image
-
-        with TemporaryDirectory() as directory:
-            root = Path(directory)
-            outputs = root / "outputs"
-            drawing = root / "Example Drawing.png"
-            Image.new("RGB", (1200, 800), "white").save(drawing)
-
-            ocr_blocks = [
-                {
-                    "id": "page_001_ocr_001",
-                    "page": 1,
-                    "text": "#1,83",
-                    "bbox": {"x": 500, "y": 300, "width": 40, "height": 12},
-                    "source_ref": str(drawing) + "#page=1",
-                    "engine": "test",
-                    "confidence": 0.91,
-                },
-                {
-                    "id": "page_001_ocr_002",
-                    "page": 1,
-                    "text": "3",
-                    "bbox": {"x": 100, "y": 100, "width": 5, "height": 8},
-                    "source_ref": str(drawing) + "#page=1",
-                    "engine": "test",
-                    "confidence": 0.95,
-                },
-            ]
-
-            with patch(
-                "technical_drawing_parser.pipeline.run_ocr_pages",
-                return_value=ocr_blocks,
-            ):
-                summary = process_inputs(
-                    drawing,
-                    outputs,
-                    generate_ocr_target_crops=True,
-                )
-
-            internal_path = outputs / "internal" / "example.internal.json"
-            internal = json.loads(internal_path.read_text(encoding="utf-8"))
-
-            self.assertEqual(summary["processed"], 1)
-            self.assertEqual(len(internal["ocr_candidates"]), 2)
-            self.assertEqual(len(internal["ocr_target_crops"]), 1)
-            self.assertEqual(
-                internal["ocr_target_crops"][0]["source_ocr_block_id"],
-                "page_001_ocr_001",
+            self.assertEqual(internal["ocr_target_crops"], [])
+            self.assertEqual(internal["ocr_target_refinements"], [])
+            self.assertIn(
+                "OCR target refinement was skipped because no VLM extractor is enabled.",
+                internal["warnings"],
             )
-            self.assertTrue(Path(internal["ocr_target_crops"][0]["crop_ref"]).exists())
 
     def test_process_can_refine_ocr_target_crops_internally(self) -> None:
         from PIL import Image
@@ -344,7 +298,7 @@ class PipelineTests(unittest.TestCase):
                     outputs,
                     extractor="ollama",
                     model="test-model",
-                    refine_ocr_targets=True,
+                    run_ocr=True,
                 )
 
             result_path = outputs / "products" / "example.json"

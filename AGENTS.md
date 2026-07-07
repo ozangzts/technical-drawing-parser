@@ -177,6 +177,10 @@ Use these default behaviors:
 - `--force`: process again even when completed.
 - `--retry-failed`: kept as a compatibility option; failed entries are retried by default.
 
+## Current CLI Convention
+
+Default processing and full-page VLM extraction do not run OCR. Use `--ocr` as the single opt-in for the OCR-assisted pipeline: local OCR, missed-value candidates, OCR target crops, VLM target refinement when an extractor is enabled, and compact review output. Do not reintroduce separate user-facing commands for only generating OCR target crops or only refining OCR targets unless the pipeline design changes deliberately.
+
 ## Development Rules For Future Agents
 
 - Keep all repository content in English.

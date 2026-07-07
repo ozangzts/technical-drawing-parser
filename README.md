@@ -76,22 +76,22 @@ Generate overlapping page crops for visual review:
 python tdp.py process --generate-crops
 ```
 
-Run local OCR for coordinate-aware text evidence:
+Run full-page VLM extraction only:
 
 ```bash
-python tdp.py process --ocr --ocr-engine rapidocr
+python tdp.py process --extractor ollama --model gemma4:cloud --force
 ```
 
-Generate small OCR-driven target crops for high-confidence numeric candidates that full-page extraction missed:
+Run OCR-assisted VLM refinement and compact review output:
 
 ```bash
-python tdp.py process --generate-ocr-target-crops
+python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force
 ```
 
-Refine OCR target crops with the selected VLM without merging them into the product JSON:
+Choose a supported OCR engine when needed:
 
 ```bash
-python tdp.py process --extractor ollama --model gemma4:cloud --refine-ocr-targets --force
+python tdp.py process --extractor ollama --model gemma4:cloud --ocr --ocr-engine rapidocr --force
 ```
 
 Extract generated crops into internal metadata without merging them into the product JSON:
