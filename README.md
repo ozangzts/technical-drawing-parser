@@ -26,6 +26,12 @@ Activate it:
 conda activate technical-drawing-parser
 ```
 
+Update an existing environment after dependencies change:
+
+```bash
+conda env update -f environment.yml --prune
+```
+
 Run tests:
 
 ```bash
