@@ -72,6 +72,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added metadata review candidates to OCR target refinement summaries so OCR-target metadata can flag supported, conflicting, or missing product metadata without automatic correction.
 - Added compact review JSON artifacts under `outputs/internal/reviews/` for quick inspection without reading the full internal audit JSON.
 - Simplified review JSON coverage to counts only so compact reviews stay focused on actionable issues.
+- Clarified prompts so single-letter symbolic references are not extracted as dimensions unless a numeric value is visible with the reference.
 
 ### Notes
 
