@@ -50,6 +50,11 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(internal["extraction"]["status"], "not_run")
             self.assertEqual(review["product"]["path"], str(result_path))
             self.assertEqual(review["counts"]["dimensions"], 0)
+            self.assertEqual(review["coverage"]["covered_by_dimensions_count"], 0)
+            self.assertEqual(
+                review["coverage"]["covered_by_dimension_tables_count"],
+                0,
+            )
             self.assertIn("Schema:", prompt_path.read_text(encoding="utf-8"))
 
     def test_build_output_slug_prefers_brand_and_code(self) -> None:

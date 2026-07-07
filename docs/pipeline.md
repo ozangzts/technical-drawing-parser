@@ -38,7 +38,7 @@ outputs/internal/tile_responses/<input_or_product_code>_page_001_tile_001.raw_re
 
 Additional debug artifacts and crops should only be added when they become necessary.
 
-`<input_or_product_code>.review.json` is a compact human-facing review artifact. It summarizes extraction status, counts, validation warnings, OCR refinement candidates, metadata conflicts, and coverage without requiring readers to open the full internal audit JSON.
+`<input_or_product_code>.review.json` is a compact human-facing review artifact. It summarizes extraction status, counts, validation warnings, actionable OCR refinement candidates, metadata conflicts, and coverage counts without requiring readers to open the full internal audit JSON. Detailed covered candidates remain in the full internal JSON.
 
 When `--generate-crops` is used, overlapping page tiles are written under:
 

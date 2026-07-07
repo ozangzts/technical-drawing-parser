@@ -862,13 +862,11 @@ def build_review_result(
             "product_warnings": product_json.get("warnings", []),
         },
         "coverage": {
-            "covered_by_dimensions": refinement_summary_dict.get(
-                "covered_by_dimensions",
-                [],
+            "covered_by_dimensions_count": count_list(
+                refinement_summary_dict.get("covered_by_dimensions")
             ),
-            "covered_by_dimension_tables": refinement_summary_dict.get(
-                "covered_by_dimension_tables",
-                [],
+            "covered_by_dimension_tables_count": count_list(
+                refinement_summary_dict.get("covered_by_dimension_tables")
             ),
         },
         "tile_review": {
