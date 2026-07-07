@@ -38,7 +38,7 @@ outputs/internal/tile_responses/<input_or_product_code>_page_001_tile_001.raw_re
 
 Additional debug artifacts and crops should only be added when they become necessary.
 
-`<input_or_product_code>.review.json` is a compact human-facing review artifact. It summarizes extraction status, counts, validation warnings, actionable OCR refinement candidates, metadata conflicts, and coverage counts without requiring readers to open the full internal audit JSON. Detailed covered candidates remain in the full internal JSON.
+`<input_or_product_code>.review.json` is a compact human-facing review artifact. It summarizes extraction status, counts, validation warnings, and actionable OCR refinement decisions without requiring readers to open the full internal audit JSON. Detailed covered candidates remain in the full internal JSON.
 
 When `--generate-crops` is used, overlapping page tiles are written under:
 
@@ -79,13 +79,18 @@ The same `--ocr` run sends each target crop to the VLM with a focused refinement
 outputs/internal/ocr_target_responses/<name>_page_001_ocr_target_001.raw_response.txt
 ```
 
-OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. These results do not merge into the product JSON yet.
+OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. The OCR text is treated as a hint only: the VLM should re-read the visible crop text, return `visual_text`, and set `ocr_text_supported` to indicate whether the crop visually supports the OCR hint. These results do not merge into the product JSON yet.
 
 When `--ocr` is used without a VLM extractor, the pipeline stores OCR blocks and candidates but skips target crop refinement with a processing warning.
 
 Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review. Merge candidates are split into values already covered by flat `dimensions`, values already covered by `dimension_tables`, and truly new `new_dimension_candidates`.
 
 Metadata refinements are summarized as `metadata_review_candidates`. These compare OCR-target metadata values such as `scale`, `revision_date`, `size`, and `sheet` against the product JSON and mark them as `supported`, `conflict`, or `missing_in_product` without changing the product JSON automatically.
+
+Compact review JSON intentionally hides candidates that are already covered or merely supported. It exposes only actionable decision buckets:
+
+- `merge_ready`: high-confidence OCR-target refinements that are not covered by full-page extraction, have clean OCR/visual text support, and use a safe dimension type for a future merge step.
+- `needs_review`: low-confidence candidates, metadata conflicts, or metadata missing from product JSON.
 
 ## Processing Registry
 

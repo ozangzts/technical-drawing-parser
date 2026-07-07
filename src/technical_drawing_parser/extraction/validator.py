@@ -126,6 +126,8 @@ def parse_ocr_target_refinement_response(
         "classification",
         "is_product_dimension",
         "raw_text",
+        "visual_text",
+        "ocr_text_supported",
         "dimension",
         "metadata",
         "confidence",
@@ -147,6 +149,8 @@ def empty_ocr_target_refinement(target: dict[str, Any]) -> dict[str, Any]:
         "classification": "uncertain",
         "is_product_dimension": None,
         "raw_text": None,
+        "visual_text": None,
+        "ocr_text_supported": None,
         "dimension": None,
         "metadata": None,
         "confidence": 0.0,
@@ -183,6 +187,11 @@ def normalize_ocr_target_refinement(
 
     raw_text = result.get("raw_text")
     result["raw_text"] = normalize_scalar(raw_text)
+    result["visual_text"] = normalize_scalar(result.get("visual_text"))
+
+    ocr_text_supported = result.get("ocr_text_supported")
+    if not isinstance(ocr_text_supported, bool):
+        result["ocr_text_supported"] = None
 
     dimension = result.get("dimension")
     if isinstance(dimension, dict):

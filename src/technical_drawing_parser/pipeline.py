@@ -39,6 +39,8 @@ from .registry import (
     should_process,
 )
 
+MERGE_READY_CONFIDENCE_THRESHOLD = 0.85
+
 
 def process_inputs(
     input_path: Path,
@@ -790,20 +792,7 @@ def build_review_result(
         refinement_summary if isinstance(refinement_summary, dict) else {}
     )
     tile_summary_dict = tile_summary if isinstance(tile_summary, dict) else {}
-    metadata_review_candidates = list(
-        refinement_summary_dict.get("metadata_review_candidates") or []
-    )
-    metadata_conflicts = [
-        candidate
-        for candidate in metadata_review_candidates
-        if isinstance(candidate, dict) and candidate.get("status") == "conflict"
-    ]
-    metadata_missing = [
-        candidate
-        for candidate in metadata_review_candidates
-        if isinstance(candidate, dict)
-        and candidate.get("status") == "missing_in_product"
-    ]
+    review_decisions = build_refinement_review_decisions(refinement_summary_dict)
 
     return {
         "schema_version": "0.1.0",
@@ -842,12 +831,8 @@ def build_review_result(
             "tile_extractions": count_list(internal.get("tile_extractions")),
         },
         "review": {
-            "new_dimension_candidates": refinement_summary_dict.get(
-                "new_dimension_candidates",
-                [],
-            ),
-            "metadata_conflicts": metadata_conflicts,
-            "metadata_missing_in_product": metadata_missing,
+            "merge_ready": review_decisions["merge_ready"],
+            "needs_review": review_decisions["needs_review"],
             "failed_refinements": refinement_summary_dict.get("failed", 0),
             "validation_warnings": extraction_dict.get("validation_warnings", []),
             "product_warnings": product_json.get("warnings", []),
@@ -874,6 +859,132 @@ def build_review_result(
             "processed_at": document_dict.get("processed_at"),
         },
     }
+
+
+def build_refinement_review_decisions(
+    refinement_summary: dict[str, object],
+) -> dict[str, list[dict[str, object]]]:
+    merge_ready: list[dict[str, object]] = []
+    needs_review: list[dict[str, object]] = []
+
+    for candidate in list_dicts(refinement_summary.get("new_dimension_candidates")):
+        item = build_dimension_review_item(candidate)
+        confidence = confidence_as_float(candidate.get("confidence"))
+        if has_text_support_conflict(candidate):
+            item["reason"] = (
+                "Target refinement text does not cleanly support the OCR hint, "
+                "so the dimension candidate needs review."
+            )
+            needs_review.append(item)
+        elif not is_merge_ready_dimension_candidate(candidate):
+            item["reason"] = (
+                "Target refinement found a possible product dimension, but "
+                "the dimension type or value is not safe enough for merge-ready."
+            )
+            needs_review.append(item)
+        elif confidence is not None and confidence >= MERGE_READY_CONFIDENCE_THRESHOLD:
+            item["reason"] = (
+                "High-confidence target refinement found a product dimension "
+                "that is not covered by full-page extraction."
+            )
+            merge_ready.append(item)
+        else:
+            item["reason"] = (
+                "Target refinement found a possible product dimension, but "
+                "confidence is below the merge-ready threshold."
+            )
+            needs_review.append(item)
+
+    for candidate in list_dicts(refinement_summary.get("metadata_review_candidates")):
+        status = candidate.get("status")
+        if status == "conflict":
+            item = build_metadata_review_item(candidate)
+            item["reason"] = (
+                "Target refinement conflicts with the product JSON metadata."
+            )
+            needs_review.append(item)
+        elif status == "missing_in_product":
+            item = build_metadata_review_item(candidate)
+            item["reason"] = (
+                "Target refinement found metadata that is missing from the "
+                "product JSON."
+            )
+            needs_review.append(item)
+
+    return {
+        "merge_ready": merge_ready,
+        "needs_review": needs_review,
+    }
+
+
+def build_dimension_review_item(candidate: dict[str, object]) -> dict[str, object]:
+    return {
+        "kind": "dimension",
+        "target_id": candidate.get("target_id"),
+        "ocr_text": candidate.get("ocr_text"),
+        "visual_text": candidate.get("visual_text"),
+        "ocr_text_supported": candidate.get("ocr_text_supported"),
+        "candidate": candidate.get("dimension"),
+        "confidence": candidate.get("confidence"),
+    }
+
+
+def build_metadata_review_item(candidate: dict[str, object]) -> dict[str, object]:
+    return {
+        "kind": "metadata",
+        "target_id": candidate.get("target_id"),
+        "ocr_text": candidate.get("ocr_text"),
+        "visual_text": candidate.get("visual_text"),
+        "ocr_text_supported": candidate.get("ocr_text_supported"),
+        "field": candidate.get("field"),
+        "product_value": candidate.get("product_value"),
+        "refinement_value": candidate.get("refinement_value"),
+        "confidence": candidate.get("confidence"),
+    }
+
+
+def list_dicts(value: object) -> list[dict[str, object]]:
+    if not isinstance(value, list):
+        return []
+    return [item for item in value if isinstance(item, dict)]
+
+
+def confidence_as_float(value: object) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    return None
+
+
+def is_merge_ready_dimension_candidate(candidate: dict[str, object]) -> bool:
+    dimension = candidate.get("dimension")
+    if not isinstance(dimension, dict):
+        return False
+
+    dimension_type = dimension.get("type")
+    if dimension_type in {"pattern", "unknown", None}:
+        return False
+
+    return bool(dimension.get("raw_text") and dimension.get("value"))
+
+
+def has_text_support_conflict(candidate: dict[str, object]) -> bool:
+    if candidate.get("ocr_text_supported") is False:
+        return True
+
+    ocr_text = normalize_review_text(candidate.get("ocr_text"))
+    visual_text = normalize_review_text(candidate.get("visual_text"))
+    return bool(ocr_text and visual_text and ocr_text != visual_text)
+
+
+def normalize_review_text(value: object) -> str | None:
+    if value is None:
+        return None
+    normalized = str(value).strip().lower()
+    normalized = normalized.replace(",", ".")
+    normalized = " ".join(normalized.split())
+    return normalized or None
 
 
 def count_list(value: object) -> int:
@@ -909,6 +1020,8 @@ def build_metadata_review_candidate(
     return {
         "target_id": refinement.get("target_id"),
         "ocr_text": refinement.get("ocr_text"),
+        "visual_text": refinement_json.get("visual_text"),
+        "ocr_text_supported": refinement_json.get("ocr_text_supported"),
         "field": field,
         "product_value": product_value,
         "refinement_value": value,
@@ -968,6 +1081,8 @@ def build_refinement_merge_candidate(
     return {
         "target_id": refinement.get("target_id"),
         "ocr_text": refinement.get("ocr_text"),
+        "visual_text": refinement_json.get("visual_text"),
+        "ocr_text_supported": refinement_json.get("ocr_text_supported"),
         "dimension": dimension,
         "confidence": refinement_json.get("confidence"),
         "coverage": coverage,

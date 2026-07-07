@@ -91,9 +91,13 @@ Allowed initial `type` values:
 - `pattern`
 - `unknown`
 
-## VLM Prompt
+## VLM Prompts
 
-The canonical prompt lives in `src/technical_drawing_parser/extraction/prompt.py`.
+The canonical prompt builders live in `src/technical_drawing_parser/extraction/prompt.py`:
+
+- `build_vlm_prompt`: full-page extraction.
+- `build_tile_vlm_prompt`: overlapping tile extraction.
+- `build_ocr_target_refinement_prompt`: OCR-target crop refinement.
 
 The pipeline writes the prompt used for each file to:
 

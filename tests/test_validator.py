@@ -4,7 +4,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from technical_drawing_parser.extraction.validator import parse_product_json_response
+from technical_drawing_parser.extraction.validator import (
+    parse_ocr_target_refinement_response,
+    parse_product_json_response,
+)
 
 
 class ValidatorTests(unittest.TestCase):
@@ -166,6 +169,34 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(warnings, [])
         self.assertEqual(result["tables"][0]["type"], "pinout_table")
         self.assertEqual(result["tables"][0]["rows"][0]["values"], ["GND"])
+
+    def test_parse_ocr_target_refinement_preserves_visual_text_check(self) -> None:
+        response = """{
+  "target_id": "page_001_ocr_target_001",
+  "page": 1,
+  "classification": "metadata",
+  "is_product_dimension": false,
+  "raw_text": "12:100",
+  "visual_text": "12:100",
+  "ocr_text_supported": false,
+  "dimension": null,
+  "metadata": {
+    "field": "scale",
+    "value": "12:100"
+  },
+  "confidence": 0.92,
+  "warnings": []
+}"""
+
+        result, warnings = parse_ocr_target_refinement_response(
+            response,
+            {"id": "page_001_ocr_target_001", "page": 1},
+        )
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["visual_text"], "12:100")
+        self.assertIs(result["ocr_text_supported"], False)
+        self.assertEqual(result["metadata"]["value"], "12:100")
 
 
 if __name__ == "__main__":

@@ -75,6 +75,10 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Clarified prompts so single-letter symbolic references are not extracted as dimensions unless a numeric value is visible with the reference.
 - Added `sheet` to the product schema for title-block sheet information such as `1/1`.
 - Added a general `tables` field for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
+- Added compact OCR refinement review decision buckets: `merge_ready` for high-confidence uncovered candidates and `needs_review` for uncertain candidates or metadata issues.
+- Added OCR target visual text verification fields so crop refinements can report the VLM-read `visual_text` and whether it supports the OCR hint.
+- Tightened VLM prompts to preserve visible metadata formatting, avoid assigning isolated numbers to metadata, and treat OCR target text strictly as a hint.
+- Tightened `merge_ready` review decisions so pattern-like dimensions and OCR/visual text conflicts remain in `needs_review`.
 
 ### Changed
 

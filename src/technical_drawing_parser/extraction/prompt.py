@@ -17,12 +17,14 @@ Rules:
 - Extract only information that is visible in the drawing.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
 - If units are stated globally, use that unit for dimensions. If units are not visible, use null.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
-- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
+- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
+- Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
 - Put table-derived measurements in dimension_tables with their row and column context instead of flattening them into dimensions when the table context is needed to understand the value.
@@ -51,12 +53,14 @@ Rules:
 - Extract only information that is visible inside this crop.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
 - If units are stated globally in this crop, use that unit for dimensions. If units are not visible, use null.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
-- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
+- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
+- Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract visible table-derived measurements into dimension_tables when row or column context is needed.
 - Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables.
@@ -97,9 +101,15 @@ Goal:
 
 Rules:
 - Use the image content as the source of truth. OCR text is only a hint.
+- Re-read the visible text in the crop yourself. Do not copy the OCR hint unless the image supports it.
+- If the OCR hint and the visible crop text differ, put the visible crop text in visual_text and set ocr_text_supported to false.
+- If ocr_text_supported is false, do not use the OCR hint as the dimension value or metadata value.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible metadata values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Do not treat title-block metadata as a product dimension.
+- Set is_product_dimension to true only for physical product dimensions, not title-block scale, dates, sheet numbers, drawing numbers, notes, or table indexes.
+- For metadata, use one of these fields when visible: product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
 - Add warnings for cropped, ambiguous, or unreadable information.
 - Do not include coordinates except the provided target ids and page number.
 
@@ -118,8 +128,10 @@ Schema:
   "target_id": "{target_id}",
   "page": {page},
   "classification": "dimension | metadata | note | uncertain | irrelevant",
-  "is_product_dimension": true,
+  "is_product_dimension": null,
   "raw_text": null,
+  "visual_text": null,
+  "ocr_text_supported": null,
   "dimension": {{
     "raw_text": null,
     "value": null,
@@ -130,7 +142,7 @@ Schema:
     "context": null
   }},
   "metadata": {{
-    "field": null,
+    "field": "product_name | document_name | drawing_number | revision | revision_date | sheet | size | scale | units | other | null",
     "value": null
   }},
   "confidence": 0.0,

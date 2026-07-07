@@ -9,6 +9,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from technical_drawing_parser.pipeline import (
+    build_refinement_review_decisions,
     build_ocr_target_refinement_summary,
     build_output_slug,
     process_inputs,
@@ -189,6 +190,91 @@ class PipelineTests(unittest.TestCase):
             "supported",
         )
 
+    def test_refinement_review_decisions_keep_review_actionable(self) -> None:
+        decisions = build_refinement_review_decisions(
+            {
+                "new_dimension_candidates": [
+                    {
+                        "target_id": "page_001_ocr_target_001",
+                        "ocr_text": "950",
+                        "dimension": {
+                            "raw_text": "950",
+                            "value": "950",
+                            "unit": "mm",
+                            "type": "linear",
+                        },
+                        "confidence": 0.91,
+                    },
+                    {
+                        "target_id": "page_001_ocr_target_002",
+                        "ocr_text": "2,1",
+                        "dimension": {
+                            "raw_text": "2,1",
+                            "value": "2,1",
+                            "unit": "mm",
+                            "type": "linear",
+                        },
+                        "confidence": 0.62,
+                    },
+                    {
+                        "target_id": "page_001_ocr_target_006",
+                        "ocr_text": "慄 12",
+                        "visual_text": "X 12",
+                        "ocr_text_supported": True,
+                        "dimension": {
+                            "raw_text": "X 12",
+                            "value": "12",
+                            "unit": None,
+                            "type": "pattern",
+                        },
+                        "confidence": 0.95,
+                    },
+                ],
+                "covered_by_dimensions": [
+                    {
+                        "target_id": "page_001_ocr_target_003",
+                        "ocr_text": "100",
+                        "confidence": 0.99,
+                    }
+                ],
+                "metadata_review_candidates": [
+                    {
+                        "target_id": "page_001_ocr_target_004",
+                        "ocr_text": "05.09.2025",
+                        "field": "revision_date",
+                        "product_value": "09.09.2021",
+                        "refinement_value": "05.09.2025",
+                        "confidence": 1.0,
+                        "status": "conflict",
+                    },
+                    {
+                        "target_id": "page_001_ocr_target_005",
+                        "ocr_text": "A3",
+                        "field": "size",
+                        "product_value": "A3",
+                        "refinement_value": "A3",
+                        "confidence": 0.94,
+                        "status": "supported",
+                    },
+                ],
+            }
+        )
+
+        self.assertEqual(len(decisions["merge_ready"]), 1)
+        self.assertEqual(
+            decisions["merge_ready"][0]["target_id"],
+            "page_001_ocr_target_001",
+        )
+        self.assertEqual(len(decisions["needs_review"]), 3)
+        self.assertEqual(
+            [item["kind"] for item in decisions["needs_review"]],
+            ["dimension", "dimension", "metadata"],
+        )
+        self.assertNotIn(
+            "page_001_ocr_target_003",
+            [item.get("target_id") for item in decisions["needs_review"]],
+        )
+
     def test_process_can_generate_overlapping_crops(self) -> None:
         from PIL import Image
 
@@ -281,7 +367,7 @@ class PipelineTests(unittest.TestCase):
                 ),
                 SimpleNamespace(
                     status="completed",
-                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.88, "warnings": []}',
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.88, "warnings": []}',
                     error=None,
                 ),
             ]
@@ -336,7 +422,18 @@ class PipelineTests(unittest.TestCase):
                 [],
             )
             self.assertEqual(review["counts"]["ocr_target_refinements"], 1)
-            self.assertEqual(review["review"]["metadata_conflicts"], [])
+            self.assertEqual(review["review"]["merge_ready"], [])
+            self.assertEqual(len(review["review"]["needs_review"]), 1)
+            self.assertEqual(review["review"]["needs_review"][0]["kind"], "metadata")
+            self.assertEqual(review["review"]["needs_review"][0]["field"], "scale")
+            self.assertEqual(
+                review["review"]["needs_review"][0]["visual_text"],
+                "2:1",
+            )
+            self.assertIs(
+                review["review"]["needs_review"][0]["ocr_text_supported"],
+                True,
+            )
             self.assertTrue(Path(refinement["raw_response_path"]).exists())
 
     def test_process_can_extract_generated_crops_internally(self) -> None:
