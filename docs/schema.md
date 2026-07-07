@@ -9,6 +9,7 @@ Product JSON files under `outputs/products/` are the user-facing extraction resu
 ```json
 {
   "source_file": "drawing.pdf",
+  "brand_name": null,
   "product_name": null,
   "document_name": null,
   "drawing_number": null,
@@ -67,6 +68,7 @@ Internal JSON may include fingerprints, source paths, image metadata, regions, r
 ## Design Notes
 
 - Keep normalized fields stable and readable.
+- Keep `brand_name`, `product_name`, `drawing_number`, and `document_name` separate: company/logo text belongs in `brand_name`, human-readable product descriptions in `product_name`, short drawing/model/part codes in `drawing_number`, and document type text in `document_name`.
 - Do not put developer/debug fields in product JSON.
 - Store raw OCR, region metadata, fingerprints, and evidence details in internal JSON when needed.
 - Add new sections only when a real drawing needs them.

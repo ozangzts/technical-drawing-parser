@@ -87,7 +87,7 @@ Internal output also includes `ocr_target_refinement_summary`, which counts refi
 
 Metadata refinements are summarized as `metadata_review_candidates`. These compare OCR-target metadata values such as `scale`, `revision_date`, `size`, and `sheet` against the product JSON and mark them as `supported`, `conflict`, or `missing_in_product`.
 
-Safe metadata merge is intentionally narrow and evidence-based. The pipeline may fill an empty product metadata field from OCR-target refinement only when the refinement is metadata, the product field is currently empty, confidence is high, the OCR hint is not visually rejected, `visual_text` matches the proposed value, local crop context supports metadata, and the field belongs to the product JSON metadata schema. Existing product values are never overwritten automatically.
+Safe metadata merge is intentionally narrow and evidence-based. The pipeline may fill an empty product metadata field from OCR-target refinement only when the refinement is metadata, the product field is currently empty, confidence is high, the OCR hint is not visually rejected, `visual_text` matches the proposed value, local crop context supports metadata, and the field belongs to the product JSON metadata schema. Existing product values are not overwritten automatically, except for a narrow scale-ratio punctuation correction where the product value looks decimalized, the refinement value is a visible ratio such as `2:1`, and the ratio digits are unchanged.
 
 Compact review JSON intentionally hides candidates that are already covered or merely supported. It exposes only actionable decision buckets:
 

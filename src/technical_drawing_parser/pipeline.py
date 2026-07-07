@@ -42,6 +42,7 @@ from .registry import (
 MERGE_READY_CONFIDENCE_THRESHOLD = 0.85
 SAFE_METADATA_MERGE_CONFIDENCE_THRESHOLD = 0.9
 MERGEABLE_PRODUCT_METADATA_FIELDS = {
+    "brand_name",
     "product_name",
     "document_name",
     "drawing_number",
@@ -812,6 +813,7 @@ def build_review_result(
         "product": {
             "path": internal.get("product_json_path"),
             "source_file": product_json.get("source_file"),
+            "brand_name": product_json.get("brand_name"),
             "product_name": product_json.get("product_name"),
             "document_name": product_json.get("document_name"),
             "revision": product_json.get("revision"),
@@ -907,11 +909,6 @@ def apply_safe_metadata_merges(
             continue
 
         field = normalize_metadata_field(metadata.get("field"))
-        if field not in MERGEABLE_PRODUCT_METADATA_FIELDS:
-            continue
-        if normalize_metadata_value(product_json.get(field)) is not None:
-            continue
-
         value = clean_metadata_merge_value(metadata.get("value"))
         if value is None:
             continue
@@ -922,27 +919,68 @@ def apply_safe_metadata_merges(
         if normalize_metadata_value(visual_text) != normalize_metadata_value(value):
             continue
 
+        if field not in MERGEABLE_PRODUCT_METADATA_FIELDS:
+            continue
+
+        product_value = product_json.get(field)
+        if normalize_metadata_value(product_value) is not None:
+            if is_safe_scale_ratio_correction(field, product_value, value):
+                product_json[field] = value
+                merges.append(
+                    build_metadata_merge_record(
+                        refinement=refinement,
+                        refinement_json=refinement_json,
+                        field=field,
+                        value=value,
+                        confidence=confidence,
+                        reason=(
+                            "Corrected product scale punctuation from "
+                            "high-confidence OCR target refinement without "
+                            "changing the ratio digits."
+                        ),
+                    )
+                )
+            continue
+
         product_json[field] = value
         merges.append(
-            {
-                "kind": "metadata",
-                "field": field,
-                "value": value,
-                "target_id": refinement.get("target_id"),
-                "ocr_text": refinement.get("ocr_text"),
-                "visual_text": refinement_json.get("visual_text"),
-                "ocr_text_supported": refinement_json.get("ocr_text_supported"),
-                "local_context": refinement_json.get("local_context"),
-                "visible_label": refinement_json.get("visible_label"),
-                "confidence": confidence,
-                "reason": (
+            build_metadata_merge_record(
+                refinement=refinement,
+                refinement_json=refinement_json,
+                field=field,
+                value=value,
+                confidence=confidence,
+                reason=(
                     "Filled empty product metadata from high-confidence OCR "
                     "target refinement without overwriting an existing value."
                 ),
-            }
+            )
         )
 
     return merges
+
+
+def build_metadata_merge_record(
+    refinement: dict[str, object],
+    refinement_json: dict[str, object],
+    field: str,
+    value: object,
+    confidence: float,
+    reason: str,
+) -> dict[str, object]:
+    return {
+        "kind": "metadata",
+        "field": field,
+        "value": value,
+        "target_id": refinement.get("target_id"),
+        "ocr_text": refinement.get("ocr_text"),
+        "visual_text": refinement_json.get("visual_text"),
+        "ocr_text_supported": refinement_json.get("ocr_text_supported"),
+        "local_context": refinement_json.get("local_context"),
+        "visible_label": refinement_json.get("visible_label"),
+        "confidence": confidence,
+        "reason": reason,
+    }
 
 
 def clean_metadata_merge_value(value: object) -> object | None:
@@ -954,6 +992,30 @@ def clean_metadata_merge_value(value: object) -> object | None:
             return None
         return cleaned
     return value
+
+
+def is_safe_scale_ratio_correction(
+    field: str,
+    product_value: object,
+    refinement_value: object,
+) -> bool:
+    if field != "scale":
+        return False
+    if not isinstance(product_value, str) or not isinstance(refinement_value, str):
+        return False
+
+    product_text = product_value.strip()
+    refinement_text = refinement_value.strip()
+    if ":" not in refinement_text or ":" in product_text:
+        return False
+    if "." not in product_text and "," not in product_text:
+        return False
+
+    return scale_ratio_digits(product_text) == scale_ratio_digits(refinement_text)
+
+
+def scale_ratio_digits(value: str) -> str:
+    return "".join(character for character in value if character.isdigit())
 
 
 def has_metadata_context_support(refinement_json: dict[str, object]) -> bool:
@@ -1152,6 +1214,13 @@ def normalize_metadata_field(value: object) -> str | None:
     normalized = normalized.replace("_", " ")
     normalized = " ".join(normalized.split())
     field_aliases = {
+        "brand": "brand_name",
+        "brand name": "brand_name",
+        "company": "brand_name",
+        "company name": "brand_name",
+        "manufacturer": "brand_name",
+        "manufacturer name": "brand_name",
+        "logo": "brand_name",
         "scale": "scale",
         "drawing scale": "scale",
         "size": "size",

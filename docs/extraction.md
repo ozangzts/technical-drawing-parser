@@ -8,7 +8,7 @@ technical drawing -> visible product information -> simple product JSON
 
 ## Strategy
 
-Use a vision-language model as the main extractor. OCR can be added later as a supporting signal, but OCR alone is not enough for technical drawings because dimensions, arrows, regions, schematic diagrams, and land patterns need visual interpretation.
+Use a vision-language model as the main extractor. OCR is a supporting signal for coordinate-aware evidence and targeted refinement, but OCR alone is not enough for technical drawings because dimensions, arrows, regions, schematic diagrams, and land patterns need visual interpretation.
 
 ## Rules For Extraction
 
@@ -32,6 +32,7 @@ Extractor output is normalized with narrow deterministic rules before it is writ
 - Unknown dimension types are set to `unknown` and recorded as warnings.
 - Obvious mojibake for the diameter symbol is repaired.
 - Suspicious but plausible symbol misreads, such as `#` in a diameter dimension, are recorded as warnings without changing `raw_text`.
+- OCR-target refinement may safely fill empty product metadata fields when the crop provides high-confidence visual support. Existing product metadata is not overwritten, except for narrow scale-ratio punctuation correction backed by OCR-target evidence.
 
 These rules clean schema shape and common formatting errors only. They should not infer values that are not visible in the drawing.
 
@@ -40,11 +41,13 @@ These rules clean schema shape and common formatting errors only. They should no
 ```json
 {
   "source_file": "drawing.jpg",
+  "brand_name": null,
   "product_name": null,
   "document_name": null,
   "drawing_number": null,
   "revision": null,
   "revision_date": null,
+  "sheet": null,
   "size": null,
   "scale": null,
   "units": null,
@@ -59,6 +62,8 @@ These rules clean schema shape and common formatting errors only. They should no
       "context": "top product view"
     }
   ],
+  "dimension_tables": [],
+  "tables": [],
   "tolerances": [],
   "notes": [],
   "warnings": []

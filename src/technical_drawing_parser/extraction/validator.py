@@ -11,6 +11,7 @@ from .product import empty_product_result
 
 PRODUCT_FIELDS = {
     "source_file",
+    "brand_name",
     "product_name",
     "document_name",
     "drawing_number",
@@ -249,6 +250,7 @@ def normalize_refinement_local_context(
 def normalize_scalars(result: dict[str, Any]) -> None:
     for field in (
         "product_name",
+        "brand_name",
         "document_name",
         "drawing_number",
         "revision",

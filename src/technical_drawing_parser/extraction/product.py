@@ -9,6 +9,7 @@ from typing import Any
 def empty_product_result(source_file: Path) -> dict[str, Any]:
     return {
         "source_file": source_file.name,
+        "brand_name": None,
         "product_name": None,
         "document_name": None,
         "drawing_number": None,
@@ -32,6 +33,7 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
 def product_schema_description() -> str:
     return """{
   "source_file": "string",
+  "brand_name": "string or null",
   "product_name": "string or null",
   "document_name": "string or null",
   "drawing_number": "string or null",

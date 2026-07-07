@@ -46,6 +46,16 @@ class PromptTests(unittest.TestCase):
         self.assertIn("Do not assign isolated numbers", full_page_prompt)
         self.assertIn("Do not assign isolated numbers", tile_prompt)
 
+    def test_prompts_distinguish_brand_product_and_drawing_number(self) -> None:
+        prompt = build_vlm_prompt(Path("drawing.pdf"))
+
+        self.assertIn("brand_name", prompt)
+        self.assertIn("not product_name", prompt)
+        self.assertIn("drawing_number", prompt)
+        self.assertIn("document_name", prompt)
+        self.assertIn("source file name is only a processing hint", prompt)
+        self.assertIn("Do not use a full filename", prompt)
+
     def test_ocr_target_prompt_requires_visual_text_verification(self) -> None:
         prompt = build_ocr_target_refinement_prompt(
             Path("drawing.pdf"),

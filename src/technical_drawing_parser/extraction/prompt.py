@@ -23,6 +23,12 @@ Rules:
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
 - If units are stated globally, use that unit for dimensions. If units are not visible, use null.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
+- Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
+- Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
+- Put the concise visible drawing, part, or model code in drawing_number when visible.
+- Put document type text such as Technical Drawing in document_name.
+- The source file name is only a processing hint. Do not copy the source file name into product_name, document_name, or drawing_number unless that exact text is visibly printed in the drawing.
+- Do not use a full filename such as Brand_Code_Technical_Drawing.pdf as drawing_number. Prefer the short visible code from the title block, such as Code1234.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
 - Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
@@ -59,6 +65,12 @@ Rules:
 - Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
 - If units are stated globally in this crop, use that unit for dimensions. If units are not visible, use null.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
+- Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
+- Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
+- Put the concise visible drawing, part, or model code in drawing_number when visible.
+- Put document type text such as Technical Drawing in document_name.
+- The source file name is only a processing hint. Do not copy the source file name into product_name, document_name, or drawing_number unless that exact text is visibly printed in the drawing.
+- Do not use a full filename such as Brand_Code_Technical_Drawing.pdf as drawing_number. Prefer the short visible code from the title block, such as Code1234.
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
 - Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
@@ -97,7 +109,7 @@ Goal:
 - Classify what this crop shows.
 - Identify the local visual context of the crop, such as title block, dimension callout, table, note, drawing view, or unknown.
 - If it contains a product dimension, extract that dimension.
-- If it shows metadata such as scale, date, sheet number, title block text, or other non-dimension information, classify it as metadata.
+- If it shows metadata such as brand/company text, product name, drawing number, scale, date, sheet number, title block text, or other non-dimension information, classify it as metadata.
 - If it is unclear, mark it uncertain.
 
 Rules:
@@ -110,7 +122,7 @@ Rules:
 - Preserve visible metadata values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Do not treat title-block metadata as a product dimension.
 - Set is_product_dimension to true only for physical product dimensions, not title-block scale, dates, sheet numbers, drawing numbers, notes, or table indexes.
-- For metadata, use one of these fields when visible: product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
+- For metadata, use one of these fields when visible: brand_name, product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
 - Use local_context to describe what the crop visually appears to be: title_block, dimension_callout, dimension_table, general_table, drawing_view, note, or unknown.
 - Use visible_label for a nearby visible label that supports the classification, such as SCALE, DATE, SHEET, REV, SIZE, UNITS, or a table heading. Use null when no supporting label is visible.
 - If the crop contains only an isolated number with no visible label, table structure, leader line, arrow, or title-block context, classify it as uncertain or irrelevant instead of metadata.
@@ -148,7 +160,7 @@ Schema:
     "context": null
   }},
   "metadata": {{
-    "field": "product_name | document_name | drawing_number | revision | revision_date | sheet | size | scale | units | other | null",
+    "field": "brand_name | product_name | document_name | drawing_number | revision | revision_date | sheet | size | scale | units | other | null",
     "value": null
   }},
   "confidence": 0.0,

@@ -81,6 +81,9 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Tightened `merge_ready` review decisions so pattern-like dimensions and OCR/visual text conflicts remain in `needs_review`.
 - Added safe metadata merge from OCR-target refinement for empty product metadata fields only; existing product values are never overwritten automatically.
 - Added OCR-target local context and visible label evidence so crop refinements can distinguish labeled metadata, tables, dimensions, notes, and isolated numbers without full-page context.
+- Added a narrow evidence-based scale ratio punctuation correction for cases where OCR-target refinement supports `2:1` but the full-page value was decimalized as `2.1`.
+- Added `brand_name` to the product schema so company, manufacturer, brand, or logo text can be kept separate from product names, drawing numbers, and document names.
+- Tightened metadata prompts so source filenames are not copied into product, document, or drawing-number fields unless visibly printed in the drawing.
 
 ### Changed
 

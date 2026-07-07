@@ -38,6 +38,7 @@ class ValidatorTests(unittest.TestCase):
     def test_parse_product_json_response_normalizes_common_model_output(self) -> None:
         response = """{
   "product_name": " Example ",
+  "brand_name": " ACME ",
   "revision": "null",
   "sheet": " 1/1 ",
   "size": "",
@@ -68,6 +69,7 @@ class ValidatorTests(unittest.TestCase):
         result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
 
         self.assertEqual(result["product_name"], "Example")
+        self.assertEqual(result["brand_name"], "ACME")
         self.assertIsNone(result["revision"])
         self.assertEqual(result["sheet"], "1/1")
         self.assertEqual(result["size"], "A3")
