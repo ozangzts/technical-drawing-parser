@@ -20,6 +20,7 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
         "units": None,
         "dimensions": [],
         "dimension_tables": [],
+        "tables": [],
         "tolerances": [],
         "notes": [],
         "warnings": [
@@ -53,6 +54,20 @@ def product_schema_description() -> str:
   ],
   "dimension_tables": [
     {
+      "title": "string or null",
+      "context": "string or null",
+      "columns": ["string"],
+      "rows": [
+        {
+          "label": "string or null",
+          "values": ["string"]
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "type": "pinout_table | connection_table | specification_table | notes_table | unknown",
       "title": "string or null",
       "context": "string or null",
       "columns": ["string"],

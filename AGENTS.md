@@ -121,7 +121,7 @@ Use these as a starting vocabulary. Add new types as real samples require them.
 Use a two-layer JSON design:
 
 1. Normalized extraction layer
-   - Clean, consumer-friendly fields such as `product_name`, `document_name`, `revision`, `revision_date`, `sheet`, `size`, `scale`, `units`, `dimensions`, `dimension_tables`, and `notes`.
+   - Clean, consumer-friendly fields such as `product_name`, `document_name`, `revision`, `revision_date`, `sheet`, `size`, `scale`, `units`, `dimensions`, `dimension_tables`, `tables`, and `notes`.
 
 2. Evidence layer
    - `source_regions`, `raw_ocr_blocks`, `uncertain_fields`, and field-level references that explain where each value came from.

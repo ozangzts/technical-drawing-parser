@@ -22,6 +22,7 @@ PRODUCT_FIELDS = {
     "units",
     "dimensions",
     "dimension_tables",
+    "tables",
     "tolerances",
     "notes",
     "warnings",
@@ -83,6 +84,7 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
     for list_field in (
         "dimensions",
         "dimension_tables",
+        "tables",
         "tolerances",
         "notes",
         "warnings",

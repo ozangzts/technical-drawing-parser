@@ -74,6 +74,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Simplified review JSON coverage to counts only so compact reviews stay focused on actionable issues.
 - Clarified prompts so single-letter symbolic references are not extracted as dimensions unless a numeric value is visible with the reference.
 - Added `sheet` to the product schema for title-block sheet information such as `1/1`.
+- Added a general `tables` field for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
 
 ### Notes
 

@@ -22,7 +22,7 @@ outputs/products/<input_or_product_code>.json
 
 At the current MVP stage, the output name is derived from the input filename and cleaned to prefer a short brand/code style name when possible. For example, `DEICO_DE8135_Technical_Drawing_page-0001.jpg` becomes `deico_de8135.json`. Later, once title block extraction exists, the output name can use a detected product or drawing code.
 
-Product JSON includes flat `dimensions` for direct drawing callouts and `dimension_tables` for tabular measurements where row and column context is required to understand values.
+Product JSON includes flat `dimensions` for direct drawing callouts, `dimension_tables` for tabular measurements where row and column context is required to understand values, and `tables` for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
 
 Developer-facing metadata is written separately:
 

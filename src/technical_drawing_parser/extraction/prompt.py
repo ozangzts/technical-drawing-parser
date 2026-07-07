@@ -26,6 +26,7 @@ Rules:
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
 - Put table-derived measurements in dimension_tables with their row and column context instead of flattening them into dimensions when the table context is needed to understand the value.
+- Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables, not in dimension_tables.
 - Do not list single-letter symbolic references such as A, B, C, X, or Y as dimensions unless a numeric value is visible with the reference. If the symbol is defined by a table, keep it as table column text or context.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 
@@ -58,6 +59,7 @@ Rules:
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, or NTS.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
 - Extract visible table-derived measurements into dimension_tables when row or column context is needed.
+- Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables.
 - Do not list single-letter symbolic references as dimensions unless a numeric value is visible with the reference.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 

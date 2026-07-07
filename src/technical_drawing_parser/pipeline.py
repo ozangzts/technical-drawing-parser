@@ -841,6 +841,7 @@ def build_review_result(
             "pages": count_list(internal.get("rendered_pages")),
             "dimensions": count_list(product_json.get("dimensions")),
             "dimension_tables": count_list(product_json.get("dimension_tables")),
+            "tables": count_list(product_json.get("tables")),
             "notes": count_list(product_json.get("notes")),
             "product_warnings": count_list(product_json.get("warnings")),
             "raw_ocr_blocks": count_list(internal.get("raw_ocr_blocks")),

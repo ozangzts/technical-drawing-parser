@@ -45,6 +45,7 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(result["source_file"], drawing.name)
             self.assertIsNone(result["sheet"])
             self.assertEqual(result["dimension_tables"], [])
+            self.assertEqual(result["tables"], [])
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
             self.assertEqual(internal["extraction"]["extractor"], "none")
