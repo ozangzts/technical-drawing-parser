@@ -79,16 +79,19 @@ The same `--ocr` run sends each target crop to the VLM with a focused refinement
 outputs/internal/ocr_target_responses/<name>_page_001_ocr_target_001.raw_response.txt
 ```
 
-OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. The OCR text is treated as a hint only: the VLM should re-read the visible crop text, return `visual_text`, and set `ocr_text_supported` to indicate whether the crop visually supports the OCR hint. These results do not merge into the product JSON yet.
+OCR target refinement classifies each crop as `dimension`, `metadata`, `note`, `uncertain`, or `irrelevant`. The OCR text is treated as a hint only: the VLM should re-read the visible crop text, return `visual_text`, and set `ocr_text_supported` to indicate whether the crop visually supports the OCR hint. It should also return local crop evidence such as `local_context` and `visible_label` so isolated numbers can be separated from labeled title-block values, tables, notes, or real dimension callouts.
 
 When `--ocr` is used without a VLM extractor, the pipeline stores OCR blocks and candidates but skips target crop refinement with a processing warning.
 
 Internal output also includes `ocr_target_refinement_summary`, which counts refinement classifications and lists product-dimension `merge_candidates` for later review. Merge candidates are split into values already covered by flat `dimensions`, values already covered by `dimension_tables`, and truly new `new_dimension_candidates`.
 
-Metadata refinements are summarized as `metadata_review_candidates`. These compare OCR-target metadata values such as `scale`, `revision_date`, `size`, and `sheet` against the product JSON and mark them as `supported`, `conflict`, or `missing_in_product` without changing the product JSON automatically.
+Metadata refinements are summarized as `metadata_review_candidates`. These compare OCR-target metadata values such as `scale`, `revision_date`, `size`, and `sheet` against the product JSON and mark them as `supported`, `conflict`, or `missing_in_product`.
+
+Safe metadata merge is intentionally narrow and evidence-based. The pipeline may fill an empty product metadata field from OCR-target refinement only when the refinement is metadata, the product field is currently empty, confidence is high, the OCR hint is not visually rejected, `visual_text` matches the proposed value, local crop context supports metadata, and the field belongs to the product JSON metadata schema. Existing product values are never overwritten automatically.
 
 Compact review JSON intentionally hides candidates that are already covered or merely supported. It exposes only actionable decision buckets:
 
+- `applied_merges`: safe metadata values already filled into product JSON from OCR-target refinement.
 - `merge_ready`: high-confidence OCR-target refinements that are not covered by full-page extraction, have clean OCR/visual text support, and use a safe dimension type for a future merge step.
 - `needs_review`: low-confidence candidates, metadata conflicts, or metadata missing from product JSON.
 

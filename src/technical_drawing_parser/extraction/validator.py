@@ -54,6 +54,15 @@ ALLOWED_REFINEMENT_CLASSIFICATIONS = {
     "uncertain",
     "irrelevant",
 }
+ALLOWED_REFINEMENT_LOCAL_CONTEXTS = {
+    "title_block",
+    "dimension_callout",
+    "dimension_table",
+    "general_table",
+    "drawing_view",
+    "note",
+    "unknown",
+}
 
 NULL_STRINGS = {"", "null", "none", "n/a", "na", "-"}
 SHEET_SIZES = {"A0", "A1", "A2", "A3", "A4", "A5"}
@@ -128,6 +137,8 @@ def parse_ocr_target_refinement_response(
         "raw_text",
         "visual_text",
         "ocr_text_supported",
+        "local_context",
+        "visible_label",
         "dimension",
         "metadata",
         "confidence",
@@ -151,6 +162,8 @@ def empty_ocr_target_refinement(target: dict[str, Any]) -> dict[str, Any]:
         "raw_text": None,
         "visual_text": None,
         "ocr_text_supported": None,
+        "local_context": "unknown",
+        "visible_label": None,
         "dimension": None,
         "metadata": None,
         "confidence": 0.0,
@@ -188,6 +201,11 @@ def normalize_ocr_target_refinement(
     raw_text = result.get("raw_text")
     result["raw_text"] = normalize_scalar(raw_text)
     result["visual_text"] = normalize_scalar(result.get("visual_text"))
+    result["visible_label"] = normalize_scalar(result.get("visible_label"))
+    result["local_context"] = normalize_refinement_local_context(
+        result.get("local_context"),
+        warnings,
+    )
 
     ocr_text_supported = result.get("ocr_text_supported")
     if not isinstance(ocr_text_supported, bool):
@@ -210,6 +228,22 @@ def normalize_ocr_target_refinement(
     elif metadata is not None:
         result["metadata"] = None
         warnings.append("Refinement metadata was not an object and was reset.")
+
+
+def normalize_refinement_local_context(
+    value: Any,
+    warnings: list[str],
+) -> str:
+    if not isinstance(value, str):
+        return "unknown"
+
+    normalized = value.strip().lower().replace(" ", "_")
+    if normalized not in ALLOWED_REFINEMENT_LOCAL_CONTEXTS:
+        warnings.append(
+            f"Refinement local_context `{value}` is not allowed and was set to unknown."
+        )
+        return "unknown"
+    return normalized
 
 
 def normalize_scalars(result: dict[str, Any]) -> None:

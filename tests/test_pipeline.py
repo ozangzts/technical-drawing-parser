@@ -221,6 +221,8 @@ class PipelineTests(unittest.TestCase):
                         "ocr_text": "慄 12",
                         "visual_text": "X 12",
                         "ocr_text_supported": True,
+                        "local_context": "drawing_view",
+                        "visible_label": None,
                         "dimension": {
                             "raw_text": "X 12",
                             "value": "12",
@@ -367,7 +369,7 @@ class PipelineTests(unittest.TestCase):
                 ),
                 SimpleNamespace(
                     status="completed",
-                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.88, "warnings": []}',
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "local_context": "title_block", "visible_label": "SCALE", "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.88, "warnings": []}',
                     error=None,
                 ),
             ]
@@ -430,11 +432,221 @@ class PipelineTests(unittest.TestCase):
                 review["review"]["needs_review"][0]["visual_text"],
                 "2:1",
             )
+            self.assertEqual(
+                review["review"]["needs_review"][0]["local_context"],
+                "title_block",
+            )
+            self.assertEqual(
+                review["review"]["needs_review"][0]["visible_label"],
+                "SCALE",
+            )
             self.assertIs(
                 review["review"]["needs_review"][0]["ocr_text_supported"],
                 True,
             )
             self.assertTrue(Path(refinement["raw_response_path"]).exists())
+
+    def test_process_can_merge_safe_missing_metadata_from_refinement(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            ocr_blocks = [
+                {
+                    "id": "page_001_ocr_001",
+                    "page": 1,
+                    "text": "2:1",
+                    "bbox": {"x": 500, "y": 300, "width": 40, "height": 12},
+                    "source_ref": str(drawing) + "#page=1",
+                    "engine": "test",
+                    "confidence": 0.96,
+                }
+            ]
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Full Page", "scale": null, "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "local_context": "title_block", "visible_label": "SCALE", "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.95, "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.run_ocr_pages",
+                return_value=ocr_blocks,
+            ), patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                side_effect=responses,
+            ):
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                    run_ocr=True,
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            review_path = outputs / "internal" / "reviews" / "example.review.json"
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(result["scale"], "2:1")
+            self.assertEqual(len(internal["metadata_merges"]), 1)
+            self.assertEqual(internal["metadata_merges"][0]["field"], "scale")
+            self.assertEqual(review["counts"]["metadata_merges"], 1)
+            self.assertEqual(len(review["review"]["applied_merges"]), 1)
+            self.assertEqual(review["review"]["applied_merges"][0]["value"], "2:1")
+            self.assertEqual(
+                review["review"]["applied_merges"][0]["local_context"],
+                "title_block",
+            )
+            self.assertEqual(
+                review["review"]["applied_merges"][0]["visible_label"],
+                "SCALE",
+            )
+            self.assertEqual(review["review"]["needs_review"], [])
+
+    def test_process_does_not_overwrite_metadata_from_refinement(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            ocr_blocks = [
+                {
+                    "id": "page_001_ocr_001",
+                    "page": 1,
+                    "text": "2:1",
+                    "bbox": {"x": 500, "y": 300, "width": 40, "height": 12},
+                    "source_ref": str(drawing) + "#page=1",
+                    "engine": "test",
+                    "confidence": 0.96,
+                }
+            ]
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Full Page", "scale": "1:1", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "local_context": "title_block", "visible_label": "SCALE", "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.95, "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.run_ocr_pages",
+                return_value=ocr_blocks,
+            ), patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                side_effect=responses,
+            ):
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                    run_ocr=True,
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            review_path = outputs / "internal" / "reviews" / "example.review.json"
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(result["scale"], "1:1")
+            self.assertEqual(internal["metadata_merges"], [])
+            self.assertEqual(review["review"]["applied_merges"], [])
+            self.assertEqual(len(review["review"]["needs_review"]), 1)
+            self.assertEqual(
+                review["review"]["needs_review"][0]["reason"],
+                "Target refinement conflicts with the product JSON metadata.",
+            )
+
+    def test_process_does_not_merge_metadata_without_local_context(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            ocr_blocks = [
+                {
+                    "id": "page_001_ocr_001",
+                    "page": 1,
+                    "text": "006",
+                    "bbox": {"x": 500, "y": 300, "width": 40, "height": 12},
+                    "source_ref": str(drawing) + "#page=1",
+                    "engine": "test",
+                    "confidence": 0.96,
+                }
+            ]
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Full Page", "sheet": null, "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "006", "visual_text": "006", "ocr_text_supported": true, "local_context": "unknown", "visible_label": null, "dimension": null, "metadata": {"field": "sheet", "value": "006"}, "confidence": 0.95, "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.run_ocr_pages",
+                return_value=ocr_blocks,
+            ), patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                side_effect=responses,
+            ):
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                    run_ocr=True,
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            review_path = outputs / "internal" / "reviews" / "example.review.json"
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertIsNone(result["sheet"])
+            self.assertEqual(internal["metadata_merges"], [])
+            self.assertEqual(review["review"]["applied_merges"], [])
+            self.assertEqual(len(review["review"]["needs_review"]), 1)
+            self.assertEqual(
+                review["review"]["needs_review"][0]["local_context"],
+                "unknown",
+            )
 
     def test_process_can_extract_generated_crops_internally(self) -> None:
         from PIL import Image

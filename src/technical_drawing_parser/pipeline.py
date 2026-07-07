@@ -40,6 +40,18 @@ from .registry import (
 )
 
 MERGE_READY_CONFIDENCE_THRESHOLD = 0.85
+SAFE_METADATA_MERGE_CONFIDENCE_THRESHOLD = 0.9
+MERGEABLE_PRODUCT_METADATA_FIELDS = {
+    "product_name",
+    "document_name",
+    "drawing_number",
+    "revision",
+    "revision_date",
+    "sheet",
+    "size",
+    "scale",
+    "units",
+}
 
 
 def process_inputs(
@@ -254,6 +266,7 @@ def create_product_json(
         processing_warnings.append(
             "OCR target refinement was skipped because no VLM extractor is enabled."
         )
+    metadata_merges = apply_safe_metadata_merges(result, ocr_target_refinements)
     result["warnings"].extend(processing_warnings)
 
     internal = build_internal_result(
@@ -265,7 +278,9 @@ def create_product_json(
         ocr_candidates=ocr_candidates,
         ocr_target_crops=ocr_target_crops,
         ocr_target_refinements=ocr_target_refinements,
+        metadata_merges=metadata_merges,
         tiles=tiles,
+        product_json=result,
         product_json_path=result_path,
         tile_summary_path=tile_summary_path,
         prompt_path=prompt_path,
@@ -630,7 +645,9 @@ def build_internal_result(
     ocr_candidates: list[dict[str, object]],
     ocr_target_crops: list[dict[str, object]],
     ocr_target_refinements: list[dict[str, object]],
+    metadata_merges: list[dict[str, object]],
     tiles: list[dict[str, object]],
+    product_json: dict[str, object],
     product_json_path: Path,
     tile_summary_path: Path,
     prompt_path: Path,
@@ -647,7 +664,7 @@ def build_internal_result(
     processed_at: str,
 ) -> dict[str, object]:
     warnings = [
-        "Layout detection, product merge from refinement results, and region-specific semantic extraction are not implemented yet."
+        "Layout detection, dimension merge from refinement results, and region-specific semantic extraction are not implemented yet."
     ]
     warnings.extend(processing_warnings)
     tile_extraction_summary = build_tile_extraction_summary(
@@ -657,12 +674,7 @@ def build_internal_result(
         and isinstance(page_extractions[0].get("product_json"), dict)
         else None,
     )
-    full_page_product_json = (
-        page_extractions[0]["product_json"]
-        if page_extractions
-        and isinstance(page_extractions[0].get("product_json"), dict)
-        else None
-    )
+    full_page_product_json = product_json
 
     return {
         "schema_version": "0.1.0",
@@ -699,12 +711,13 @@ def build_internal_result(
         "ocr_candidates": ocr_candidates,
         "ocr_target_crops": ocr_target_crops,
         "ocr_target_refinements": ocr_target_refinements,
+        "metadata_merges": metadata_merges,
         "warnings": warnings,
         "uncertain_fields": [
             {
                 "field": "semantic_extraction",
                 "value": None,
-                "reason": "Product JSON merge from OCR target refinement and region-specific semantic extraction are not implemented yet.",
+                "reason": "Dimension merge from OCR target refinement and region-specific semantic extraction are not implemented yet.",
                 "evidence": [],
                 "confidence": 0.0,
             }
@@ -828,9 +841,11 @@ def build_review_result(
             "ocr_target_refinements": count_list(
                 internal.get("ocr_target_refinements")
             ),
+            "metadata_merges": count_list(internal.get("metadata_merges")),
             "tile_extractions": count_list(internal.get("tile_extractions")),
         },
         "review": {
+            "applied_merges": internal.get("metadata_merges", []),
             "merge_ready": review_decisions["merge_ready"],
             "needs_review": review_decisions["needs_review"],
             "failed_refinements": refinement_summary_dict.get("failed", 0),
@@ -858,6 +873,98 @@ def build_review_result(
             "original_filename": document_dict.get("original_filename"),
             "processed_at": document_dict.get("processed_at"),
         },
+    }
+
+
+def apply_safe_metadata_merges(
+    product_json: dict[str, object],
+    refinements: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    merges: list[dict[str, object]] = []
+    for refinement in refinements:
+        if refinement.get("status") not in {"completed", "validation_failed"}:
+            continue
+
+        refinement_json = refinement.get("refinement_json")
+        if not isinstance(refinement_json, dict):
+            continue
+        if refinement_json.get("classification") != "metadata":
+            continue
+
+        confidence = confidence_as_float(refinement_json.get("confidence"))
+        if (
+            confidence is None
+            or confidence < SAFE_METADATA_MERGE_CONFIDENCE_THRESHOLD
+        ):
+            continue
+        if refinement_json.get("ocr_text_supported") is False:
+            continue
+        if not has_metadata_context_support(refinement_json):
+            continue
+
+        metadata = refinement_json.get("metadata")
+        if not isinstance(metadata, dict):
+            continue
+
+        field = normalize_metadata_field(metadata.get("field"))
+        if field not in MERGEABLE_PRODUCT_METADATA_FIELDS:
+            continue
+        if normalize_metadata_value(product_json.get(field)) is not None:
+            continue
+
+        value = clean_metadata_merge_value(metadata.get("value"))
+        if value is None:
+            continue
+
+        visual_text = clean_metadata_merge_value(refinement_json.get("visual_text"))
+        if visual_text is None:
+            continue
+        if normalize_metadata_value(visual_text) != normalize_metadata_value(value):
+            continue
+
+        product_json[field] = value
+        merges.append(
+            {
+                "kind": "metadata",
+                "field": field,
+                "value": value,
+                "target_id": refinement.get("target_id"),
+                "ocr_text": refinement.get("ocr_text"),
+                "visual_text": refinement_json.get("visual_text"),
+                "ocr_text_supported": refinement_json.get("ocr_text_supported"),
+                "local_context": refinement_json.get("local_context"),
+                "visible_label": refinement_json.get("visible_label"),
+                "confidence": confidence,
+                "reason": (
+                    "Filled empty product metadata from high-confidence OCR "
+                    "target refinement without overwriting an existing value."
+                ),
+            }
+        )
+
+    return merges
+
+
+def clean_metadata_merge_value(value: object) -> object | None:
+    if value is None:
+        return None
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if cleaned.lower() in {"", "null", "none", "n/a", "na", "-"}:
+            return None
+        return cleaned
+    return value
+
+
+def has_metadata_context_support(refinement_json: dict[str, object]) -> bool:
+    visible_label = clean_metadata_merge_value(refinement_json.get("visible_label"))
+    if visible_label is not None:
+        return True
+
+    return refinement_json.get("local_context") in {
+        "title_block",
+        "dimension_table",
+        "general_table",
     }
 
 
@@ -924,6 +1031,8 @@ def build_dimension_review_item(candidate: dict[str, object]) -> dict[str, objec
         "ocr_text": candidate.get("ocr_text"),
         "visual_text": candidate.get("visual_text"),
         "ocr_text_supported": candidate.get("ocr_text_supported"),
+        "local_context": candidate.get("local_context"),
+        "visible_label": candidate.get("visible_label"),
         "candidate": candidate.get("dimension"),
         "confidence": candidate.get("confidence"),
     }
@@ -936,6 +1045,8 @@ def build_metadata_review_item(candidate: dict[str, object]) -> dict[str, object
         "ocr_text": candidate.get("ocr_text"),
         "visual_text": candidate.get("visual_text"),
         "ocr_text_supported": candidate.get("ocr_text_supported"),
+        "local_context": candidate.get("local_context"),
+        "visible_label": candidate.get("visible_label"),
         "field": candidate.get("field"),
         "product_value": candidate.get("product_value"),
         "refinement_value": candidate.get("refinement_value"),
@@ -1022,6 +1133,8 @@ def build_metadata_review_candidate(
         "ocr_text": refinement.get("ocr_text"),
         "visual_text": refinement_json.get("visual_text"),
         "ocr_text_supported": refinement_json.get("ocr_text_supported"),
+        "local_context": refinement_json.get("local_context"),
+        "visible_label": refinement_json.get("visible_label"),
         "field": field,
         "product_value": product_value,
         "refinement_value": value,
@@ -1083,6 +1196,8 @@ def build_refinement_merge_candidate(
         "ocr_text": refinement.get("ocr_text"),
         "visual_text": refinement_json.get("visual_text"),
         "ocr_text_supported": refinement_json.get("ocr_text_supported"),
+        "local_context": refinement_json.get("local_context"),
+        "visible_label": refinement_json.get("visible_label"),
         "dimension": dimension,
         "confidence": refinement_json.get("confidence"),
         "coverage": coverage,

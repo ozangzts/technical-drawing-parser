@@ -95,6 +95,7 @@ Return only valid JSON. Do not include markdown fences or explanations.
 
 Goal:
 - Classify what this crop shows.
+- Identify the local visual context of the crop, such as title block, dimension callout, table, note, drawing view, or unknown.
 - If it contains a product dimension, extract that dimension.
 - If it shows metadata such as scale, date, sheet number, title block text, or other non-dimension information, classify it as metadata.
 - If it is unclear, mark it uncertain.
@@ -110,6 +111,9 @@ Rules:
 - Do not treat title-block metadata as a product dimension.
 - Set is_product_dimension to true only for physical product dimensions, not title-block scale, dates, sheet numbers, drawing numbers, notes, or table indexes.
 - For metadata, use one of these fields when visible: product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
+- Use local_context to describe what the crop visually appears to be: title_block, dimension_callout, dimension_table, general_table, drawing_view, note, or unknown.
+- Use visible_label for a nearby visible label that supports the classification, such as SCALE, DATE, SHEET, REV, SIZE, UNITS, or a table heading. Use null when no supporting label is visible.
+- If the crop contains only an isolated number with no visible label, table structure, leader line, arrow, or title-block context, classify it as uncertain or irrelevant instead of metadata.
 - Add warnings for cropped, ambiguous, or unreadable information.
 - Do not include coordinates except the provided target ids and page number.
 
@@ -132,6 +136,8 @@ Schema:
   "raw_text": null,
   "visual_text": null,
   "ocr_text_supported": null,
+  "local_context": "title_block | dimension_callout | dimension_table | general_table | drawing_view | note | unknown",
+  "visible_label": null,
   "dimension": {{
     "raw_text": null,
     "value": null,

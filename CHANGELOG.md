@@ -79,6 +79,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added OCR target visual text verification fields so crop refinements can report the VLM-read `visual_text` and whether it supports the OCR hint.
 - Tightened VLM prompts to preserve visible metadata formatting, avoid assigning isolated numbers to metadata, and treat OCR target text strictly as a hint.
 - Tightened `merge_ready` review decisions so pattern-like dimensions and OCR/visual text conflicts remain in `needs_review`.
+- Added safe metadata merge from OCR-target refinement for empty product metadata fields only; existing product values are never overwritten automatically.
+- Added OCR-target local context and visible label evidence so crop refinements can distinguish labeled metadata, tables, dimensions, notes, and isolated numbers without full-page context.
 
 ### Changed
 

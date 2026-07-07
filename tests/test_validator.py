@@ -179,6 +179,8 @@ class ValidatorTests(unittest.TestCase):
   "raw_text": "12:100",
   "visual_text": "12:100",
   "ocr_text_supported": false,
+  "local_context": "title_block",
+  "visible_label": "SCALE",
   "dimension": null,
   "metadata": {
     "field": "scale",
@@ -196,6 +198,8 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(warnings, [])
         self.assertEqual(result["visual_text"], "12:100")
         self.assertIs(result["ocr_text_supported"], False)
+        self.assertEqual(result["local_context"], "title_block")
+        self.assertEqual(result["visible_label"], "SCALE")
         self.assertEqual(result["metadata"]["value"], "12:100")
 
 

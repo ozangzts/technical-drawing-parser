@@ -63,6 +63,9 @@ class PromptTests(unittest.TestCase):
         self.assertIn("ocr_text_supported", prompt)
         self.assertIn("do not use the OCR hint", prompt)
         self.assertIn("Set is_product_dimension to true only", prompt)
+        self.assertIn("local_context", prompt)
+        self.assertIn("visible_label", prompt)
+        self.assertIn("isolated number", prompt)
 
 
 if __name__ == "__main__":
