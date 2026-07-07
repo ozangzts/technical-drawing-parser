@@ -123,4 +123,5 @@ python tdp.py status
 - `inputs/incoming/`: place source drawings here
 - `outputs/products/`: product JSON outputs will be written here
 - `outputs/internal/`: developer-facing metadata will be written here
+- `outputs/internal/reviews/`: compact review summaries for quick inspection
 - `.env.example`: local configuration template

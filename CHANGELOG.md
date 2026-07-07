@@ -70,6 +70,7 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added `dimension_tables` to the product schema and prompt so tabular measurements can be extracted with row and column context instead of being ignored or flattened into ambiguous dimensions.
 - Updated OCR target refinement summaries to distinguish new dimension candidates from values already covered by flat dimensions or dimension tables.
 - Added metadata review candidates to OCR target refinement summaries so OCR-target metadata can flag supported, conflicting, or missing product metadata without automatic correction.
+- Added compact review JSON artifacts under `outputs/internal/reviews/` for quick inspection without reading the full internal audit JSON.
 
 ### Notes
 

@@ -30,21 +30,26 @@ class PipelineTests(unittest.TestCase):
 
             result_path = outputs / "products" / "example.json"
             internal_path = outputs / "internal" / "example.internal.json"
+            review_path = outputs / "internal" / "reviews" / "example.review.json"
             prompt_path = outputs / "internal" / "example.vlm_prompt.txt"
             self.assertTrue(result_path.exists())
             self.assertTrue(internal_path.exists())
+            self.assertTrue(review_path.exists())
             self.assertTrue(prompt_path.exists())
             self.assertEqual(first_summary["processed"], 1)
             self.assertEqual(second_summary["skipped"], 1)
 
             result = json.loads(result_path.read_text(encoding="utf-8"))
             internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
             self.assertEqual(result["source_file"], drawing.name)
             self.assertEqual(result["dimension_tables"], [])
             self.assertNotIn("fingerprint", result)
             self.assertNotIn("regions", result)
             self.assertEqual(internal["extraction"]["extractor"], "none")
             self.assertEqual(internal["extraction"]["status"], "not_run")
+            self.assertEqual(review["product"]["path"], str(result_path))
+            self.assertEqual(review["counts"]["dimensions"], 0)
             self.assertIn("Schema:", prompt_path.read_text(encoding="utf-8"))
 
     def test_build_output_slug_prefers_brand_and_code(self) -> None:
@@ -337,7 +342,9 @@ class PipelineTests(unittest.TestCase):
 
             result_path = outputs / "products" / "example.json"
             internal_path = outputs / "internal" / "example.internal.json"
+            review_path = outputs / "internal" / "reviews" / "example.review.json"
             internal = json.loads(internal_path.read_text(encoding="utf-8"))
+            review = json.loads(review_path.read_text(encoding="utf-8"))
             result = json.loads(result_path.read_text(encoding="utf-8"))
 
             self.assertEqual(summary["processed"], 1)
@@ -367,6 +374,8 @@ class PipelineTests(unittest.TestCase):
                 internal["ocr_target_refinement_summary"]["merge_candidates"],
                 [],
             )
+            self.assertEqual(review["counts"]["ocr_target_refinements"], 1)
+            self.assertEqual(review["review"]["metadata_conflicts"], [])
             self.assertTrue(Path(refinement["raw_response_path"]).exists())
 
     def test_process_can_extract_generated_crops_internally(self) -> None:

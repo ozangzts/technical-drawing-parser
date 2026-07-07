@@ -148,6 +148,7 @@ def create_product_json(
     result_path = products_dir / f"{output_slug}.json"
     internal_path = internal_dir / f"{output_slug}.internal.json"
     tile_summary_path = internal_dir / f"{output_slug}.tile_summary.json"
+    review_path = internal_dir / "reviews" / f"{output_slug}.review.json"
     prompt_path = internal_dir / f"{output_slug}.vlm_prompt.txt"
     raw_response_path = internal_dir / f"{output_slug}.raw_response.txt"
     metadata = read_file_metadata(input_file)
@@ -292,6 +293,7 @@ def create_product_json(
     write_json(result_path, result)
     write_json(internal_path, internal)
     write_json(tile_summary_path, internal["tile_extraction_summary"])
+    write_json(review_path, build_review_result(internal, result))
     write_text(prompt_path, vlm_prompt)
 
     registry_entry = {
@@ -302,6 +304,7 @@ def create_product_json(
         "result_path": str(result_path),
         "internal_path": str(internal_path),
         "tile_summary_path": str(tile_summary_path),
+        "review_path": str(review_path),
         "prompt_path": str(prompt_path),
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
@@ -783,6 +786,111 @@ def build_ocr_target_refinement_summary(
     return summary
 
 
+def build_review_result(
+    internal: dict[str, object],
+    product_json: dict[str, object],
+) -> dict[str, object]:
+    extraction = internal.get("extraction")
+    document = internal.get("document")
+    refinement_summary = internal.get("ocr_target_refinement_summary")
+    tile_summary = internal.get("tile_extraction_summary")
+
+    extraction_dict = extraction if isinstance(extraction, dict) else {}
+    document_dict = document if isinstance(document, dict) else {}
+    refinement_summary_dict = (
+        refinement_summary if isinstance(refinement_summary, dict) else {}
+    )
+    tile_summary_dict = tile_summary if isinstance(tile_summary, dict) else {}
+    metadata_review_candidates = list(
+        refinement_summary_dict.get("metadata_review_candidates") or []
+    )
+    metadata_conflicts = [
+        candidate
+        for candidate in metadata_review_candidates
+        if isinstance(candidate, dict) and candidate.get("status") == "conflict"
+    ]
+    metadata_missing = [
+        candidate
+        for candidate in metadata_review_candidates
+        if isinstance(candidate, dict)
+        and candidate.get("status") == "missing_in_product"
+    ]
+
+    return {
+        "schema_version": "0.1.0",
+        "product": {
+            "path": internal.get("product_json_path"),
+            "source_file": product_json.get("source_file"),
+            "product_name": product_json.get("product_name"),
+            "document_name": product_json.get("document_name"),
+            "revision": product_json.get("revision"),
+            "revision_date": product_json.get("revision_date"),
+            "size": product_json.get("size"),
+            "scale": product_json.get("scale"),
+            "units": product_json.get("units"),
+        },
+        "extraction": {
+            "status": extraction_dict.get("status"),
+            "extractor": extraction_dict.get("extractor"),
+            "model": extraction_dict.get("model"),
+            "error": extraction_dict.get("error"),
+            "validation_warnings": extraction_dict.get("validation_warnings", []),
+        },
+        "counts": {
+            "pages": count_list(internal.get("rendered_pages")),
+            "dimensions": count_list(product_json.get("dimensions")),
+            "dimension_tables": count_list(product_json.get("dimension_tables")),
+            "notes": count_list(product_json.get("notes")),
+            "product_warnings": count_list(product_json.get("warnings")),
+            "raw_ocr_blocks": count_list(internal.get("raw_ocr_blocks")),
+            "ocr_candidates": count_list(internal.get("ocr_candidates")),
+            "ocr_target_crops": count_list(internal.get("ocr_target_crops")),
+            "ocr_target_refinements": count_list(
+                internal.get("ocr_target_refinements")
+            ),
+            "tile_extractions": count_list(internal.get("tile_extractions")),
+        },
+        "review": {
+            "new_dimension_candidates": refinement_summary_dict.get(
+                "new_dimension_candidates",
+                [],
+            ),
+            "metadata_conflicts": metadata_conflicts,
+            "metadata_missing_in_product": metadata_missing,
+            "failed_refinements": refinement_summary_dict.get("failed", 0),
+            "validation_warnings": extraction_dict.get("validation_warnings", []),
+            "product_warnings": product_json.get("warnings", []),
+        },
+        "coverage": {
+            "covered_by_dimensions": refinement_summary_dict.get(
+                "covered_by_dimensions",
+                [],
+            ),
+            "covered_by_dimension_tables": refinement_summary_dict.get(
+                "covered_by_dimension_tables",
+                [],
+            ),
+        },
+        "tile_review": {
+            "dimensions_found": tile_summary_dict.get("dimensions_found", 0),
+            "tile_only_candidates": tile_summary_dict.get("tile_only_candidates", []),
+            "duplicate_candidate_groups": tile_summary_dict.get(
+                "duplicate_candidate_groups",
+                [],
+            ),
+        },
+        "document": {
+            "source_path": document_dict.get("source_path"),
+            "original_filename": document_dict.get("original_filename"),
+            "processed_at": document_dict.get("processed_at"),
+        },
+    }
+
+
+def count_list(value: object) -> int:
+    return len(value) if isinstance(value, list) else 0
+
+
 def build_metadata_review_candidate(
     refinement: dict[str, object],
     refinement_json: dict[str, object],
@@ -990,6 +1098,7 @@ def now_utc() -> str:
 
 
 def write_json(path: Path, data: object) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file:
         json.dump(data, file, indent=2, ensure_ascii=False)
         file.write("\n")

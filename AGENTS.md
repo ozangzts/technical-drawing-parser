@@ -149,6 +149,7 @@ Prefer explicit uncertainty:
 - Source input location: `inputs/incoming/`
 - Product JSON output location: `outputs/products/`
 - Developer/internal metadata output location: `outputs/internal/`
+- Compact review summary location: `outputs/internal/reviews/`
 - Recommended Conda environment file: `environment.yml`
 - Local configuration template: `.env.example`
 - Local CLI wrapper: `tdp.py`
