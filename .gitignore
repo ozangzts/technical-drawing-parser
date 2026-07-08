@@ -15,3 +15,8 @@ outputs/runs/
 
 inputs/incoming/*
 !inputs/incoming/.gitkeep
+!inputs/incoming/DEICO_DE12XXX_Technical_Drawing.pdf
+!inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf
+!inputs/incoming/DEICO_DE4001_TECHNICAL_DRAWING.pdf
+!inputs/incoming/DEICO_DE8133_Technical_Drawing.pdf
+!inputs/incoming/DEICO_DE8207_Technical_Drawing.pdf

@@ -4,6 +4,12 @@ All notable changes to this project should be documented in this file.
 
 The format is inspired by Keep a Changelog, and this project uses chronological entries while the project is still in early exploration.
 
+## 2026-07-08
+
+### Added
+
+- Allowlisted the current incoming DEICO PDF sample set so another contributor can use the same one-time source inputs without opening `inputs/incoming/` to future files by default.
+
 ## 2026-07-01
 
 ### Added
