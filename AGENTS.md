@@ -160,6 +160,7 @@ Prefer explicit uncertainty:
 - Overlapping tile crop helper: `src/technical_drawing_parser/crops.py`
 - Tile extraction duplicate summary helper: `src/technical_drawing_parser/dedupe.py`
 - Product, crop, and OCR target refinement prompts: `src/technical_drawing_parser/extraction/prompt.py`
+- Anthropic Claude extractor: `src/technical_drawing_parser/extraction/anthropic.py`
 - Registry helpers: `src/technical_drawing_parser/registry.py`
 - Reference sample drawing: `DEICO_DE8135_Technical_Drawing_page-0001.jpg`
 
@@ -179,7 +180,9 @@ Use these default behaviors:
 
 ## Current CLI Convention
 
-Default processing and full-page VLM extraction do not run OCR. Use `--ocr` as the single opt-in for the OCR-assisted pipeline: local OCR, missed-value candidates, OCR target crops, VLM target refinement when an extractor is enabled, and compact review output. Do not reintroduce separate user-facing commands for only generating OCR target crops or only refining OCR targets unless the pipeline design changes deliberately.
+Default processing and full-page VLM extraction do not run OCR. Use `--ocr` as the single opt-in for the OCR-assisted pipeline: local OCR, missed-value candidates, OCR target crops, VLM target refinement when supported by the extractor, and compact review output. Do not reintroduce separate user-facing commands for only generating OCR target crops or only refining OCR targets unless the pipeline design changes deliberately.
+
+OCR refinement and safe metadata merge helpers may remain in the codebase, but product JSON mutation from OCR-target refinement is currently paused. Until this decision changes deliberately, `outputs/products/*.json` should reflect the full-page VLM extraction result, not OCR/refinement merge output.
 
 ## Development Rules For Future Agents
 
@@ -198,10 +201,11 @@ Default processing and full-page VLM extraction do not run OCR. Use `--ocr` as t
 ## Open TODO
 
 - Continue improving the opt-in Ollama extractor. Current model results: `gemma4:cloud` gives the best extraction so far; `minicpm-v4.6` runs locally and returns valid but imperfect JSON; `moondream` runs but is not useful for extraction; `qwen2.5vl:3b`, `qwen3-vl:2b`, and local `gemma4` crash with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
+- Evaluate the Anthropic Claude extractor against the current Ollama/Gemma baseline using a separate output root such as `outputs_claude_test/`.
 - Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
 - Add merge behavior for multi-page PDF page-level extraction.
 - Add PDF type detection.
-- Continue evaluating OCR target refinement quality. Safe metadata merge is allowed only for empty product metadata with strong visual evidence; dimension merge is not implemented yet.
+- Continue evaluating OCR target refinement quality. Safe metadata merge code exists but is paused for product JSON output; dimension merge is not implemented yet.
 - Add crop extraction merge and dedupe using page-space tile coordinates.
 - Add layout detection only when needed.
 - Add a curated sample fixture and expected product JSON once VLM extraction exists.

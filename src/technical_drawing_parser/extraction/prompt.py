@@ -21,7 +21,9 @@ Rules:
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
-- If units are stated globally, use that unit for dimensions. If units are not visible, use null.
+- Use units only when they are explicitly visible on the drawing, in a dimension label, title block, or global note.
+- Do not infer units from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
+- If units are not visibly stated, use null for global units and for dimension unit.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
 - Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
 - Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
@@ -63,7 +65,9 @@ Rules:
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
-- If units are stated globally in this crop, use that unit for dimensions. If units are not visible, use null.
+- Use units only when they are explicitly visible in this crop, in a dimension label, title block fragment, or global note fragment.
+- Do not infer units from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
+- If units are not visibly stated in this crop, use null for global units and for dimension unit.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
 - Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
 - Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
@@ -123,6 +127,7 @@ Rules:
 - Do not treat title-block metadata as a product dimension.
 - Set is_product_dimension to true only for physical product dimensions, not title-block scale, dates, sheet numbers, drawing numbers, notes, or table indexes.
 - For metadata, use one of these fields when visible: brand_name, product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
+- Use units only when the unit text is visible in the crop. Do not infer mm, inch, or any other unit from the number format or drawing style.
 - Use local_context to describe what the crop visually appears to be: title_block, dimension_callout, dimension_table, general_table, drawing_view, note, or unknown.
 - Use visible_label for a nearby visible label that supports the classification, such as SCALE, DATE, SHEET, REV, SIZE, UNITS, or a table heading. Use null when no supporting label is visible.
 - If the crop contains only an isolated number with no visible label, table structure, leader line, arrow, or title-block context, classify it as uncertain or irrelevant instead of metadata.

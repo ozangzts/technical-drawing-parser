@@ -18,6 +18,7 @@ Use a vision-language model as the main extractor. OCR is a supporting signal fo
 - Use `null` when a field is not visible.
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
+- Use units only when they are explicitly visible in a dimension label, title block, or global note. Do not infer millimeters, inches, or any other unit from drawing style or numeric formatting.
 - Keep the product JSON readable for a non-developer.
 - Store developer/debug details separately under `outputs/internal/`.
 
@@ -133,7 +134,7 @@ Recommended next local steps:
 
 1. Use the `ollama` extractor as an explicit opt-in provider.
 2. Use `gemma4:cloud` for quality checks when cloud use is acceptable.
-3. Use `minicpm-v4.6` as the current local baseline when cloud use is not acceptable.
+3. Use the `anthropic` extractor with a Claude model for hosted API comparison when an Anthropic API key is available.
 4. Keep `none` as the default extractor.
 5. Store local/cloud model name, raw response, and extraction status in internal metadata.
 6. Improve schema/prompt/validator around `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
@@ -143,6 +144,7 @@ Example:
 
 ```bash
 python tdp.py process --extractor ollama --model gemma4:cloud --force
+python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force
 ```
 
 Do not assume OCR is enough for this project. Technical drawing dimensions require visual context, so OCR should remain optional support unless testing proves otherwise.

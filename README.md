@@ -6,7 +6,7 @@ Extract structured JSON from technical drawings while preserving source evidence
 
 This project has a CLI-based batch processor that reads drawings from `inputs/incoming/`, skips files that were already processed, and writes simple product JSON files under `outputs/products/`.
 
-Opt-in VLM extraction through Ollama is available for image and PDF inputs. PDF inputs are rendered to page PNG images; page-level extraction is stored internally, while the current product JSON uses page 1 until merge behavior is implemented. `--ocr` enables OCR-assisted target refinement, compact review JSON, and narrow safe metadata merge for empty product metadata fields.
+Opt-in VLM extraction through Ollama or Anthropic Claude is available for image and PDF inputs. PDF inputs are rendered to page PNG images; page-level extraction is stored internally, while the current product JSON uses the page 1 full-page VLM result until merge behavior is deliberately re-enabled. `--ocr` remains available for internal OCR-assisted evidence and review, but OCR refinement does not currently mutate product JSON.
 
 ## Usage
 
@@ -82,10 +82,22 @@ Run full-page VLM extraction only:
 python tdp.py process --extractor ollama --model gemma4:cloud --force
 ```
 
+Run a Claude full-page extraction test into a separate output root:
+
+```bash
+python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force
+```
+
 Run OCR-assisted VLM refinement and compact review output:
 
 ```bash
 python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force
+```
+
+The same OCR-assisted flow can use Claude:
+
+```bash
+python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --ocr --force
 ```
 
 Choose a supported OCR engine when needed:

@@ -84,11 +84,15 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added a narrow evidence-based scale ratio punctuation correction for cases where OCR-target refinement supports `2:1` but the full-page value was decimalized as `2.1`.
 - Added `brand_name` to the product schema so company, manufacturer, brand, or logo text can be kept separate from product names, drawing numbers, and document names.
 - Tightened metadata prompts so source filenames are not copied into product, document, or drawing-number fields unless visibly printed in the drawing.
+- Tightened unit extraction prompts so units are not inferred from drawing style, decimal formatting, product type, or previous drawings.
+- Added an opt-in Anthropic Claude extractor for full-page VLM extraction through the Messages API.
 
 ### Changed
 
 - Simplified OCR CLI behavior so `--ocr` now runs the OCR-assisted pipeline: local OCR, missed-value candidate detection, target crop generation, VLM target refinement when an extractor is enabled, and compact review output.
 - Removed the separate `--generate-ocr-target-crops` and `--refine-ocr-targets` commands from the active CLI surface.
+- Paused OCR-target metadata merge into product JSON; refinement evidence remains internal, but product JSON now reflects the full-page VLM result unless merge behavior is deliberately re-enabled.
+- Made OCR target refinement use the active VLM extractor so `--ocr` works with Anthropic as well as Ollama.
 
 ### Notes
 

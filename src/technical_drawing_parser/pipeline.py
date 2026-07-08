@@ -19,6 +19,7 @@ from .ocr import (
     normalize_ocr_value,
     run_ocr_pages,
 )
+from .extraction.anthropic import extract_with_anthropic
 from .extraction.ollama import DEFAULT_OLLAMA_MODEL, extract_with_ollama
 from .extraction.product import empty_product_result
 from .extraction.prompt import (
@@ -203,14 +204,15 @@ def create_product_json(
     page_extractions: list[dict[str, object]] = []
     tile_extractions: list[dict[str, object]] = []
     ocr_target_refinements: list[dict[str, object]] = []
+    resolved_model = resolve_extractor_model(extractor, model)
 
-    if extractor == "ollama":
+    if extractor in {"ollama", "anthropic"}:
         extraction_inputs = build_extraction_inputs(
             input_file=input_file,
             rendered_pages=rendered_pages,
         )
         for extraction_input in extraction_inputs:
-            page_extraction = run_ollama_page_extraction(
+            page_extraction = run_page_vlm_extraction(
                 image_path=extraction_input["image_path"],
                 page=int(extraction_input["page"]),
                 prompt=vlm_prompt,
@@ -219,7 +221,8 @@ def create_product_json(
                     raw_response_path,
                     int(extraction_input["page"]),
                 ),
-                model=model or DEFAULT_OLLAMA_MODEL,
+                extractor=extractor,
+                model=resolved_model,
             )
             page_extractions.append(page_extraction)
 
@@ -233,15 +236,19 @@ def create_product_json(
 
         if extraction_status not in {"completed", "validation_failed"}:
             result["warnings"] = [
-                f"Ollama extraction failed: {extraction_error or 'unknown error'}"
+                f"{extractor} extraction failed: {extraction_error or 'unknown error'}"
             ]
-        if extract_crops:
+        if extract_crops and extractor == "ollama":
             tile_extractions = run_ollama_tile_extractions(
                 tiles=tiles,
                 source_file=input_file,
                 internal_dir=internal_dir,
                 output_slug=output_slug,
-                model=model or DEFAULT_OLLAMA_MODEL,
+                model=resolved_model or DEFAULT_OLLAMA_MODEL,
+            )
+        elif extract_crops:
+            processing_warnings.append(
+                "Crop extraction is currently implemented for Ollama only."
             )
     elif extract_crops:
         processing_warnings.append(
@@ -249,25 +256,27 @@ def create_product_json(
         )
     ocr_candidates = build_ocr_candidates(raw_ocr_blocks, result)
     ocr_target_crops: list[dict[str, object]] = []
-    if run_ocr and extractor == "ollama":
+    if run_ocr:
         ocr_target_crops = build_ocr_target_crops(
             ocr_candidates=ocr_candidates,
             page_images=page_source_images,
             output_dir=internal_dir / "ocr_target_crops",
             output_slug=output_slug,
         )
-        ocr_target_refinements = run_ollama_ocr_target_refinements(
-            targets=ocr_target_crops,
-            source_file=input_file,
-            internal_dir=internal_dir,
-            output_slug=output_slug,
-            model=model or DEFAULT_OLLAMA_MODEL,
-        )
-    elif run_ocr:
-        processing_warnings.append(
-            "OCR target refinement was skipped because no VLM extractor is enabled."
-        )
-    metadata_merges = apply_safe_metadata_merges(result, ocr_target_refinements)
+        if extractor in {"ollama", "anthropic"}:
+            ocr_target_refinements = run_ocr_target_refinements(
+                targets=ocr_target_crops,
+                source_file=input_file,
+                internal_dir=internal_dir,
+                output_slug=output_slug,
+                extractor=extractor,
+                model=resolved_model,
+            )
+        else:
+            processing_warnings.append(
+                "OCR target refinement was skipped because no VLM extractor is enabled."
+            )
+    metadata_merges: list[dict[str, object]] = []
     result["warnings"].extend(processing_warnings)
 
     internal = build_internal_result(
@@ -290,7 +299,7 @@ def create_product_json(
         page_extractions=page_extractions,
         tile_extractions=tile_extractions,
         extractor=extractor,
-        model=model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
+        model=resolved_model,
         extraction_status=extraction_status,
         extraction_error=extraction_error,
         validation_warnings=validation_warnings,
@@ -318,7 +327,7 @@ def create_product_json(
         "ocr_engine": ocr_engine if run_ocr else None,
         "ocr_target_crops": bool(ocr_target_crops),
         "ocr_target_refinements": bool(ocr_target_refinements),
-        "model": model or (DEFAULT_OLLAMA_MODEL if extractor == "ollama" else None),
+        "model": resolved_model,
         "extraction_status": extraction_status,
         "processed_at": processed_at,
     }
@@ -457,19 +466,38 @@ def build_page_raw_response_path(raw_response_path: Path, page: int) -> Path:
     )
 
 
-def run_ollama_page_extraction(
+def resolve_extractor_model(extractor: str, model: str | None) -> str | None:
+    if extractor == "ollama":
+        return model or DEFAULT_OLLAMA_MODEL
+    if extractor == "anthropic":
+        return model
+    return None
+
+
+def run_page_vlm_extraction(
     image_path: Path,
     page: int,
     prompt: str,
     input_file: Path,
     raw_response_path: Path,
-    model: str,
+    extractor: str,
+    model: str | None,
 ) -> dict[str, object]:
-    extraction = extract_with_ollama(
-        image_path=image_path,
-        prompt=prompt,
-        model=model,
-    )
+    if extractor == "ollama":
+        extraction = extract_with_ollama(
+            image_path=image_path,
+            prompt=prompt,
+            model=model or DEFAULT_OLLAMA_MODEL,
+        )
+    elif extractor == "anthropic":
+        extraction = extract_with_anthropic(
+            image_path=image_path,
+            prompt=prompt,
+            model=model,
+        )
+    else:
+        raise ValueError(f"Unsupported VLM extractor: {extractor}")
+
     validation_warnings: list[str] = []
     product_json = None
     status = extraction.status
@@ -492,6 +520,8 @@ def run_ollama_page_extraction(
         else None,
         "status": status,
         "error": extraction.error,
+        "extractor": extractor,
+        "model": model,
         "validation_warnings": validation_warnings,
         "product_json": product_json,
     }
@@ -555,12 +585,13 @@ def run_ollama_tile_extractions(
     return tile_extractions
 
 
-def run_ollama_ocr_target_refinements(
+def run_ocr_target_refinements(
     targets: list[dict[str, object]],
     source_file: Path,
     internal_dir: Path,
     output_slug: str,
-    model: str,
+    extractor: str,
+    model: str | None,
 ) -> list[dict[str, object]]:
     refinements = []
     for target in targets:
@@ -575,9 +606,10 @@ def run_ollama_ocr_target_refinements(
             target_id=target_id,
         )
         prompt = build_ocr_target_refinement_prompt(source_file, target)
-        extraction = extract_with_ollama(
+        extraction = extract_target_with_provider(
             image_path=Path(crop_ref),
             prompt=prompt,
+            extractor=extractor,
             model=model,
         )
         validation_warnings: list[str] = []
@@ -609,12 +641,35 @@ def run_ollama_ocr_target_refinements(
                 else None,
                 "status": status,
                 "error": extraction.error,
+                "extractor": extractor,
+                "model": model,
                 "validation_warnings": validation_warnings,
                 "refinement_json": refinement_json,
             }
         )
 
     return refinements
+
+
+def extract_target_with_provider(
+    image_path: Path,
+    prompt: str,
+    extractor: str,
+    model: str | None,
+):
+    if extractor == "ollama":
+        return extract_with_ollama(
+            image_path=image_path,
+            prompt=prompt,
+            model=model or DEFAULT_OLLAMA_MODEL,
+        )
+    if extractor == "anthropic":
+        return extract_with_anthropic(
+            image_path=image_path,
+            prompt=prompt,
+            model=model,
+        )
+    raise ValueError(f"Unsupported VLM extractor: {extractor}")
 
 
 def build_tile_raw_response_path(

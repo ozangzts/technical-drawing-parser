@@ -21,7 +21,9 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
             "  python tdp.py process --extractor ollama --model gemma4:cloud\n"
+            "  python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force\n"
             "  python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force\n"
+            "  python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --ocr --force\n"
             "  python tdp.py process --generate-crops\n"
             "  python tdp.py process --extractor ollama --model moondream --extract-crops --force\n"
             "  python tdp.py process path/to/drawing.jpg --force\n"
@@ -88,7 +90,7 @@ def build_parser() -> argparse.ArgumentParser:
     process_parser.add_argument(
         "--extractor",
         default=config.extractor,
-        choices=[DEFAULT_EXTRACTOR, "ollama"],
+        choices=[DEFAULT_EXTRACTOR, "ollama", "anthropic"],
         help="Extraction provider to use. Defaults to TDP_EXTRACTOR or none.",
     )
     process_parser.add_argument(

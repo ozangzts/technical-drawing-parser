@@ -9,6 +9,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from technical_drawing_parser.pipeline import (
+    apply_safe_metadata_merges,
     build_refinement_review_decisions,
     build_ocr_target_refinement_summary,
     build_output_slug,
@@ -335,12 +336,165 @@ class PipelineTests(unittest.TestCase):
                 internal["ocr_candidates"][0]["full_page_status"],
                 "not_found_in_full_page",
             )
-            self.assertEqual(internal["ocr_target_crops"], [])
+            self.assertEqual(len(internal["ocr_target_crops"]), 1)
             self.assertEqual(internal["ocr_target_refinements"], [])
             self.assertIn(
                 "OCR target refinement was skipped because no VLM extractor is enabled.",
                 internal["warnings"],
             )
+
+    def test_process_can_run_anthropic_extraction(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            response = SimpleNamespace(
+                status="completed",
+                raw_response='{"brand_name": "ACME", "product_name": "Claude Page", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                error=None,
+            )
+
+            with patch(
+                "technical_drawing_parser.pipeline.extract_with_anthropic",
+                return_value=response,
+            ) as extractor:
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="anthropic",
+                    model="claude-test",
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(extractor.call_count, 1)
+            self.assertEqual(result["product_name"], "Claude Page")
+            self.assertEqual(internal["extraction"]["extractor"], "anthropic")
+            self.assertEqual(internal["extraction"]["model"], "claude-test")
+            self.assertEqual(internal["page_extractions"][0]["extractor"], "anthropic")
+
+    def test_process_can_refine_ocr_target_crops_with_anthropic(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (1200, 800), "white").save(drawing)
+
+            ocr_blocks = [
+                {
+                    "id": "page_001_ocr_001",
+                    "page": 1,
+                    "text": "2:1",
+                    "bbox": {"x": 500, "y": 300, "width": 40, "height": 12},
+                    "source_ref": str(drawing) + "#page=1",
+                    "engine": "test",
+                    "confidence": 0.91,
+                }
+            ]
+            responses = [
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"product_name": "Claude Full Page", "scale": null, "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                    error=None,
+                ),
+                SimpleNamespace(
+                    status="completed",
+                    raw_response='{"target_id": "page_001_ocr_target_001", "page": 1, "classification": "metadata", "is_product_dimension": false, "raw_text": "2:1", "visual_text": "2:1", "ocr_text_supported": true, "local_context": "title_block", "visible_label": "SCALE", "dimension": null, "metadata": {"field": "scale", "value": "2:1"}, "confidence": 0.95, "warnings": []}',
+                    error=None,
+                ),
+            ]
+
+            with patch(
+                "technical_drawing_parser.pipeline.run_ocr_pages",
+                return_value=ocr_blocks,
+            ), patch(
+                "technical_drawing_parser.pipeline.extract_with_anthropic",
+                side_effect=responses,
+            ) as extractor:
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="anthropic",
+                    model="claude-test",
+                    run_ocr=True,
+                )
+
+            result_path = outputs / "products" / "example.json"
+            internal_path = outputs / "internal" / "example.internal.json"
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            self.assertEqual(extractor.call_count, 2)
+            self.assertEqual(result["product_name"], "Claude Full Page")
+            self.assertIsNone(result["scale"])
+            self.assertEqual(len(internal["ocr_target_crops"]), 1)
+            self.assertEqual(len(internal["ocr_target_refinements"]), 1)
+            self.assertEqual(
+                internal["ocr_target_refinements"][0]["extractor"],
+                "anthropic",
+            )
+            self.assertEqual(internal["metadata_merges"], [])
+
+    def test_apply_safe_metadata_merges_can_fill_empty_metadata(self) -> None:
+        product_json: dict[str, object] = {"scale": None}
+        refinements = [
+            {
+                "target_id": "page_001_ocr_target_001",
+                "ocr_text": "2:1",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "metadata",
+                    "visual_text": "2:1",
+                    "ocr_text_supported": True,
+                    "local_context": "title_block",
+                    "visible_label": "SCALE",
+                    "metadata": {"field": "scale", "value": "2:1"},
+                    "confidence": 0.95,
+                },
+            }
+        ]
+
+        merges = apply_safe_metadata_merges(product_json, refinements)
+
+        self.assertEqual(product_json["scale"], "2:1")
+        self.assertEqual(len(merges), 1)
+        self.assertEqual(merges[0]["field"], "scale")
+
+    def test_apply_safe_metadata_merges_can_correct_scale_ratio_punctuation(self) -> None:
+        product_json: dict[str, object] = {"scale": "2.1"}
+        refinements = [
+            {
+                "target_id": "page_001_ocr_target_001",
+                "ocr_text": "2:1",
+                "status": "completed",
+                "refinement_json": {
+                    "classification": "metadata",
+                    "visual_text": "2:1",
+                    "ocr_text_supported": True,
+                    "local_context": "title_block",
+                    "visible_label": "SCALE",
+                    "metadata": {"field": "scale", "value": "2:1"},
+                    "confidence": 0.95,
+                },
+            }
+        ]
+
+        merges = apply_safe_metadata_merges(product_json, refinements)
+
+        self.assertEqual(product_json["scale"], "2:1")
+        self.assertEqual(len(merges), 1)
+        self.assertIn("Corrected product scale punctuation", merges[0]["reason"])
 
     def test_process_can_refine_ocr_target_crops_internally(self) -> None:
         from PIL import Image
@@ -449,7 +603,7 @@ class PipelineTests(unittest.TestCase):
             )
             self.assertTrue(Path(refinement["raw_response_path"]).exists())
 
-    def test_process_can_merge_safe_missing_metadata_from_refinement(self) -> None:
+    def test_process_does_not_merge_missing_metadata_from_refinement(self) -> None:
         from PIL import Image
 
         with TemporaryDirectory() as directory:
@@ -505,21 +659,12 @@ class PipelineTests(unittest.TestCase):
             review = json.loads(review_path.read_text(encoding="utf-8"))
 
             self.assertEqual(summary["processed"], 1)
-            self.assertEqual(result["scale"], "2:1")
-            self.assertEqual(len(internal["metadata_merges"]), 1)
-            self.assertEqual(internal["metadata_merges"][0]["field"], "scale")
-            self.assertEqual(review["counts"]["metadata_merges"], 1)
-            self.assertEqual(len(review["review"]["applied_merges"]), 1)
-            self.assertEqual(review["review"]["applied_merges"][0]["value"], "2:1")
-            self.assertEqual(
-                review["review"]["applied_merges"][0]["local_context"],
-                "title_block",
-            )
-            self.assertEqual(
-                review["review"]["applied_merges"][0]["visible_label"],
-                "SCALE",
-            )
-            self.assertEqual(review["review"]["needs_review"], [])
+            self.assertIsNone(result["scale"])
+            self.assertEqual(internal["metadata_merges"], [])
+            self.assertEqual(review["counts"]["metadata_merges"], 0)
+            self.assertEqual(review["review"]["applied_merges"], [])
+            self.assertEqual(len(review["review"]["needs_review"]), 1)
+            self.assertEqual(review["review"]["needs_review"][0]["field"], "scale")
 
     def test_process_does_not_overwrite_metadata_from_refinement(self) -> None:
         from PIL import Image
@@ -586,7 +731,7 @@ class PipelineTests(unittest.TestCase):
                 "Target refinement conflicts with the product JSON metadata.",
             )
 
-    def test_process_can_correct_scale_ratio_punctuation_from_refinement(self) -> None:
+    def test_process_does_not_correct_scale_ratio_punctuation_from_refinement(self) -> None:
         from PIL import Image
 
         with TemporaryDirectory() as directory:
@@ -642,14 +787,11 @@ class PipelineTests(unittest.TestCase):
             review = json.loads(review_path.read_text(encoding="utf-8"))
 
             self.assertEqual(summary["processed"], 1)
-            self.assertEqual(result["scale"], "2:1")
-            self.assertEqual(len(internal["metadata_merges"]), 1)
-            self.assertIn(
-                "Corrected product scale punctuation",
-                internal["metadata_merges"][0]["reason"],
-            )
-            self.assertEqual(review["review"]["applied_merges"][0]["value"], "2:1")
-            self.assertEqual(review["review"]["needs_review"], [])
+            self.assertEqual(result["scale"], "2.1")
+            self.assertEqual(internal["metadata_merges"], [])
+            self.assertEqual(review["review"]["applied_merges"], [])
+            self.assertEqual(len(review["review"]["needs_review"]), 1)
+            self.assertEqual(review["review"]["needs_review"][0]["field"], "scale")
 
     def test_process_does_not_merge_metadata_without_local_context(self) -> None:
         from PIL import Image

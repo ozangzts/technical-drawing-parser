@@ -56,6 +56,32 @@ class PromptTests(unittest.TestCase):
         self.assertIn("source file name is only a processing hint", prompt)
         self.assertIn("Do not use a full filename", prompt)
 
+    def test_prompts_warn_against_unit_inference(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+        ocr_target_prompt = build_ocr_target_refinement_prompt(
+            source_file,
+            {
+                "id": "page_001_ocr_target_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 40},
+                "text": "12.5",
+                "ocr_bbox": {"x": 10, "y": 10, "width": 50, "height": 12},
+            },
+        )
+
+        self.assertIn("Do not infer units", full_page_prompt)
+        self.assertIn("Do not infer units", tile_prompt)
+        self.assertIn("Do not infer mm", ocr_target_prompt)
+
     def test_ocr_target_prompt_requires_visual_text_verification(self) -> None:
         prompt = build_ocr_target_refinement_prompt(
             Path("drawing.pdf"),
