@@ -154,6 +154,7 @@ Preserve visible decimal separators in numeric strings. If the drawing shows `44
 - Product JSON output location: `outputs/products/`
 - Developer/internal metadata output location: `outputs/internal/`
 - Compact review summary location: `outputs/internal/reviews/`
+- Committed Claude Sonnet comparison outputs: `outputs_claude_sonnet_test/`
 - Recommended Conda environment file: `environment.yml`
 - Local configuration template: `.env.example`
 - Local CLI wrapper: `tdp.py`
@@ -205,7 +206,7 @@ OCR refinement and safe metadata merge helpers may remain in the codebase, but p
 ## Open TODO
 
 - Continue improving the opt-in Ollama extractor. Current model results: `gemma4:cloud` gives the best extraction so far; `minicpm-v4.6` runs locally and returns valid but imperfect JSON; `moondream` runs but is not useful for extraction; `qwen2.5vl:3b`, `qwen3-vl:2b`, and local `gemma4` crash with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
-- Evaluate the Anthropic Claude extractor against the current Ollama/Gemma baseline using a separate output root such as `outputs_claude_test/`.
+- Claude Sonnet was evaluated on the current sample PDFs and produced the strongest structured output so far, especially for readable tables and specification sections. The committed comparison outputs live under `outputs_claude_sonnet_test/`. Sonnet is expensive on 300 DPI full-page technical drawings, so prefer smaller targeted tests, cheaper models, or lower-DPI experiments before running large batches again.
 - Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
 - Add merge behavior for multi-page PDF page-level extraction.
 - Add PDF type detection.

@@ -33,7 +33,7 @@ Extractor output is normalized with narrow deterministic rules before it is writ
 - Unknown dimension types are set to `unknown` and recorded as warnings.
 - Obvious mojibake for the diameter symbol is repaired.
 - Suspicious but plausible symbol misreads, such as `#` in a diameter dimension, are recorded as warnings without changing `raw_text`.
-- OCR-target refinement may safely fill empty product metadata fields when the crop provides high-confidence visual support. Existing product metadata is not overwritten, except for narrow scale-ratio punctuation correction backed by OCR-target evidence.
+- OCR-target refinement is currently review/evidence only. Safe metadata merge helper code exists, but product JSON mutation from OCR refinement is paused unless the pipeline design changes deliberately.
 
 These rules clean schema shape and common formatting errors only. They should not infer values that are not visible in the drawing.
 
@@ -133,7 +133,7 @@ Recommended next local steps:
 
 1. Use the `ollama` extractor as an explicit opt-in provider.
 2. Use `gemma4:cloud` for quality checks when cloud use is acceptable.
-3. Use the `anthropic` extractor with a Claude model for hosted API comparison when an Anthropic API key is available.
+3. Use the `anthropic` extractor for small hosted API comparisons when an Anthropic API key is available. Claude Sonnet produced the strongest sample outputs so far, but full-page 300 DPI drawings were expensive; keep future hosted tests small unless budget is approved.
 4. Keep `none` as the default extractor.
 5. Store local/cloud model name, raw response, and extraction status in internal metadata.
 6. Improve schema/prompt/validator around `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
@@ -147,6 +147,8 @@ python tdp.py process --extractor anthropic --model <claude-model> --outputs out
 ```
 
 Do not assume OCR is enough for this project. Technical drawing dimensions require visual context, so OCR should remain optional support unless testing proves otherwise.
+
+Committed Claude Sonnet comparison outputs for the current sample PDFs are stored in `outputs_claude_sonnet_test/`.
 
 ## Unit And Table Extraction Rules
 

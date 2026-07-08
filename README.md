@@ -88,6 +88,8 @@ Run a Claude full-page extraction test into a separate output root:
 python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force
 ```
 
+Hosted vision models can be costly on full-page 300 DPI technical drawings. Use a single file, a separate output root, and a cheaper model first when experimenting. The committed `outputs_claude_sonnet_test/` folder preserves one Sonnet comparison run for the current sample PDFs.
+
 Run OCR-assisted VLM refinement and compact review output:
 
 ```bash
