@@ -1034,6 +1034,41 @@ class PipelineTests(unittest.TestCase):
                 "Page 2",
             )
 
+    def test_process_passes_ollama_think_to_extractor(self) -> None:
+        from PIL import Image
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            outputs = root / "outputs"
+            drawing = root / "Example Drawing.png"
+            Image.new("RGB", (100, 100), "white").save(drawing)
+
+            response = SimpleNamespace(
+                status="completed",
+                raw_response='{"product_name": "Think Test", "dimensions": [], "tolerances": [], "notes": [], "warnings": []}',
+                error=None,
+            )
+
+            with patch(
+                "technical_drawing_parser.pipeline.extract_with_ollama",
+                return_value=response,
+            ) as extractor:
+                summary = process_inputs(
+                    drawing,
+                    outputs,
+                    extractor="ollama",
+                    model="test-model",
+                    ollama_think="medium",
+                )
+
+            internal_path = outputs / "internal" / "example.internal.json"
+            internal = json.loads(internal_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["processed"], 1)
+            extractor.assert_called_once()
+            self.assertEqual(extractor.call_args.kwargs["think"], "medium")
+            self.assertEqual(internal["extraction"]["ollama_think"], "medium")
+
 
 if __name__ == "__main__":
     unittest.main()

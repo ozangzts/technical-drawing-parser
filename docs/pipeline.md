@@ -126,6 +126,8 @@ python tdp.py --help
 python tdp.py process
 python tdp.py process --extractor none
 python tdp.py process --extractor ollama --model gemma4:cloud --force
+python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model minicpm-v4.6 --outputs outputs_ollama_de3000_minicpm_test --force
+python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model qwen3-vl:2b --ollama-think true --outputs outputs_ollama_de3000_qwen3vl_think_test --force
 python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force
 python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force
 python tdp.py process --generate-crops
@@ -134,6 +136,10 @@ python tdp.py status
 ```
 
 `process` is the command that starts drawing processing. Command names keep the CLI extensible as future actions are added.
+
+Use `--outputs <new_output_root>` for model experiments so existing output folders are not overwritten. The pipeline creates the output root and its `products/` and `internal/` subdirectories automatically.
+
+For Ollama thinking-capable models, `--ollama-think` passes Ollama's API `think` setting. It accepts `true`, `false`, `low`, `medium`, `high`, or `max`; model support varies.
 
 ## Configuration
 

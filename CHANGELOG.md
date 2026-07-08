@@ -9,6 +9,8 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 ### Added
 
 - Allowlisted the current incoming DEICO PDF sample set so another contributor can use the same one-time source inputs without opening `inputs/incoming/` to future files by default.
+- Added an `--ollama-think` CLI option for passing Ollama's thinking setting to local full-page, crop, and OCR-target extraction calls.
+- Updated README and pipeline examples to use separate experiment output roots so model tests do not overwrite existing outputs.
 
 ## 2026-07-01
 

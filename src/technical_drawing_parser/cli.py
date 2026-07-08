@@ -21,6 +21,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  python tdp.py process inputs/incoming\n"
             "  python tdp.py process --extractor none\n"
             "  python tdp.py process --extractor ollama --model gemma4:cloud\n"
+            "  python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model minicpm-v4.6 --outputs outputs_ollama_de3000_minicpm_test --force\n"
+            "  python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model qwen3-vl:2b --ollama-think true --outputs outputs_ollama_de3000_qwen3vl_think_test --force\n"
             "  python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --force\n"
             "  python tdp.py process --extractor ollama --model gemma4:cloud --ocr --force\n"
             "  python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --ocr --force\n"
@@ -98,6 +100,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=config.model,
         help="Model name for future extractor providers. Defaults to TDP_MODEL.",
     )
+    process_parser.add_argument(
+        "--ollama-think",
+        choices=["true", "false", "low", "medium", "high", "max"],
+        help=(
+            "Optional Ollama thinking setting. Use true/false for models that "
+            "support toggling, or low/medium/high/max for models with thinking levels."
+        ),
+    )
 
     status_parser = subparsers.add_parser(
         "status",
@@ -128,6 +138,9 @@ def main(argv: list[str] | None = None) -> int:
             retry_failed=getattr(args, "retry_failed", False),
             extractor=getattr(args, "extractor", DEFAULT_EXTRACTOR),
             model=getattr(args, "model", None),
+            ollama_think=normalize_ollama_think(
+                getattr(args, "ollama_think", None)
+            ),
             generate_crops=getattr(args, "generate_crops", False),
             extract_crops=getattr(args, "extract_crops", False),
             run_ocr=getattr(args, "ocr", False),
@@ -151,6 +164,14 @@ def main(argv: list[str] | None = None) -> int:
 
     parser.print_help()
     return 1
+
+
+def normalize_ollama_think(value: str | None) -> bool | str | None:
+    if value == "true":
+        return True
+    if value == "false":
+        return False
+    return value
 
 
 def print_summary(summary: dict[str, int | list[str]]) -> None:

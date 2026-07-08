@@ -26,6 +26,7 @@ def extract_with_ollama(
     image_path: Path,
     prompt: str,
     model: str | None,
+    think: bool | str | None = None,
     url: str = DEFAULT_OLLAMA_URL,
 ) -> ExtractionResponse:
     payload = {
@@ -35,6 +36,8 @@ def extract_with_ollama(
         "stream": False,
         "format": "json",
     }
+    if think is not None:
+        payload["think"] = think
     request = urllib.request.Request(
         url,
         data=json.dumps(payload).encode("utf-8"),

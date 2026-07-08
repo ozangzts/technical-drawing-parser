@@ -187,6 +187,10 @@ Use these default behaviors:
 
 Default processing and full-page VLM extraction do not run OCR. Use `--ocr` as the single opt-in for the OCR-assisted pipeline: local OCR, missed-value candidates, OCR target crops, VLM target refinement when supported by the extractor, and compact review output. Do not reintroduce separate user-facing commands for only generating OCR target crops or only refining OCR targets unless the pipeline design changes deliberately.
 
+Use `--outputs <new_output_root>` for one-off model comparisons so existing output roots are preserved. The pipeline creates the requested output root automatically.
+
+Use `--ollama-think` only for Ollama models that support thinking. Accepted values are `true`, `false`, `low`, `medium`, `high`, and `max`; model support varies.
+
 OCR refinement and safe metadata merge helpers may remain in the codebase, but product JSON mutation from OCR-target refinement is currently paused. Until this decision changes deliberately, `outputs/products/*.json` should reflect the full-page VLM extraction result, not OCR/refinement merge output.
 
 ## Development Rules For Future Agents

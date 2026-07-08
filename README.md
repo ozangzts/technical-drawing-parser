@@ -79,7 +79,25 @@ python tdp.py process --generate-crops
 Run full-page VLM extraction only:
 
 ```bash
-python tdp.py process --extractor ollama --model gemma4:cloud --force
+python tdp.py process --extractor ollama --model gemma4:cloud --outputs outputs_ollama_gemma4_cloud_test --force
+```
+
+Test one local Ollama model on one PDF without overwriting existing outputs:
+
+```bash
+python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model minicpm-v4.6 --outputs outputs_ollama_de3000_minicpm_test --force
+```
+
+For Ollama thinking-capable models, pass `--ollama-think`. The output root is created automatically:
+
+```bash
+python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model qwen3-vl:2b --ollama-think true --outputs outputs_ollama_de3000_qwen3vl_think_test --force
+```
+
+Some Ollama models support thinking levels:
+
+```bash
+python tdp.py process inputs/incoming/DEICO_DE3000_Technical_Drawing.pdf --extractor ollama --model gpt-oss --ollama-think medium --outputs outputs_ollama_de3000_gpt_oss_medium_test --force
 ```
 
 Run a Claude full-page extraction test into a separate output root:
@@ -101,6 +119,8 @@ The same OCR-assisted flow can use Claude:
 ```bash
 python tdp.py process --extractor anthropic --model <claude-model> --outputs outputs_claude_test --ocr --force
 ```
+
+Use a new `--outputs` folder for each experiment, such as `outputs_ollama_de3000_minicpm_test` or `outputs_ollama_de3000_qwen3vl_think_test`, to keep previous runs intact.
 
 Choose a supported OCR engine when needed:
 

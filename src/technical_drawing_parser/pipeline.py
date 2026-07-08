@@ -62,6 +62,7 @@ def process_inputs(
     retry_failed: bool = False,
     extractor: str = "none",
     model: str | None = None,
+    ollama_think: bool | str | None = None,
     generate_crops: bool = False,
     extract_crops: bool = False,
     run_ocr: bool = False,
@@ -100,6 +101,7 @@ def process_inputs(
                 outputs_root=outputs_root,
                 extractor=extractor,
                 model=model,
+                ollama_think=ollama_think,
                 generate_crops=generate_crops,
                 extract_crops=extract_crops,
                 run_ocr=run_ocr,
@@ -140,6 +142,7 @@ def create_product_json(
     outputs_root: Path,
     extractor: str = "none",
     model: str | None = None,
+    ollama_think: bool | str | None = None,
     generate_crops: bool = False,
     extract_crops: bool = False,
     run_ocr: bool = False,
@@ -222,6 +225,7 @@ def create_product_json(
                 ),
                 extractor=extractor,
                 model=resolved_model,
+                ollama_think=ollama_think,
             )
             page_extractions.append(page_extraction)
 
@@ -244,6 +248,7 @@ def create_product_json(
                 internal_dir=internal_dir,
                 output_slug=output_slug,
                 model=resolved_model or DEFAULT_OLLAMA_MODEL,
+                ollama_think=ollama_think,
             )
         elif extract_crops:
             processing_warnings.append(
@@ -270,6 +275,7 @@ def create_product_json(
                 output_slug=output_slug,
                 extractor=extractor,
                 model=resolved_model,
+                ollama_think=ollama_think,
             )
         else:
             processing_warnings.append(
@@ -299,6 +305,7 @@ def create_product_json(
         tile_extractions=tile_extractions,
         extractor=extractor,
         model=resolved_model,
+        ollama_think=ollama_think,
         extraction_status=extraction_status,
         extraction_error=extraction_error,
         validation_warnings=validation_warnings,
@@ -324,6 +331,7 @@ def create_product_json(
         "raw_response_path": str(raw_response_path) if raw_response_path.exists() else None,
         "extractor": extractor,
         "ocr_engine": ocr_engine if run_ocr else None,
+        "ollama_think": ollama_think if extractor == "ollama" else None,
         "ocr_target_crops": bool(ocr_target_crops),
         "ocr_target_refinements": bool(ocr_target_refinements),
         "model": resolved_model,
@@ -481,12 +489,14 @@ def run_page_vlm_extraction(
     raw_response_path: Path,
     extractor: str,
     model: str | None,
+    ollama_think: bool | str | None = None,
 ) -> dict[str, object]:
     if extractor == "ollama":
         extraction = extract_with_ollama(
             image_path=image_path,
             prompt=prompt,
             model=model or DEFAULT_OLLAMA_MODEL,
+            think=ollama_think,
         )
     elif extractor == "anthropic":
         extraction = extract_with_anthropic(
@@ -532,6 +542,7 @@ def run_ollama_tile_extractions(
     internal_dir: Path,
     output_slug: str,
     model: str,
+    ollama_think: bool | str | None = None,
 ) -> list[dict[str, object]]:
     tile_extractions = []
     for tile in tiles:
@@ -550,6 +561,7 @@ def run_ollama_tile_extractions(
             image_path=Path(crop_ref),
             prompt=prompt,
             model=model,
+            think=ollama_think,
         )
         validation_warnings: list[str] = []
         product_json = None
@@ -591,6 +603,7 @@ def run_ocr_target_refinements(
     output_slug: str,
     extractor: str,
     model: str | None,
+    ollama_think: bool | str | None = None,
 ) -> list[dict[str, object]]:
     refinements = []
     for target in targets:
@@ -610,6 +623,7 @@ def run_ocr_target_refinements(
             prompt=prompt,
             extractor=extractor,
             model=model,
+            ollama_think=ollama_think,
         )
         validation_warnings: list[str] = []
         refinement_json = None
@@ -655,12 +669,14 @@ def extract_target_with_provider(
     prompt: str,
     extractor: str,
     model: str | None,
+    ollama_think: bool | str | None = None,
 ):
     if extractor == "ollama":
         return extract_with_ollama(
             image_path=image_path,
             prompt=prompt,
             model=model or DEFAULT_OLLAMA_MODEL,
+            think=ollama_think,
         )
     if extractor == "anthropic":
         return extract_with_anthropic(
@@ -712,6 +728,7 @@ def build_internal_result(
     tile_extractions: list[dict[str, object]],
     extractor: str,
     model: str | None,
+    ollama_think: bool | str | None,
     extraction_status: str,
     extraction_error: str | None,
     validation_warnings: list[str],
@@ -749,6 +766,7 @@ def build_internal_result(
         "extraction": {
             "extractor": extractor,
             "model": model,
+            "ollama_think": ollama_think if extractor == "ollama" else None,
             "status": extraction_status,
             "error": extraction_error,
             "validation_warnings": validation_warnings,
