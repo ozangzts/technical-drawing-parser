@@ -121,7 +121,7 @@ Use these as a starting vocabulary. Add new types as real samples require them.
 Use a two-layer JSON design:
 
 1. Normalized extraction layer
-   - Clean, consumer-friendly fields such as `brand_name`, `product_name`, `document_name`, `drawing_number`, `revision`, `revision_date`, `sheet`, `size`, `scale`, `units`, `dimensions`, `dimension_tables`, `tables`, and `notes`.
+   - Clean, consumer-friendly fields such as `brand_name`, `product_name`, `document_name`, `drawing_number`, `revision`, `revision_date`, `sheet`, `size`, `scale`, `dimensions`, `dimension_tables`, `tables`, and `notes`.
 
 2. Evidence layer
    - `source_regions`, `raw_ocr_blocks`, `uncertain_fields`, and field-level references that explain where each value came from.
@@ -136,6 +136,10 @@ Prefer explicit uncertainty:
   "confidence": 0.0
 }
 ```
+
+Tables in product JSON should be readable without positional matching. Prefer rows with `cells` objects such as `{"column": "Signal", "value": "GND"}` instead of separate `columns` arrays plus positional `values`. For repeated side-by-side table blocks, prefer one logical item per row, such as one connector pin, one part, or one specification row.
+
+Preserve visible decimal separators in numeric strings. If the drawing shows `44,12`, keep `value` as `44,12`; do not convert it to `44.12`. Unit fields may be normalized when safe, such as `millimeters` or `millimetres` to `mm`.
 
 ## Where To Look
 

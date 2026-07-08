@@ -18,7 +18,6 @@ Product JSON files under `outputs/products/` are the user-facing extraction resu
   "sheet": null,
   "size": null,
   "scale": null,
-  "units": null,
   "dimensions": [],
   "dimension_tables": [],
   "tables": [],
@@ -73,6 +72,11 @@ Internal JSON may include fingerprints, source paths, image metadata, regions, r
 - Store raw OCR, region metadata, fingerprints, and evidence details in internal JSON when needed.
 - Add new sections only when a real drawing needs them.
 - Preserve original text where normalization may lose important context.
+- Preserve visible decimal separators in numeric strings. For example, if the drawing says `44,12`, keep `value` as `44,12` instead of converting it to `44.12`.
+- Do not include a product-level unit field. Put units on each extracted dimension and keep global unit notes, such as "all dimensions are in millimeters", in `notes`.
+- Normalize common unit spellings in unit fields when safe, such as `millimeters` or `millimetres` to `mm`.
 - Use `dimension_tables` for tabular product measurements where row and column context is needed to understand values.
 - Use `tables` for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
+- Represent table rows with readable `cells`, for example `{"column": "Signal", "value": "GND"}`. Avoid disconnected `columns` plus positional `values` in product JSON.
+- For repeated side-by-side table blocks, prefer one logical item per row, such as one connector pin or one specification row, instead of one very wide row with repeated headers.
 - See `docs/extraction.md` for VLM extraction rules and dimension object guidance.

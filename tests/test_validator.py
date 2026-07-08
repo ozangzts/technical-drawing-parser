@@ -74,6 +74,7 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual(result["sheet"], "1/1")
         self.assertEqual(result["size"], "A3")
         self.assertIsNone(result["scale"])
+        self.assertEqual(result["dimensions"][0]["value"], "1,22")
         self.assertEqual(result["dimensions"][0]["raw_text"], "(x11) Ø1,22")
         self.assertEqual(result["dimensions"][0]["type"], "diameter")
         self.assertIsNone(result["dimensions"][0]["label"])
@@ -84,6 +85,62 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(
             any("Dimension 3 type `made up`" in warning for warning in warnings)
         )
+
+    def test_parse_product_json_response_drops_product_units_without_changing_values(self) -> None:
+        response = """{
+  "units": "millimetres",
+  "dimensions": [
+    {
+      "raw_text": "44,12",
+      "value": "44,12",
+      "unit": "millimeters",
+      "type": "linear"
+    },
+    {
+      "raw_text": "90°",
+      "value": "90",
+      "unit": "degrees",
+      "type": "angle"
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertNotIn("units", result)
+        self.assertNotIn("dimension_units", result)
+        self.assertEqual(result["dimensions"][0]["raw_text"], "44,12")
+        self.assertEqual(result["dimensions"][0]["value"], "44,12")
+        self.assertEqual(result["dimensions"][0]["unit"], "mm")
+        self.assertEqual(result["dimensions"][1]["unit"], "deg")
+
+    def test_parse_product_json_response_warns_about_filename_like_metadata(self) -> None:
+        response = """{
+  "product_name": "DEICO_DE8133_Technical_Drawing.pdf",
+  "document_name": "DEICO_DE8133_Technical_Drawing",
+  "drawing_number": "DEICO_DE8133_Technical_Drawing.pdf",
+  "dimensions": [],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(
+            response,
+            Path("DEICO_DE8133_Technical_Drawing.pdf"),
+        )
+
+        self.assertEqual(
+            result["product_name"],
+            "DEICO_DE8133_Technical_Drawing.pdf",
+        )
+        self.assertTrue(any("product_name" in warning for warning in warnings))
+        self.assertTrue(any("document_name" in warning for warning in warnings))
+        self.assertTrue(any("drawing_number" in warning for warning in warnings))
 
     def test_parse_product_json_response_warns_about_suspicious_diameter_symbol(self) -> None:
         response = """{
@@ -141,7 +198,13 @@ class ValidatorTests(unittest.TestCase):
 
         self.assertEqual(warnings, [])
         self.assertEqual(result["dimension_tables"][0]["title"], "Cabinet sizes")
-        self.assertEqual(result["dimension_tables"][0]["rows"][0]["values"], ["600", "800"])
+        self.assertEqual(
+            result["dimension_tables"][0]["rows"][0]["cells"],
+            [
+                {"column": "Width", "value": "600"},
+                {"column": "Depth", "value": "800"},
+            ],
+        )
 
     def test_parse_product_json_response_preserves_general_tables(self) -> None:
         response = """{
@@ -170,7 +233,10 @@ class ValidatorTests(unittest.TestCase):
 
         self.assertEqual(warnings, [])
         self.assertEqual(result["tables"][0]["type"], "pinout_table")
-        self.assertEqual(result["tables"][0]["rows"][0]["values"], ["GND"])
+        self.assertEqual(
+            result["tables"][0]["rows"][0]["cells"],
+            [{"column": "Signal", "value": "GND"}],
+        )
 
     def test_parse_ocr_target_refinement_preserves_visual_text_check(self) -> None:
         response = """{

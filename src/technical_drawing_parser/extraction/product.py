@@ -18,7 +18,6 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
         "sheet": None,
         "size": None,
         "scale": None,
-        "units": None,
         "dimensions": [],
         "dimension_tables": [],
         "tables": [],
@@ -42,7 +41,6 @@ def product_schema_description() -> str:
   "sheet": "string or null",
   "size": "string or null",
   "scale": "string or null",
-  "units": "string or null",
   "dimensions": [
     {
       "raw_text": "string",
@@ -58,11 +56,15 @@ def product_schema_description() -> str:
     {
       "title": "string or null",
       "context": "string or null",
-      "columns": ["string"],
       "rows": [
         {
           "label": "string or null",
-          "values": ["string"]
+          "cells": [
+            {
+              "column": "string or null",
+              "value": "string or null"
+            }
+          ]
         }
       ]
     }
@@ -72,11 +74,15 @@ def product_schema_description() -> str:
       "type": "pinout_table | connection_table | specification_table | notes_table | unknown",
       "title": "string or null",
       "context": "string or null",
-      "columns": ["string"],
       "rows": [
         {
           "label": "string or null",
-          "values": ["string"]
+          "cells": [
+            {
+              "column": "string or null",
+              "value": "string or null"
+            }
+          ]
         }
       ]
     }

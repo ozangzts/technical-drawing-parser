@@ -1,0 +1,396 @@
+{
+  "schema_version": "0.1.0",
+  "product_json_path": "outputs_claude_sonnet_test\\products\\deico_de12xxx.json",
+  "tile_summary_path": "outputs_claude_sonnet_test\\internal\\deico_de12xxx.tile_summary.json",
+  "vlm_prompt_path": "outputs_claude_sonnet_test\\internal\\deico_de12xxx.vlm_prompt.txt",
+  "raw_response_path": "outputs_claude_sonnet_test\\internal\\deico_de12xxx.raw_response.txt",
+  "rendered_page": {
+    "path": "outputs_claude_sonnet_test\\internal\\page_images\\deico_de12xxx_page_001.png",
+    "page": 1,
+    "dpi": 300,
+    "width": 4961,
+    "height": 3508,
+    "pdf_width_points": 1190.550048828125,
+    "pdf_height_points": 841.8900146484375
+  },
+  "rendered_pages": [
+    {
+      "path": "outputs_claude_sonnet_test\\internal\\page_images\\deico_de12xxx_page_001.png",
+      "page": 1,
+      "dpi": 300,
+      "width": 4961,
+      "height": 3508,
+      "pdf_width_points": 1190.550048828125,
+      "pdf_height_points": 841.8900146484375
+    }
+  ],
+  "page_extractions": [
+    {
+      "page": 1,
+      "image_path": "outputs_claude_sonnet_test\\internal\\page_images\\deico_de12xxx_page_001.png",
+      "raw_response_path": "outputs_claude_sonnet_test\\internal\\deico_de12xxx.raw_response.txt",
+      "status": "validation_failed",
+      "error": null,
+      "extractor": "anthropic",
+      "model": "claude-sonnet-5",
+      "validation_warnings": [
+        "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+      ],
+      "product_json": {
+        "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+        "brand_name": "DEICO",
+        "product_name": "19\" RACK CABINETS",
+        "document_name": "Technical Drawing",
+        "drawing_number": "DEICO_DE12XXX_Technical_Drawing",
+        "revision": "0",
+        "revision_date": "05.09.2025",
+        "sheet": "1/1",
+        "size": "A3",
+        "scale": null,
+        "dimensions": [
+          {
+            "raw_text": "600",
+            "value": "600",
+            "unit": "mm",
+            "type": "linear",
+            "quantity": null,
+            "label": null,
+            "context": "single cabinet overall width (top view)"
+          },
+          {
+            "raw_text": "75",
+            "value": "75",
+            "unit": "mm",
+            "type": "linear",
+            "quantity": null,
+            "label": null,
+            "context": "single cabinet top view side depth segment"
+          },
+          {
+            "raw_text": "182",
+            "value": "182",
+            "unit": "mm",
+            "type": "linear",
+            "quantity": null,
+            "label": null,
+            "context": "single cabinet base/plinth height"
+          },
+          {
+            "raw_text": "1200",
+            "value": "1200",
+            "unit": "mm",
+            "type": "linear",
+            "quantity": null,
+            "label": null,
+            "context": "double cabinet overall width (top view)"
+          }
+        ],
+        "dimension_tables": [
+          {
+            "title": "Cabinet Product Table",
+            "context": "19\" rack cabinet variants with height, depth, and type",
+            "rows": [
+              {
+                "label": "DE12000",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12000"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "20U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "SINGLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12001",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12001"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "32U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "SINGLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12002",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12002"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "32U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "DOUBLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12003",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12003"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "36U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "SINGLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12004",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12004"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "36U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "DOUBLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12005",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12005"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "38U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "900"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "SINGLE"
+                  }
+                ]
+              },
+              {
+                "label": "DE12006",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "DE12006"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "38U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "900"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "DOUBLE"
+                  }
+                ]
+              },
+              {
+                "label": "CUSTOM CABINET",
+                "cells": [
+                  {
+                    "column": "PRODUCT CODE",
+                    "value": "CUSTOM CABINET"
+                  },
+                  {
+                    "column": "CABINET HEIGHT (A)",
+                    "value": "20U-42U"
+                  },
+                  {
+                    "column": "CABINET DEPTH (B) (MM)",
+                    "value": "800-1000"
+                  },
+                  {
+                    "column": "CABINET TYPE",
+                    "value": "CUSTOMIZABLE"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "tables": [],
+        "tolerances": [],
+        "notes": [
+          "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS."
+        ],
+        "warnings": [
+          "Cabinet height (A) values are given in rack units (U) in the table, not millimeters, so no numeric mm dimension was extracted for A.",
+          "The 'B' dimension label appears on the front/side views without a numeric value; only depth values from the table are available.",
+          "Some hardware details (e.g., handles, locks, vent panels) are visible but not labeled with dimensions.",
+          "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+        ]
+      }
+    }
+  ],
+  "tile_extractions": [],
+  "tile_extraction_summary": {
+    "summary_notes": {
+      "purpose": "Internal review aid for crop/tile extraction results; it does not change product JSON.",
+      "duplicate_candidate_groups": "Dimensions that may be repeated because the same visible measurement was extracted from overlapping tiles.",
+      "strong_duplicate": "A duplicate group with stronger matching evidence such as label or quantity; merge evidence only after review.",
+      "weak_duplicate": "A duplicate group with limited matching evidence, usually missing label or quantity; review carefully.",
+      "full_page_supported_candidates": "Tile dimensions that match a dimension found by full-page extraction.",
+      "tile_only_candidates": "Tile dimensions not found in full-page extraction; they may be useful new evidence or crop-only false positives.",
+      "tile_only_review_candidates": "Count of tile-only candidates that look potentially useful enough for manual review.",
+      "weak_tile_only": "Tile-only candidates with weak evidence, such as missing labels or very short raw text.",
+      "non_product_candidate": "Tile-only candidates that look like schematic ratios, reference labels, or other information that should not automatically become product dimensions."
+    },
+    "tiles_processed": 0,
+    "dimensions_found": 0,
+    "duplicate_candidate_groups": [],
+    "full_page_supported_candidates": [],
+    "tile_only_candidates": [],
+    "unique_dimension_candidates": [],
+    "review_summary": {
+      "strong_duplicate_groups": 0,
+      "weak_duplicate_groups": 0,
+      "full_page_supported_candidates": 0,
+      "tile_only_candidates": 0,
+      "tile_only_review_candidates": 0,
+      "weak_tile_only_candidates": 0,
+      "non_product_candidates": 0
+    }
+  },
+  "ocr_target_refinement_summary": {
+    "targets": 0,
+    "dimensions": 0,
+    "metadata": 0,
+    "notes": 0,
+    "uncertain": 0,
+    "irrelevant": 0,
+    "failed": 0,
+    "merge_candidates": [],
+    "covered_by_dimensions": [],
+    "covered_by_dimension_tables": [],
+    "new_dimension_candidates": [],
+    "metadata_review_candidates": []
+  },
+  "extraction": {
+    "extractor": "anthropic",
+    "model": "claude-sonnet-5",
+    "status": "validation_failed",
+    "error": null,
+    "validation_warnings": [
+      "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+    ]
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE12XXX_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE12XXX_Technical_Drawing.pdf",
+    "fingerprint": "sha256:5c5081bdeb0e2debf4ec8b023d0e80fbc57ebd2f7592cbd3fb5b3b6710c5d6de",
+    "metadata": {
+      "filename": "DEICO_DE12XXX_Technical_Drawing.pdf",
+      "extension": ".pdf",
+      "size_bytes": 3089300,
+      "pdf": {
+        "page_count": 1,
+        "is_pdf": true
+      },
+      "rendered_pages": [
+        {
+          "path": "outputs_claude_sonnet_test\\internal\\page_images\\deico_de12xxx_page_001.png",
+          "page": 1,
+          "dpi": 300,
+          "width": 4961,
+          "height": 3508,
+          "pdf_width_points": 1190.550048828125,
+          "pdf_height_points": 841.8900146484375
+        }
+      ],
+      "image": {
+        "width": 4961,
+        "height": 3508,
+        "derived_from": "inputs\\incoming\\DEICO_DE12XXX_Technical_Drawing.pdf",
+        "page": 1
+      }
+    },
+    "processed_at": "2026-07-08T05:59:26+00:00"
+  },
+  "regions": [
+    {
+      "id": "page_001_region_001",
+      "type": "full_page",
+      "page": 1,
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 4961,
+        "height": 3508
+      },
+      "source_ref": "inputs\\incoming\\DEICO_DE12XXX_Technical_Drawing.pdf#page=1",
+      "crop_ref": null,
+      "confidence": 1.0
+    }
+  ],
+  "tiles": [],
+  "raw_ocr_blocks": [],
+  "ocr_candidates": [],
+  "ocr_target_crops": [],
+  "ocr_target_refinements": [],
+  "metadata_merges": [],
+  "warnings": [
+    "Layout detection, dimension merge from refinement results, and region-specific semantic extraction are not implemented yet."
+  ],
+  "uncertain_fields": [
+    {
+      "field": "semantic_extraction",
+      "value": null,
+      "reason": "Dimension merge from OCR target refinement and region-specific semantic extraction are not implemented yet.",
+      "evidence": [],
+      "confidence": 0.0
+    }
+  ]
+}

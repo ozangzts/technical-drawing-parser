@@ -1,0 +1,604 @@
+{
+  "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+  "brand_name": "DEICO",
+  "product_name": "DEICO ONYX USB - I2C/SPI CONVERTER",
+  "document_name": "DE4001 - TECHNICAL DRAWING",
+  "drawing_number": "DE4001",
+  "revision": "0",
+  "revision_date": "14.08.2023",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "85,7",
+      "value": "85,7",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Top view overall width (outer dimension)"
+    },
+    {
+      "raw_text": "84",
+      "value": "84",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Top view width (inner dimension, front panel area)"
+    },
+    {
+      "raw_text": "R10",
+      "value": "10",
+      "unit": "mm",
+      "type": "radius",
+      "quantity": null,
+      "label": "R10",
+      "context": "End view corner radius"
+    },
+    {
+      "raw_text": "18,8",
+      "value": "18,8",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "End view width"
+    },
+    {
+      "raw_text": "49,3",
+      "value": "49,3",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Side view overall height"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Target Bus Connector",
+      "context": "10-pin connector pinout (I2C/SPI/GPIO)",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "I2C SCL"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "I2C interface clock signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "I2C SDA"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "I2C interface data signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "VCC 3V3"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "3.3V output."
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "SPI MISO"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface master in slave out signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "VCC 3V3"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "3.3V output."
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "SPI CLK"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface clock signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "SPI MOSI"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface master out slave in signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "SPI SS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface slave select signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "connection_table",
+      "title": "Host Bus Connector",
+      "context": "USB-C style host connector pin sequence",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "TX1+"
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "TX1-"
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "VBUS"
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "CC1"
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "D+"
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "D-"
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "SBU1"
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "VBUS"
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "RX2-"
+            }
+          ]
+        },
+        {
+          "label": "11",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "RX2+"
+            }
+          ]
+        },
+        {
+          "label": "12",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "GND"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "connection_table",
+      "title": "Target Bus Connector (ribbon cable)",
+      "context": "USB-C style target connector pin sequence",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "RX1+"
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "RX1-"
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "VBUS"
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "SBU2"
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "D-"
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "D+"
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "CC2"
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "VBUS"
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "TX2-"
+            }
+          ]
+        },
+        {
+          "label": "11",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "TX2+"
+            }
+          ]
+        },
+        {
+          "label": "12",
+          "cells": [
+            {
+              "column": "Pin",
+              "value": "GND"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "connection_table",
+      "title": "Front Panel Connector Layout",
+      "context": "Front panel labeled pin header (matches Target Bus Connector signals)",
+      "rows": [
+        {
+          "label": "Left column - row 1",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "I2C_SCL"
+            }
+          ]
+        },
+        {
+          "label": "Left column - row 2",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "I2C_DA"
+            }
+          ]
+        },
+        {
+          "label": "Left column - row 3",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "SPI_MISO"
+            }
+          ]
+        },
+        {
+          "label": "Left column - row 4",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "SPI_CLK"
+            }
+          ]
+        },
+        {
+          "label": "Left column - row 5",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "SPI_SS"
+            }
+          ]
+        },
+        {
+          "label": "Right column - row 1",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": "Right column - row 2",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "VCC_3V3"
+            }
+          ]
+        },
+        {
+          "label": "Right column - row 3",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "VCC_3V3"
+            }
+          ]
+        },
+        {
+          "label": "Right column - row 4",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "SPI_MOSI"
+            }
+          ]
+        },
+        {
+          "label": "Right column - row 5",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "GND"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical Specifications",
+      "context": "Section 1.0 Mechanical Specifications",
+      "rows": [
+        {
+          "label": "1.1",
+          "cells": [
+            {
+              "column": "Parameter",
+              "value": "Enclosure Material"
+            },
+            {
+              "column": "Value",
+              "value": "EN AW-6060 T66, 2MM THK. Finish: Black Anodized"
+            }
+          ]
+        },
+        {
+          "label": "1.2",
+          "cells": [
+            {
+              "column": "Parameter",
+              "value": "Front Panel Material"
+            },
+            {
+              "column": "Value",
+              "value": "EN AW-Al Mg1 5005 H34, 2MM THK. Finish: Black Anodized"
+            }
+          ]
+        },
+        {
+          "label": "1.3",
+          "cells": [
+            {
+              "column": "Parameter",
+              "value": "Plastic Strip Material"
+            },
+            {
+              "column": "Value",
+              "value": "PC-ABS ALLOY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Environmental",
+      "context": "Section 2.0 Environmental",
+      "rows": [
+        {
+          "label": "2.1",
+          "cells": [
+            {
+              "column": "Parameter",
+              "value": "Operating Temperature Range"
+            },
+            {
+              "column": "Value",
+              "value": "-55°C TO 125°C"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Circuitry block diagram shows USB input to CONTROLLER, with outputs to I2C/GPIO and SPI/GPIO.",
+    "Front panel includes PWR and ACT indicator LEDs, TYPE-C connector, CE/FCC/WEEE marks, and www.deico.com.tr text.",
+    "Product front label reads: Onyx I2C/SPI, DE4001 USB-I2C/SPI CONVERTER.",
+    "A separate reference code 'SBL-0033 Rev. No:0 Date: 29.05.2023' appears at the bottom left of the sheet, distinct from the main title block revision info."
+  ],
+  "warnings": [
+    "The bottom-left code 'SBL-0033 Rev. No:0 Date: 29.05.2023' may represent a separate document control number distinct from the title block drawing number DE4001; relationship between the two is unclear.",
+    "Dimension unit 'mm' is inferred from the general note 'ALL DIMENSIONS ARE IN MILLIMETERS' since no unit symbol appears directly next to the dimension values.",
+    "Some connector pin labels (e.g., I2C_DA on front panel) appear to be abbreviated or partially cropped compared to full pinout table naming (I2C SDA)."
+  ]
+}

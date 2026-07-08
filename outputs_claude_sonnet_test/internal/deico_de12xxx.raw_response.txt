@@ -1,0 +1,142 @@
+```json
+{
+  "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "19\" RACK CABINETS",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DEICO_DE12XXX_Technical_Drawing",
+  "revision": "0",
+  "revision_date": "05.09.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": null,
+  "dimensions": [
+    {
+      "raw_text": "600",
+      "value": "600",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "single cabinet overall width (top view)"
+    },
+    {
+      "raw_text": "75",
+      "value": "75",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "single cabinet top view side depth segment"
+    },
+    {
+      "raw_text": "182",
+      "value": "182",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "single cabinet base/plinth height"
+    },
+    {
+      "raw_text": "1200",
+      "value": "1200",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "double cabinet overall width (top view)"
+    }
+  ],
+  "dimension_tables": [
+    {
+      "title": "Cabinet Product Table",
+      "context": "19\" rack cabinet variants with height, depth, and type",
+      "rows": [
+        {
+          "label": "DE12000",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12000"},
+            {"column": "CABINET HEIGHT (A)", "value": "20U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800"},
+            {"column": "CABINET TYPE", "value": "SINGLE"}
+          ]
+        },
+        {
+          "label": "DE12001",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12001"},
+            {"column": "CABINET HEIGHT (A)", "value": "32U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800"},
+            {"column": "CABINET TYPE", "value": "SINGLE"}
+          ]
+        },
+        {
+          "label": "DE12002",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12002"},
+            {"column": "CABINET HEIGHT (A)", "value": "32U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800"},
+            {"column": "CABINET TYPE", "value": "DOUBLE"}
+          ]
+        },
+        {
+          "label": "DE12003",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12003"},
+            {"column": "CABINET HEIGHT (A)", "value": "36U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800"},
+            {"column": "CABINET TYPE", "value": "SINGLE"}
+          ]
+        },
+        {
+          "label": "DE12004",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12004"},
+            {"column": "CABINET HEIGHT (A)", "value": "36U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800"},
+            {"column": "CABINET TYPE", "value": "DOUBLE"}
+          ]
+        },
+        {
+          "label": "DE12005",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12005"},
+            {"column": "CABINET HEIGHT (A)", "value": "38U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "900"},
+            {"column": "CABINET TYPE", "value": "SINGLE"}
+          ]
+        },
+        {
+          "label": "DE12006",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "DE12006"},
+            {"column": "CABINET HEIGHT (A)", "value": "38U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "900"},
+            {"column": "CABINET TYPE", "value": "DOUBLE"}
+          ]
+        },
+        {
+          "label": "CUSTOM CABINET",
+          "cells": [
+            {"column": "PRODUCT CODE", "value": "CUSTOM CABINET"},
+            {"column": "CABINET HEIGHT (A)", "value": "20U-42U"},
+            {"column": "CABINET DEPTH (B) (MM)", "value": "800-1000"},
+            {"column": "CABINET TYPE", "value": "CUSTOMIZABLE"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": [],
+  "tolerances": [],
+  "notes": [
+    "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS."
+  ],
+  "warnings": [
+    "Cabinet height (A) values are given in rack units (U) in the table, not millimeters, so no numeric mm dimension was extracted for A.",
+    "The 'B' dimension label appears on the front/side views without a numeric value; only depth values from the table are available.",
+    "Some hardware details (e.g., handles, locks, vent panels) are visible but not labeled with dimensions."
+  ]
+}
+```

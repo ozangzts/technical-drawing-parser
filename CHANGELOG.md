@@ -93,6 +93,11 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Removed the separate `--generate-ocr-target-crops` and `--refine-ocr-targets` commands from the active CLI surface.
 - Paused OCR-target metadata merge into product JSON; refinement evidence remains internal, but product JSON now reflects the full-page VLM result unless merge behavior is deliberately re-enabled.
 - Made OCR target refinement use the active VLM extractor so `--ocr` works with Anthropic as well as Ollama.
+- Changed product table output toward readable row `cells` with explicit `column` and `value` pairs, while normalizing older `columns`/`values` responses into the new shape.
+- Tightened unit prompts so global dimension units apply only to physical product dimensions and not to unrelated table/specification values.
+- Preserved visible decimal separators in dimension values while normalizing common unit spellings such as `millimetres` to `mm`.
+- Added filename-like metadata warnings for product, document, and drawing-number fields without automatically rewriting the extractor output.
+- Removed the product-level unit field from the schema; units now live on individual dimensions while global unit notes remain in `notes`.
 
 ### Notes
 

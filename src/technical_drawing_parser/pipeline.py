@@ -52,7 +52,6 @@ MERGEABLE_PRODUCT_METADATA_FIELDS = {
     "sheet",
     "size",
     "scale",
-    "units",
 }
 
 
@@ -876,7 +875,6 @@ def build_review_result(
             "sheet": product_json.get("sheet"),
             "size": product_json.get("size"),
             "scale": product_json.get("scale"),
-            "units": product_json.get("units"),
         },
         "extraction": {
             "status": extraction_dict.get("status"),
@@ -1356,6 +1354,14 @@ def build_product_dimension_coverage(
             for row in rows:
                 if not isinstance(row, dict):
                     continue
+                cells = row.get("cells")
+                if isinstance(cells, list):
+                    for cell in cells:
+                        if not isinstance(cell, dict):
+                            continue
+                        coverage["dimension_tables"].update(
+                            collect_scalar_comparison_values(cell.get("value"))
+                        )
                 values = row.get("values")
                 if not isinstance(values, list):
                     continue

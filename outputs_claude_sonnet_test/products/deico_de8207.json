@@ -1,0 +1,166 @@
+{
+  "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Box Type Bus Coupler 7 Stub",
+  "document_name": "DEICO_DE8207_Technical_Drawing.pdf",
+  "drawing_number": "SBL-0033",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "222",
+      "value": "222",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "overall length including end mounting tabs, top view"
+    },
+    {
+      "raw_text": "212",
+      "value": "212",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "length between mounting hole centers, top view"
+    },
+    {
+      "raw_text": "197,8",
+      "value": "197,8",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "body length excluding end tabs, top view"
+    },
+    {
+      "raw_text": "30,3",
+      "value": "30,3",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "distance from left body edge to first stub port (J3) center, bottom view"
+    },
+    {
+      "raw_text": "(x6) 22,9",
+      "value": "22,9",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": 6,
+      "label": null,
+      "context": "spacing between adjacent stub port connectors, bottom view"
+    },
+    {
+      "raw_text": "(x4) φ4,2 THRU",
+      "value": "4,2",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 4,
+      "label": "φ4,2 THRU",
+      "context": "mounting hole diameter on end tabs"
+    },
+    {
+      "raw_text": "26",
+      "value": "26",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "upper height segment, front view right side dimension"
+    },
+    {
+      "raw_text": "36",
+      "value": "36",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "height segment, front view right side dimension"
+    },
+    {
+      "raw_text": "48,5",
+      "value": "48,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "overall height, front view"
+    },
+    {
+      "raw_text": "5",
+      "value": "5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "small lower height segment, front view right side dimension"
+    },
+    {
+      "raw_text": "24",
+      "value": "24",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "connector body height, side view"
+    },
+    {
+      "raw_text": "13,1",
+      "value": "13,1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "lower body height segment, side view"
+    },
+    {
+      "raw_text": "2",
+      "value": "2",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "mounting bracket plate thickness, side view"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "specification_table",
+      "title": "INTERMATEABILITY",
+      "context": "Recommended mating connector reference",
+      "rows": [
+        {
+          "label": "BJ770",
+          "cells": [
+            {
+              "column": "CONNECTOR",
+              "value": "BJ770"
+            },
+            {
+              "column": "RECOMMENDED MATING CONNECTOR",
+              "value": "PL75"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "Schematic diagram shows J1 BUS and J2 BUS connected through a main line with 7 stub branches (J3–J9), each stub having a pair of resistors (R1–R14) and a transformer with turns ratio 1:1.41.",
+    "Intellectual property notice: document belongs to DEICO Engineering Inc.; reproduction or sharing without written permission is prohibited."
+  ],
+  "warnings": [
+    "Conflicting revision dates found: title block shows Rev. Date 26.06.2026, while bottom-left stamp 'SBL-0033 Rev. No:2 Date: 19.12.2025' shows a different date.",
+    "Schematic diagram component values (R1–R14, transformer ratio 1:1.41) are circuit elements, not physical dimensions, and were not included in the dimensions list.",
+    "Connector port labels (J1–J9) and 'BUS'/'STUB PORTS' text are identifiers, not extracted as dimensions or tables beyond context.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8207_Technical_Drawing.pdf`."
+  ]
+}

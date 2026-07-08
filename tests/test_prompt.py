@@ -78,9 +78,33 @@ class PromptTests(unittest.TestCase):
             },
         )
 
-        self.assertIn("Do not infer units", full_page_prompt)
-        self.assertIn("Do not infer units", tile_prompt)
+        self.assertIn("Do not infer dimension unit", full_page_prompt)
+        self.assertIn("Do not infer dimension unit", tile_prompt)
         self.assertIn("Do not infer mm", ocr_target_prompt)
+        self.assertIn("applies only to physical product dimensions", full_page_prompt)
+        self.assertIn("pin numbers", full_page_prompt)
+        self.assertIn("scale values", ocr_target_prompt)
+        self.assertIn("Do not convert decimal commas", full_page_prompt)
+        self.assertIn("Do not convert decimal commas", tile_prompt)
+        self.assertIn("Do not convert decimal commas", ocr_target_prompt)
+
+    def test_prompts_require_readable_table_rows(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("one logical item per row", full_page_prompt)
+        self.assertIn("cells as a list of objects", full_page_prompt)
+        self.assertIn("separate columns array", full_page_prompt)
+        self.assertIn("numbered specification sections", full_page_prompt)
+        self.assertIn("one logical item per row", tile_prompt)
 
     def test_ocr_target_prompt_requires_visual_text_verification(self) -> None:
         prompt = build_ocr_target_refinement_prompt(

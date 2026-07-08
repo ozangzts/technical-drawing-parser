@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_claude_sonnet_test\\products\\deico_de3000.json",
+    "source_file": "DEICO_DE3000_Technical_Drawing.pdf",
+    "brand_name": "DEICO",
+    "product_name": "DE3000 - Battery Simulation Unit 12 CH 5 V 500 mA",
+    "document_name": "DEICO_DE3000_Technical_Drawing",
+    "revision": "2",
+    "revision_date": "04.06.2025",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": "13:100"
+  },
+  "extraction": {
+    "status": "validation_failed",
+    "extractor": "anthropic",
+    "model": "claude-sonnet-5",
+    "error": null,
+    "validation_warnings": [
+      "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
+    ]
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 4,
+    "dimension_tables": 0,
+    "tables": 3,
+    "notes": 3,
+    "product_warnings": 5,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [
+      "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
+    ],
+    "product_warnings": [
+      "Auxiliary I/O connector pinout table repeats Analog In #1, #3, #5, #7 for both Pin 1-4 and Pin 19-22; this duplication is preserved as printed and may indicate a labeling inconsistency in the source drawing.",
+      "No explicit 'drawing number' field is visible in the title block separate from document name; drawing_number set to null.",
+      "System Functionality Chart is a block diagram without numeric dimensions and was not extracted as a table or dimension.",
+      "Front panel LED labels (PWR, FAULT) and back panel connector labels (LAN, USB, EtherCAT IN/OUT, CAN TERMINATION, AUX I/O, CELL 1-12, PWR INPUT) are visible but not extracted as tables since they are not structured pin/value data with visible values.",
+      "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
+    ]
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE3000_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE3000_Technical_Drawing.pdf",
+    "processed_at": "2026-07-08T05:59:42+00:00"
+  }
+}

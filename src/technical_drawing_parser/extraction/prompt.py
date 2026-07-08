@@ -17,13 +17,16 @@ Rules:
 - Extract only information that is visible in the drawing.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible numeric formatting in value too. Do not convert decimal commas to decimal points.
 - Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
-- Use units only when they are explicitly visible on the drawing, in a dimension label, title block, or global note.
-- Do not infer units from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
-- If units are not visibly stated, use null for global units and for dimension unit.
+- Use dimension unit only when a unit is visible in a dimension label or supported by a visible global note such as "all dimensions are in millimeters".
+- Do not infer dimension unit from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
+- If dimension units are not visibly stated, use null for dimension unit.
+- A global note such as "all dimensions are in millimeters" applies only to physical product dimensions that do not show another unit.
+- Do not apply global dimension units to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or free-text notes unless that exact value visibly carries that unit.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
 - Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
 - Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
@@ -34,9 +37,14 @@ Rules:
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
 - Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
+- Make dimension context specific enough to locate the value, such as overall width, front view height, connector body radius, or recommended land pattern hole diameter.
 - Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
 - Put table-derived measurements in dimension_tables with their row and column context instead of flattening them into dimensions when the table context is needed to understand the value.
 - Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables, not in dimension_tables.
+- Extract numbered specification sections as tables when they have a parameter/value structure. Use notes only for free-text notes that do not form a table.
+- For tables, make rows readable by humans. Use one logical item per row when possible, such as one pin per row or one specification per row.
+- In table rows, use cells as a list of objects with column and value. Do not put table headers in a separate columns array with disconnected row values.
+- If the visible table repeats the same headers across multiple side-by-side blocks, normalize it into logical rows instead of preserving repeated headers across one very wide row.
 - Do not list single-letter symbolic references such as A, B, C, X, or Y as dimensions unless a numeric value is visible with the reference. If the symbol is defined by a table, keep it as table column text or context.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 
@@ -61,13 +69,16 @@ Rules:
 - Extract only information that is visible inside this crop.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible numeric formatting in value too. Do not convert decimal commas to decimal points.
 - Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Use null for missing scalar values.
 - Use empty arrays when no values are visible.
 - Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
-- Use units only when they are explicitly visible in this crop, in a dimension label, title block fragment, or global note fragment.
-- Do not infer units from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
-- If units are not visibly stated in this crop, use null for global units and for dimension unit.
+- Use dimension unit only when a unit is visible in a dimension label or supported by a visible global note fragment such as "all dimensions are in millimeters".
+- Do not infer dimension unit from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
+- If dimension units are not visibly stated in this crop, use null for dimension unit.
+- A global note fragment such as "all dimensions are in millimeters" applies only to physical product dimensions that do not show another unit.
+- Do not apply global dimension units to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or free-text notes unless that exact value visibly carries that unit.
 - Extract title-block sheet information such as 1/1 into sheet when visible.
 - Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
 - Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
@@ -78,8 +89,12 @@ Rules:
 - Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
 - Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
 - For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
+- Make dimension context specific enough to locate the value, such as overall width, front view height, connector body radius, or recommended land pattern hole diameter.
 - Extract visible table-derived measurements into dimension_tables when row or column context is needed.
 - Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables.
+- Extract numbered specification sections as tables when they have a parameter/value structure. Use notes only for free-text notes that do not form a table.
+- For tables, use one logical item per row when possible and write row cells as objects with column and value.
+- Do not put table headers in a separate columns array with disconnected row values.
 - Do not list single-letter symbolic references as dimensions unless a numeric value is visible with the reference.
 - Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
 
@@ -123,11 +138,13 @@ Rules:
 - If ocr_text_supported is false, do not use the OCR hint as the dimension value or metadata value.
 - Do not guess missing or unclear values.
 - Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
+- Preserve visible numeric formatting in value too. Do not convert decimal commas to decimal points.
 - Preserve visible metadata values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
 - Do not treat title-block metadata as a product dimension.
 - Set is_product_dimension to true only for physical product dimensions, not title-block scale, dates, sheet numbers, drawing numbers, notes, or table indexes.
-- For metadata, use one of these fields when visible: brand_name, product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, units, other.
+- For metadata, use one of these fields when visible: brand_name, product_name, document_name, drawing_number, revision, revision_date, sheet, size, scale, other.
 - Use units only when the unit text is visible in the crop. Do not infer mm, inch, or any other unit from the number format or drawing style.
+- Do not apply a global dimension unit to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or notes unless that exact visible value carries that unit.
 - Use local_context to describe what the crop visually appears to be: title_block, dimension_callout, dimension_table, general_table, drawing_view, note, or unknown.
 - Use visible_label for a nearby visible label that supports the classification, such as SCALE, DATE, SHEET, REV, SIZE, UNITS, or a table heading. Use null when no supporting label is visible.
 - If the crop contains only an isolated number with no visible label, table structure, leader line, arrow, or title-block context, classify it as uncertain or irrelevant instead of metadata.
@@ -165,7 +182,7 @@ Schema:
     "context": null
   }},
   "metadata": {{
-    "field": "brand_name | product_name | document_name | drawing_number | revision | revision_date | sheet | size | scale | units | other | null",
+    "field": "brand_name | product_name | document_name | drawing_number | revision | revision_date | sheet | size | scale | other | null",
     "value": null
   }},
   "confidence": 0.0,

@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_claude_sonnet_test\\products\\deico_de4001.json",
+    "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "brand_name": "DEICO",
+    "product_name": "DEICO ONYX USB - I2C/SPI CONVERTER",
+    "document_name": "DE4001 - TECHNICAL DRAWING",
+    "revision": "0",
+    "revision_date": "14.08.2023",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": "1:1"
+  },
+  "extraction": {
+    "status": "completed",
+    "extractor": "anthropic",
+    "model": "claude-sonnet-5",
+    "error": null,
+    "validation_warnings": []
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 5,
+    "dimension_tables": 0,
+    "tables": 6,
+    "notes": 4,
+    "product_warnings": 3,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [],
+    "product_warnings": [
+      "The bottom-left code 'SBL-0033 Rev. No:0 Date: 29.05.2023' may represent a separate document control number distinct from the title block drawing number DE4001; relationship between the two is unclear.",
+      "Dimension unit 'mm' is inferred from the general note 'ALL DIMENSIONS ARE IN MILLIMETERS' since no unit symbol appears directly next to the dimension values.",
+      "Some connector pin labels (e.g., I2C_DA on front panel) appear to be abbreviated or partially cropped compared to full pinout table naming (I2C SDA)."
+    ]
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "original_filename": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "processed_at": "2026-07-08T06:00:30+00:00"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 3 Stub DTRM",
+  "document_name": "DEICO_DE8133_Technical_Drawing.pdf",
+  "drawing_number": "SBL-0033",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "2:1",
+  "dimensions": [
+    {
+      "raw_text": "48,85",
+      "value": "48,85",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall width, top view"
+    },
+    {
+      "raw_text": "23,2",
+      "value": "23,2",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall height, side view"
+    },
+    {
+      "raw_text": "15,24",
+      "value": "15,24",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": null,
+      "label": null,
+      "context": "Recommended land pattern, vertical pad spacing"
+    },
+    {
+      "raw_text": "(x6) 6,34",
+      "value": "6,34",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": 6,
+      "label": null,
+      "context": "Recommended land pattern, horizontal pad pitch"
+    },
+    {
+      "raw_text": "(x7) Ø1,22 (HOLE DIAMETER)",
+      "value": "1,22",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 7,
+      "label": "HOLE DIAMETER",
+      "context": "Recommended land pattern, hole diameter"
+    },
+    {
+      "raw_text": "(x7) Ø1,83 (PAD DIAMETER)",
+      "value": "1,83",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 7,
+      "label": "PAD DIAMETER",
+      "context": "Recommended land pattern, pad diameter"
+    },
+    {
+      "raw_text": "(x7) Ø1,02",
+      "value": "1,02",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 7,
+      "label": null,
+      "context": "Pin diameter, bottom view of connector pins"
+    },
+    {
+      "raw_text": "11,5",
+      "value": "11,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Pin exposed length above body, bottom view"
+    },
+    {
+      "raw_text": "12,7",
+      "value": "12,7",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Body height, bottom view"
+    },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Pin standoff gap to PCB level, bottom view"
+    },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Recommended max height of pin receptacle head from PCB"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": null,
+      "context": "Front face labels of PCB Mount Coupler",
+      "rows": [
+        {
+          "label": "GND",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": "J3 STUB",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "J3 STUB"
+            }
+          ]
+        },
+        {
+          "label": "J4 STUB",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "J4 STUB"
+            }
+          ]
+        },
+        {
+          "label": "J5 STUB",
+          "cells": [
+            {
+              "column": "Label",
+              "value": "J5 STUB"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc. The document/its content is not to be reproduced or shared with third parties without the written permission of DEICO. Any receipt of the document means that these conditions are accepted and committed.",
+    "SBL-0033 Rev. No:2 Date: 19.12.2025"
+  ],
+  "warnings": [
+    "Schematic diagram elements (R1-R8, transformer ratios 1:1.41, BUS/GND/STUB nodes) are circuit schematic references, not extracted as dimensions or tables.",
+    "Title block 'Rev. Date' (26.06.2026) and the separate footer date/revision note (SBL-0033 Rev. No:2 Date: 19.12.2025) show differing dates; both are preserved as visible text.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8133_Technical_Drawing.pdf`."
+  ]
+}

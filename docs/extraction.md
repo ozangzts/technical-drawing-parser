@@ -18,7 +18,7 @@ Use a vision-language model as the main extractor. OCR is a supporting signal fo
 - Use `null` when a field is not visible.
 - Use empty arrays when no values are visible.
 - Add warnings for unclear, ambiguous, cropped, or unreadable information.
-- Use units only when they are explicitly visible in a dimension label, title block, or global note. Do not infer millimeters, inches, or any other unit from drawing style or numeric formatting.
+- Put units on each extracted dimension. Do not include a product-level unit field. Keep global unit notes, such as "all dimensions are in millimeters", in `notes`.
 - Keep the product JSON readable for a non-developer.
 - Store developer/debug details separately under `outputs/internal/`.
 
@@ -51,7 +51,6 @@ These rules clean schema shape and common formatting errors only. They should no
   "sheet": null,
   "size": null,
   "scale": null,
-  "units": null,
   "dimensions": [
     {
       "raw_text": "61,3",
@@ -148,3 +147,11 @@ python tdp.py process --extractor anthropic --model <claude-model> --outputs out
 ```
 
 Do not assume OCR is enough for this project. Technical drawing dimensions require visual context, so OCR should remain optional support unless testing proves otherwise.
+
+## Unit And Table Extraction Rules
+
+- Use explicit units only. A global note such as "all dimensions are in millimeters" may support physical product dimensions, but it must not be applied to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or free-text notes.
+- Preserve visible numeric formatting in `raw_text` and `value`. Do not convert decimal commas to decimal points just for normalization.
+- Normalize common unit spellings in unit fields when safe, such as `millimeters`, `millimetres`, or `millimeter` to `mm`.
+- Keep table output readable for humans. Product JSON should use row `cells` with explicit `column` and `value` pairs instead of disconnected `columns` plus positional `values`.
+- When a visible table repeats the same headers across side-by-side blocks, normalize it into logical rows where possible, such as one connector pin or one specification per row.

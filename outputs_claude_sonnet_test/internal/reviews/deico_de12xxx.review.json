@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_claude_sonnet_test\\products\\deico_de12xxx.json",
+    "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+    "brand_name": "DEICO",
+    "product_name": "19\" RACK CABINETS",
+    "document_name": "Technical Drawing",
+    "revision": "0",
+    "revision_date": "05.09.2025",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": null
+  },
+  "extraction": {
+    "status": "validation_failed",
+    "extractor": "anthropic",
+    "model": "claude-sonnet-5",
+    "error": null,
+    "validation_warnings": [
+      "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+    ]
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 4,
+    "dimension_tables": 1,
+    "tables": 0,
+    "notes": 1,
+    "product_warnings": 4,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [
+      "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+    ],
+    "product_warnings": [
+      "Cabinet height (A) values are given in rack units (U) in the table, not millimeters, so no numeric mm dimension was extracted for A.",
+      "The 'B' dimension label appears on the front/side views without a numeric value; only depth values from the table are available.",
+      "Some hardware details (e.g., handles, locks, vent panels) are visible but not labeled with dimensions.",
+      "`drawing_number` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+    ]
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE12XXX_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE12XXX_Technical_Drawing.pdf",
+    "processed_at": "2026-07-08T05:59:26+00:00"
+  }
+}

@@ -91,6 +91,7 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
     result["source_file"] = source_file.name
     normalize_scalars(result)
     normalize_size_and_scale(result, warnings)
+    warn_about_filename_like_metadata(result, source_file, warnings)
     for list_field in (
         "dimensions",
         "dimension_tables",
@@ -103,6 +104,18 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
             warnings.append(f"`{list_field}` was not a list and was reset.")
             result[list_field] = []
     result["dimensions"] = normalize_dimensions(result["dimensions"], warnings)
+    result["dimension_tables"] = normalize_tables(
+        result["dimension_tables"],
+        warnings,
+        field_name="dimension_tables",
+        include_type=False,
+    )
+    result["tables"] = normalize_tables(
+        result["tables"],
+        warnings,
+        field_name="tables",
+        include_type=True,
+    )
 
     if warnings:
         result["warnings"].extend(warnings)
@@ -258,9 +271,10 @@ def normalize_scalars(result: dict[str, Any]) -> None:
         "sheet",
         "size",
         "scale",
-        "units",
     ):
         result[field] = normalize_scalar(result.get(field))
+    result.pop("units", None)
+    result.pop("dimension_units", None)
 
 
 def normalize_scalar(value: Any) -> Any:
@@ -281,6 +295,24 @@ def normalize_size_and_scale(result: dict[str, Any], warnings: list[str]) -> Non
         warnings.append("Moved sheet size value from `scale` to `size`.")
 
 
+def warn_about_filename_like_metadata(
+    result: dict[str, Any],
+    source_file: Path,
+    warnings: list[str],
+) -> None:
+    source_stem = source_file.stem.lower()
+    source_name = source_file.name.lower()
+    for field in ("product_name", "document_name", "drawing_number"):
+        value = result.get(field)
+        if not isinstance(value, str):
+            continue
+        normalized = value.strip().lower()
+        if normalized == source_name or normalized == source_stem or "." in normalized:
+            warnings.append(
+                f"`{field}` may contain a source filename or file extension: `{value}`."
+            )
+
+
 def is_sheet_size(value: Any) -> bool:
     return isinstance(value, str) and value.strip().upper() in SHEET_SIZES
 
@@ -299,6 +331,7 @@ def normalize_dimensions(
         for field in DIMENSION_FIELDS:
             if field in dimension:
                 normalized_dimension[field] = normalize_scalar(dimension[field])
+        normalized_dimension["unit"] = normalize_unit(normalized_dimension.get("unit"))
 
         normalized_dimension["type"] = normalize_dimension_type(
             normalized_dimension.get("type"),
@@ -312,6 +345,177 @@ def normalize_dimensions(
         normalized.append(normalized_dimension)
 
     return normalized
+
+
+def normalize_unit(value: Any) -> Any:
+    value = normalize_scalar(value)
+    if not isinstance(value, str):
+        return value
+
+    normalized = value.strip().lower()
+    normalized = normalized.replace(".", "")
+    normalized = " ".join(normalized.split())
+    unit_aliases = {
+        "millimeter": "mm",
+        "millimeters": "mm",
+        "millimetre": "mm",
+        "millimetres": "mm",
+        "milimeter": "mm",
+        "milimeters": "mm",
+        "mm": "mm",
+        "degree": "deg",
+        "degrees": "deg",
+        "deg": "deg",
+        "°": "deg",
+        "inch": "in",
+        "inches": "in",
+        "in": "in",
+        "\"": "in",
+        "volt": "V",
+        "volts": "V",
+        "v": "V",
+        "amp": "A",
+        "amps": "A",
+        "ampere": "A",
+        "amperes": "A",
+        "a": "A",
+        "hz": "Hz",
+        "hertz": "Hz",
+        "%": "%",
+        "percent": "%",
+        "percentage": "%",
+        "c": "C",
+        "°c": "C",
+        "celsius": "C",
+    }
+    return unit_aliases.get(normalized, value)
+
+
+def normalize_tables(
+    tables: list[Any],
+    warnings: list[str],
+    field_name: str,
+    include_type: bool,
+) -> list[dict[str, Any]]:
+    normalized_tables = []
+    for table_index, table in enumerate(tables, start=1):
+        if not isinstance(table, dict):
+            warnings.append(f"{field_name} item {table_index} was not an object and was skipped.")
+            continue
+
+        normalized_table = {
+            "title": normalize_scalar(table.get("title")),
+            "context": normalize_scalar(table.get("context")),
+            "rows": normalize_table_rows(
+                table.get("rows"),
+                table.get("columns"),
+                warnings,
+                field_name,
+                table_index,
+            ),
+        }
+        if include_type:
+            normalized_table = {
+                "type": normalize_table_type(table.get("type")),
+                **normalized_table,
+            }
+        normalized_tables.append(normalized_table)
+
+    return normalized_tables
+
+
+def normalize_table_type(value: Any) -> str:
+    if not isinstance(value, str):
+        return "unknown"
+    normalized = value.strip().lower().replace(" ", "_")
+    allowed = {
+        "pinout_table",
+        "connection_table",
+        "specification_table",
+        "notes_table",
+        "legend_table",
+        "unknown",
+    }
+    return normalized if normalized in allowed else "unknown"
+
+
+def normalize_table_rows(
+    rows: Any,
+    columns: Any,
+    warnings: list[str],
+    field_name: str,
+    table_index: int,
+) -> list[dict[str, Any]]:
+    if not isinstance(rows, list):
+        warnings.append(f"{field_name} item {table_index} rows were not a list and were reset.")
+        return []
+
+    normalized_rows = []
+    column_labels = [
+        normalize_scalar(column)
+        for column in columns
+        if isinstance(column, str)
+    ] if isinstance(columns, list) else []
+
+    for row_index, row in enumerate(rows, start=1):
+        if not isinstance(row, dict):
+            warnings.append(
+                f"{field_name} item {table_index} row {row_index} was not an object and was skipped."
+            )
+            continue
+        normalized_rows.append(
+            {
+                "label": normalize_scalar(row.get("label")),
+                "cells": normalize_table_cells(
+                    row,
+                    column_labels,
+                    warnings,
+                    field_name,
+                    table_index,
+                    row_index,
+                ),
+            }
+        )
+
+    return normalized_rows
+
+
+def normalize_table_cells(
+    row: dict[str, Any],
+    column_labels: list[Any],
+    warnings: list[str],
+    field_name: str,
+    table_index: int,
+    row_index: int,
+) -> list[dict[str, Any]]:
+    cells = row.get("cells")
+    if isinstance(cells, list):
+        return [
+            {
+                "column": normalize_scalar(cell.get("column")),
+                "value": normalize_scalar(cell.get("value")),
+            }
+            for cell in cells
+            if isinstance(cell, dict)
+        ]
+
+    values = row.get("values")
+    if isinstance(values, list):
+        value_columns = column_labels
+        if row.get("label") is not None and len(column_labels) == len(values) + 1:
+            value_columns = column_labels[1:]
+        return [
+            {
+                "column": value_columns[index] if index < len(value_columns) else None,
+                "value": normalize_scalar(value),
+            }
+            for index, value in enumerate(values)
+        ]
+
+    warnings.append(
+        f"{field_name} item {table_index} row {row_index} had no cells or values and was reset."
+    )
+    return []
 
 
 def normalize_dimension_type(
