@@ -1,0 +1,143 @@
+{
+  "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Box Type Bus Coupler 7 Stub",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE8207",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "222",
+      "value": "222",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall length"
+    },
+    {
+      "raw_text": "212",
+      "value": "212",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Length excluding end caps"
+    },
+    {
+      "raw_text": "197,8",
+      "value": "197.8",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Length of central section"
+    },
+    {
+      "raw_text": "(x 4) Ø 4,2 THRU",
+      "value": "4.2",
+      "unit": null,
+      "type": "diameter",
+      "quantity": 4,
+      "label": null,
+      "context": "Diameter of through holes"
+    },
+    {
+      "raw_text": "(x6) 22,9",
+      "value": "22.9",
+      "unit": null,
+      "type": "linear",
+      "quantity": 6,
+      "label": null,
+      "context": "Distance between stub ports"
+    },
+    {
+      "raw_text": "30,3",
+      "value": "30.3",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Width of end caps"
+    },
+    {
+      "raw_text": "26",
+      "value": "26",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Length of end cap section"
+    },
+    {
+      "raw_text": "36",
+      "value": "36",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Width of central section"
+    },
+    {
+      "raw_text": "48,5",
+      "value": "48.5",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall width including end caps"
+    },
+    {
+      "raw_text": "13,1",
+      "value": "13.1",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Height of central section"
+    },
+    {
+      "raw_text": "24",
+      "value": "24",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Width of end cap section"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "connection_table",
+      "title": "INTERMATEABILITY",
+      "context": "Recommended mating connectors",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "CONNECTOR",
+              "value": "BJ770"
+            },
+            {
+              "column": "RECOMMENDED MATING CONNECTOR",
+              "value": "PL75"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    {
+      "raw_text": "Unless otherwise specified all dimensions are in millimeters."
+    }
+  ],
+  "warnings": []
+}

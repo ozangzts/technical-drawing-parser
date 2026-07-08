@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_ollama_qwen3vl_test/products/deico_de8207.json",
+    "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+    "brand_name": "DEICO",
+    "product_name": "Box Type Bus Coupler 7 Stub",
+    "document_name": "Technical Drawing",
+    "revision": "2",
+    "revision_date": "26.06.2026",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": "1:1"
+  },
+  "extraction": {
+    "status": "completed",
+    "extractor": "ollama",
+    "model": "qwen2.5vl:32b",
+    "error": null,
+    "validation_warnings": []
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 11,
+    "dimension_tables": 0,
+    "tables": 1,
+    "notes": 1,
+    "product_warnings": 0,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [],
+    "product_warnings": []
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs/incoming/DEICO_DE8207_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE8207_Technical_Drawing.pdf",
+    "processed_at": "2026-07-08T09:43:02+00:00"
+  }
+}

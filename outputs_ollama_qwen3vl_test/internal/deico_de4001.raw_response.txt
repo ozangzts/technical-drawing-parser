@@ -1,0 +1,669 @@
+{
+  "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Onyx USB-I²C/SPI Converter",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE4001",
+  "revision": "0",
+  "revision_date": "14.08.2023",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "85,7",
+      "value": "85.7",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall width"
+    },
+    {
+      "raw_text": "84",
+      "value": "84",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Height of the device"
+    },
+    {
+      "raw_text": "18,8",
+      "value": "18.8",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Width of the side panel"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": null,
+      "context": "Host Bus Connector Pinout",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "1"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "2"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "TX1+"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "3"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "TX1-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "4"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VBUS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "5"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "CC1"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "6"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "D-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "7"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SBU1"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "8"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VBUS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "9"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "RX2-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "10"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "RX2+"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "11",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "11"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "pinout_table",
+      "title": null,
+      "context": "Target Bus Connector Pinout",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "1"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "2"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "RX1+"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "3"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "RX1-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "4"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VBUS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "5"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SBU2"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "6"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "D-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "7"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "D+"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "8"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "CC2"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "9"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VBUS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "10"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "TX2-"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "11",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "11"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "TX2+"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        },
+        {
+          "label": "12",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "12"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "pinout_table",
+      "title": null,
+      "context": "I²C/SPI Interface Pinout",
+      "rows": [
+        {
+          "label": "1",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "1"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "I²C_SCL"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "I²C interface clock signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "2",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "2"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        },
+        {
+          "label": "3",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "3"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "I²C_SDA"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "I²C interface data signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "4",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "4"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VCC 3V3"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "3.3V output."
+            }
+          ]
+        },
+        {
+          "label": "5",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "5"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SPI_MISO"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface master in slave out signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "6",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "6"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "VCC 3V3"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "3.3V output."
+            }
+          ]
+        },
+        {
+          "label": "7",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "7"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SPI_CLK"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface clock signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "8",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "8"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SPI_MOSI"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface master out slave in signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "9",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "9"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "SPI_SS"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "SPI interface slave select signal. This pin can be used as GPIO."
+            }
+          ]
+        },
+        {
+          "label": "10",
+          "cells": [
+            {
+              "column": "PIN",
+              "value": "10"
+            },
+            {
+              "column": "PIN NAME",
+              "value": "GND"
+            },
+            {
+              "column": "DESCRIPTION",
+              "value": "Ground connection."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    {
+      "raw_text": "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS.",
+      "context": "Global note"
+    },
+    {
+      "raw_text": "1.0 MECHANICAL SPECIFICATIONS:",
+      "context": "Section header"
+    },
+    {
+      "raw_text": "1.1 ENCLOSURE MATERIAL: EN AW-6060 T 66, 2MM THK.",
+      "context": "Mechanical specification"
+    },
+    {
+      "raw_text": "FINISH: BLACK ANODIZED",
+      "context": "Finish specification"
+    },
+    {
+      "raw_text": "1.2 FRONT PANEL MATERIAL: EN AW-Al Mg1 5005 H34, 2MM THK.",
+      "context": "Mechanical specification"
+    },
+    {
+      "raw_text": "FINISH: BLACK ANODIZED",
+      "context": "Finish specification"
+    },
+    {
+      "raw_text": "1.3 PLASTIC STRIP MATERIAL: PC-ABS ALLOY",
+      "context": "Material specification"
+    },
+    {
+      "raw_text": "2.0 ENVIRONMENTAL:",
+      "context": "Section header"
+    },
+    {
+      "raw_text": "2.1 OPERATING TEMPERATURE RANGE: -55°C TO 125°C",
+      "context": "Environmental specification"
+    }
+  ],
+  "warnings": [
+    "The drawing does not specify the unit for all dimensions, but a global note indicates that all dimensions are in millimeters.",
+    "Some pin descriptions are missing from the Host Bus Connector and Target Bus Connector tables."
+  ]
+}

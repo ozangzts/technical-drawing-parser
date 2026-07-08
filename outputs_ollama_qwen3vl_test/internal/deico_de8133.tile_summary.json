@@ -1,0 +1,28 @@
+{
+  "summary_notes": {
+    "purpose": "Internal review aid for crop/tile extraction results; it does not change product JSON.",
+    "duplicate_candidate_groups": "Dimensions that may be repeated because the same visible measurement was extracted from overlapping tiles.",
+    "strong_duplicate": "A duplicate group with stronger matching evidence such as label or quantity; merge evidence only after review.",
+    "weak_duplicate": "A duplicate group with limited matching evidence, usually missing label or quantity; review carefully.",
+    "full_page_supported_candidates": "Tile dimensions that match a dimension found by full-page extraction.",
+    "tile_only_candidates": "Tile dimensions not found in full-page extraction; they may be useful new evidence or crop-only false positives.",
+    "tile_only_review_candidates": "Count of tile-only candidates that look potentially useful enough for manual review.",
+    "weak_tile_only": "Tile-only candidates with weak evidence, such as missing labels or very short raw text.",
+    "non_product_candidate": "Tile-only candidates that look like schematic ratios, reference labels, or other information that should not automatically become product dimensions."
+  },
+  "tiles_processed": 0,
+  "dimensions_found": 0,
+  "duplicate_candidate_groups": [],
+  "full_page_supported_candidates": [],
+  "tile_only_candidates": [],
+  "unique_dimension_candidates": [],
+  "review_summary": {
+    "strong_duplicate_groups": 0,
+    "weak_duplicate_groups": 0,
+    "full_page_supported_candidates": 0,
+    "tile_only_candidates": 0,
+    "tile_only_review_candidates": 0,
+    "weak_tile_only_candidates": 0,
+    "non_product_candidates": 0
+  }
+}

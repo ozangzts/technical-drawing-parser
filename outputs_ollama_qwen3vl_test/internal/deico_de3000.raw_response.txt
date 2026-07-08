@@ -1,0 +1,719 @@
+{
+  "source_file": "DEICO_DE3000_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Battery Simulation Unit 12CH5V500mA",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE3000_Battery_Simulation_Unit_12CH5V500mA",
+  "revision": "2",
+  "revision_date": "04.06.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "13:100",
+  "dimensions": [
+    {
+      "raw_text": "482,6",
+      "value": "482.6",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Front View Width"
+    },
+    {
+      "raw_text": "44,45",
+      "value": "44.45",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Front View Height"
+    },
+    {
+      "raw_text": "427,8",
+      "value": "427.8",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Back View Width"
+    },
+    {
+      "raw_text": "456,19",
+      "value": "456.19",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Side View Height"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "CELL OUTPUT CONNECTOR (CONNECTION TO BMS)",
+      "context": "Auxiliary I/O Connector Pinout",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "1"
+            },
+            {
+              "column": "Connection",
+              "value": "Sense+"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "2"
+            },
+            {
+              "column": "Connection",
+              "value": "Vout+"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "3"
+            },
+            {
+              "column": "Connection",
+              "value": "Vout-"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "4"
+            },
+            {
+              "column": "Connection",
+              "value": "Sense-"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "13"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "25"
+            },
+            {
+              "column": "Connection",
+              "value": "CANL"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "14"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #2"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "15"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #4"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "16"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #6"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "17"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "18"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #7"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "19"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #3"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "20"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #5"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "21"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "22"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #8"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "23"
+            },
+            {
+              "column": "Connection",
+              "value": "CANH"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "24"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG OUT #1"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "7"
+            },
+            {
+              "column": "Connection",
+              "value": "DIGITAL I/O #2"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "8"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "9"
+            },
+            {
+              "column": "Connection",
+              "value": "DIGITAL I/O #4"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "10"
+            },
+            {
+              "column": "Connection",
+              "value": "DIGITAL I/O #6"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "11"
+            },
+            {
+              "column": "Connection",
+              "value": "DIGITAL I/O #8"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "12"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "1"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #1"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "2"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #3"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "3"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #5"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "4"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG IN #7"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "5"
+            },
+            {
+              "column": "Connection",
+              "value": "GND"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "Pin Number",
+              "value": "6"
+            },
+            {
+              "column": "Connection",
+              "value": "ANALOG OUT #1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": null,
+      "context": "Mechanical Specifications",
+      "rows": [
+        {
+          "label": "1.0 MECHANICAL SPECIFICATIONS:",
+          "cells": []
+        },
+        {
+          "label": "1.1 ENCLOSURE MATERIAL:",
+          "cells": [
+            {
+              "column": null,
+              "value": "AL-5754"
+            }
+          ]
+        },
+        {
+          "label": "FINISH:",
+          "cells": [
+            {
+              "column": null,
+              "value": "POWDER TEXTURED MATTE PAINT, RAL 9005"
+            }
+          ]
+        },
+        {
+          "label": "CHEMICAL FILM PER S1-0000-0036:",
+          "cells": [
+            {
+              "column": null,
+              "value": "CLASS 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": null,
+      "context": "Environmental Specifications",
+      "rows": [
+        {
+          "label": "2.0 ENVIRONMENTAL SPECIFICATIONS:",
+          "cells": []
+        },
+        {
+          "label": "2.1 STORAGE TEMPERATURE:",
+          "cells": [
+            {
+              "column": null,
+              "value": "-40°C TO 71°C (IEC 60068-2-1 & IEC 60068-2-2.)"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "MEETS MIL-PRF-28800F CLASS 3 LIMITS."
+            }
+          ]
+        },
+        {
+          "label": "2.2 OPERATING TEMPERATURE:",
+          "cells": [
+            {
+              "column": null,
+              "value": "0°C TO 50°C (IEC-60068-2-1 & IEC-60068-2-2.)"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "MEETS MIL-PRF-28800F CLASS 3 LOW TEMPERATURE LIMIT AND MIL-PRF-28800F CLASS 2 HIGH TEMPERATURE LIMIT."
+            }
+          ]
+        },
+        {
+          "label": "2.3 OPERATING HUMIDITY:",
+          "cells": [
+            {
+              "column": null,
+              "value": "10% TO 90%, NON CONDENSING (IEC 60068-2-7B)"
+            }
+          ]
+        },
+        {
+          "label": "2.4 STORAGE HUMIDITY:",
+          "cells": [
+            {
+              "column": null,
+              "value": "5% TO 95%, NON CONDENSING (IEC 60068-2-7B)"
+            }
+          ]
+        },
+        {
+          "label": "2.5 OPERATING VIBRATION:",
+          "cells": [
+            {
+              "column": null,
+              "value": "5HZ TO 500HZ, 0.3GRMS (WITH SOLID-STATE HARD DRIVE)"
+            }
+          ]
+        },
+        {
+          "label": "2.6 NON-OPERATING VIBRATION:",
+          "cells": [
+            {
+              "column": null,
+              "value": "5HZ TO 500HZ, 2.4GRMS (IEC 60068-2-64.)"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "NON-OPERATING TEST PROFILE EXCEEDS THE REQUIREMENTS OF MIL-PRF-28800F, CLASS 3."
+            }
+          ]
+        },
+        {
+          "label": "2.7 SHOCK:",
+          "cells": [
+            {
+              "column": null,
+              "value": "30G PEAK, HALF-SINE, 11MS PULSE (IEC 60068-2-27.)"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "MEETS MIL-PRF-28800F CLASS 2 LIMITS."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": null,
+      "context": "Acoustic Testing",
+      "rows": [
+        {
+          "label": "2.8 ACOUSTIC:",
+          "cells": [
+            {
+              "column": null,
+              "value": "ACOUSTIC TESTING SHOULD BE CARRIED OUT ACCORDING TO ISO-7779 ON A STANDARD TEST TABLE AT THE OPERATOR POSITION, CHASSIS TESTING SHOULD BE CONDUCTED WITH THE CHASSIS RUNNING AT FULL LOAD WITH FRONT PANELS INSTALLED. IF MULTIPLE FAN SPEED OPTIONS ARE AVAILABLE, THE SOUND PRESSURE LEVELS SHALL BE PROVIDED FOR THE VARIOUS FAN SPEED OPTIONS."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": null,
+      "context": "EMI/EMC Specifications",
+      "rows": [
+        {
+          "label": "2.9 EMI/EMC:",
+          "cells": []
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "EN 61326-1 (IEC 61326-1): CLASS A EMISSIONS; BASIC IMMUNITY"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "EN 55011 (CISPR 11): GROUP 1, CLASS A EMISSIONS"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "EN 55022 (CISPR 22): CLASS A EMISSIONS"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "EN 55024 (CISPR 24): IMMUNITY"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "AS/NZS CISPR 11: GROUP 1, CLASS A EMISSIONS"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "AS/NZS CISPR 22: CLASS A EMISSIONS"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "FCC 47CFR PART15B: CLASS A EMISSIONS"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "ICES-001: CLASS A EMISSIONS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": null,
+      "context": "Safety Requirements",
+      "rows": [
+        {
+          "label": "3.0 SAFETY REQUIREMENTS:",
+          "cells": []
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "IEC 61010-1, EN 61010-1"
+            }
+          ]
+        },
+        {
+          "label": "",
+          "cells": [
+            {
+              "column": null,
+              "value": "UL 61010-1, CSA C22.2 No. 61010-1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": [
+    "The dimension units are not explicitly stated in the drawing.",
+    "Some specifications reference standards and classes without providing detailed values or limits."
+  ]
+}

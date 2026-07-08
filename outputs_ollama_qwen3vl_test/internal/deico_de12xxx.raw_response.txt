@@ -1,0 +1,243 @@
+{
+  "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "19\" RACK CABINETS",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DEICO_DE12XXX",
+  "revision": "0",
+  "revision_date": "05.09.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": null,
+  "dimensions": [
+    {
+      "raw_text": "600",
+      "value": "600",
+      "unit": "MM",
+      "type": "linear",
+      "quantity": null,
+      "label": "Width of SINGLE CABINET",
+      "context": "Overall width"
+    },
+    {
+      "raw_text": "75",
+      "value": "75",
+      "unit": "MM",
+      "type": "linear",
+      "quantity": null,
+      "label": "Depth extension for SINGLE CABINET",
+      "context": "Dimension B"
+    },
+    {
+      "raw_text": "1200",
+      "value": "1200",
+      "unit": "MM",
+      "type": "linear",
+      "quantity": null,
+      "label": "Width of DOUBLE CABINET",
+      "context": "Overall width"
+    },
+    {
+      "raw_text": "800",
+      "value": "800",
+      "unit": "MM",
+      "type": "linear",
+      "quantity": null,
+      "label": "Cabinet depth for most models",
+      "context": "Dimension B"
+    },
+    {
+      "raw_text": "900",
+      "value": "900",
+      "unit": "MM",
+      "type": "linear",
+      "quantity": null,
+      "label": "Cabinet depth for some models",
+      "context": "Dimension B"
+    }
+  ],
+  "dimension_tables": [
+    {
+      "title": "PRODUCT CODE CABINET HEIGHT (A) CABINET DEPTH (B) (MM) CABINET TYPE",
+      "context": "Product specifications table",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12000"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "20U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "SINGLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12001"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "32U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "SINGLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12002"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "32U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "DOUBLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12003"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "36U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "SINGLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12004"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "36U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "DOUBLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12005"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "38U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "900"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "SINGLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "DE12006"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "38U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "900"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "DOUBLE"
+            }
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "PRODUCT CODE",
+              "value": "CUSTOM CABINET"
+            },
+            {
+              "column": "CABINET HEIGHT (A)",
+              "value": "20U-42U"
+            },
+            {
+              "column": "CABINET DEPTH (B) (MM)",
+              "value": "800-1000"
+            },
+            {
+              "column": "CABINET TYPE",
+              "value": "CUSTOMIZABLE"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": [],
+  "tolerances": [],
+  "notes": [
+    {
+      "text": "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS."
+    }
+  ],
+  "warnings": []
+}

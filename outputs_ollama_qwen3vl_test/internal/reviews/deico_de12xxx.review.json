@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_ollama_qwen3vl_test/products/deico_de12xxx.json",
+    "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+    "brand_name": "DEICO",
+    "product_name": "19\" RACK CABINETS",
+    "document_name": "Technical Drawing",
+    "revision": "0",
+    "revision_date": "05.09.2025",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": null
+  },
+  "extraction": {
+    "status": "completed",
+    "extractor": "ollama",
+    "model": "qwen2.5vl:32b",
+    "error": null,
+    "validation_warnings": []
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 5,
+    "dimension_tables": 1,
+    "tables": 0,
+    "notes": 1,
+    "product_warnings": 0,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [],
+    "product_warnings": []
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs/incoming/DEICO_DE12XXX_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE12XXX_Technical_Drawing.pdf",
+    "processed_at": "2026-07-08T09:40:05+00:00"
+  }
+}

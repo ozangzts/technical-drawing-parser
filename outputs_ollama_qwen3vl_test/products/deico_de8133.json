@@ -1,0 +1,162 @@
+{
+  "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 3 Stub DTRM",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE8133",
+  "revision": "2",
+  "revision_date": "26.06.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "2:1",
+  "dimensions": [
+    {
+      "raw_text": "48,85",
+      "value": "48.85",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Overall width of the PCB Mount Coupler"
+    },
+    {
+      "raw_text": "23,2",
+      "value": "23.2",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Height of the Bus Coupler"
+    },
+    {
+      "raw_text": "(x7) Ø1,02",
+      "value": "1.02",
+      "unit": null,
+      "type": "diameter",
+      "quantity": 7,
+      "label": null,
+      "context": "Recommended land pattern hole diameter"
+    },
+    {
+      "raw_text": "(x6) 6,34",
+      "value": "6.34",
+      "unit": null,
+      "type": "linear",
+      "quantity": 6,
+      "label": null,
+      "context": "Recommended land pattern pad spacing"
+    },
+    {
+      "raw_text": "15,24",
+      "value": "15.24",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Recommended land pattern pad length"
+    },
+    {
+      "raw_text": "(x7) Ø1,22 (HOLE DIAMETER)",
+      "value": "1.22",
+      "unit": null,
+      "type": "diameter",
+      "quantity": 7,
+      "label": null,
+      "context": "Recommended land pattern hole diameter"
+    },
+    {
+      "raw_text": "(x7) Ø1,83 (PAD DIAMETER)",
+      "value": "1.83",
+      "unit": null,
+      "type": "diameter",
+      "quantity": 7,
+      "label": null,
+      "context": "Recommended land pattern pad diameter"
+    },
+    {
+      "raw_text": "12,7",
+      "value": "12.7",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Height of the Pin Receptacle from PCB"
+    },
+    {
+      "raw_text": "11,5",
+      "value": "11.5",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": null,
+      "context": "Height of the Pin Receptacle from PCB"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": null,
+      "context": "Schematic Diagram",
+      "rows": [
+        {
+          "label": "BUS",
+          "cells": [
+            {
+              "column": "R7",
+              "value": "R7"
+            },
+            {
+              "column": "R1",
+              "value": "R1"
+            },
+            {
+              "column": "R2",
+              "value": "R2"
+            },
+            {
+              "column": "R3",
+              "value": "R3"
+            },
+            {
+              "column": "R4",
+              "value": "R4"
+            },
+            {
+              "column": "R5",
+              "value": "R5"
+            },
+            {
+              "column": "R6",
+              "value": "R6"
+            }
+          ]
+        },
+        {
+          "label": "GND",
+          "cells": [
+            {
+              "column": "STUB",
+              "value": "STUB"
+            },
+            {
+              "column": "STUB",
+              "value": "STUB"
+            },
+            {
+              "column": "STUB",
+              "value": "STUB"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    {
+      "raw_text": "Unless otherwise specified all dimensions are in millimeters."
+    }
+  ],
+  "warnings": []
+}
