@@ -516,6 +516,91 @@ class ValidatorTests(unittest.TestCase):
             ],
         )
 
+    def test_parse_product_json_response_normalizes_schematics(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "BUS to BUS with 3 stub taps, each through a transformer",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+      "parameters": [
+        {"label": "transformer turns ratio", "value": "1:1,41", "context": "each stub tap"}
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(
+            result["schematics"],
+            [
+                {
+                    "title": "Stub Termination Network",
+                    "context": "BUS to BUS with 3 stub taps, each through a transformer",
+                    "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+                    "parameters": [
+                        {
+                            "label": "transformer turns ratio",
+                            "value": "1:1,41",
+                            "context": "each stub tap",
+                        }
+                    ],
+                }
+            ],
+        )
+
+    def test_parse_product_json_response_defaults_schematics_to_empty(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["schematics"], [])
+
+    def test_parse_product_json_response_skips_invalid_schematic_entries(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [
+    "not an object",
+    {
+      "title": "Valid Entry",
+      "context": null,
+      "components": ["R1", 5, null],
+      "parameters": "not a list"
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(len(warnings), 2)
+        self.assertIn("schematics item 1 was not an object", warnings[0])
+        self.assertIn("schematics item 2 parameters was not a list", warnings[1])
+        self.assertEqual(len(result["schematics"]), 1)
+        self.assertEqual(result["schematics"][0]["title"], "Valid Entry")
+        self.assertEqual(result["schematics"][0]["components"], ["R1"])
+        self.assertEqual(result["schematics"][0]["parameters"], [])
+
     def test_parse_ocr_target_refinement_preserves_visual_text_check(self) -> None:
         response = """{
   "target_id": "page_001_ocr_target_001",

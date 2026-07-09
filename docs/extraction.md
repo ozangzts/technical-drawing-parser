@@ -189,3 +189,12 @@ Across the DEICO sample set, no title block has ever had a field literally label
 - A generic document/form control stamp, such as `SBL-0033 Rev. No:2 Date: 19.12.2025`, printed in a sheet border. It carries its own revision and date that are unrelated to the title block's `revision`/`revision_date`, because it identifies the drawing *template* or company form, not this specific product. Do not use it as `drawing_number`; keep it in `notes`.
 
 Comparing manual extractions against the existing Anthropic-run outputs for this sample set showed the model treating the same recurring form-control stamp three different ways across sibling drawings (left null, used as `drawing_number`, and "unclear, not used") — this distinction was added to the prompt specifically because that inconsistency was real, not a one-off misread.
+
+## Schematic Vs. Block Diagram
+
+A drawing can show two visually similar but functionally different kinds of diagram, and only one of them gets a `schematics` entry:
+
+- A **circuit-level schematic** shows component reference designators (`R1`, `C3`, `U2`, ...) and/or a named electrical parameter repeated across the diagram (a transformer turns ratio, a resistor value, an impedance). Extract these into `schematics`: `components` as the flat list of visible reference designators, `parameters` as label/value pairs for the repeated values. In the DEICO sample set, the same bus-coupler network (a `BUS` line with resistor/transformer stub taps, each transformer at a `1:1,41` turns ratio) appears at three different stub counts (`DE8133`: 3 stubs, `R1`-`R8`; `DE8135`: 5 stubs, `R1`-`R12`; `DE8207`: 7 stubs, `R1`-`R14`) — structuring it means the repeated ratio and the component count can be checked for consistency across the family instead of only existing as three separately worded warning sentences.
+- A **functional/block diagram** shows only boxes and arrows describing a flow (`USB -> Controller -> I2C/GPIO`), with no reference designators and no electrical values. This does not get a `schematics` entry — there is nothing extractable beyond the box labels, which are already just short text. Describe it in `warnings` instead, as with `DE3000`'s "System Functionality Chart" and `DE4001`'s "Circuitry" block diagram.
+
+Do not force an empty or placeholder `schematics` entry onto a block diagram just because it looks diagram-shaped; the field should only ever contain diagrams that actually had extractable component/parameter data.

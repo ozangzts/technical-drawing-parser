@@ -21,6 +21,7 @@ def empty_product_result(source_file: Path) -> dict[str, Any]:
         "dimensions": [],
         "dimension_tables": [],
         "tables": [],
+        "schematics": [],
         "tolerances": [],
         "notes": [],
         "warnings": [
@@ -83,6 +84,20 @@ def product_schema_description() -> str:
               "value": "string or null"
             }
           ]
+        }
+      ]
+    }
+  ],
+  "schematics": [
+    {
+      "title": "string or null",
+      "context": "string or null",
+      "components": ["string"],
+      "parameters": [
+        {
+          "label": "string",
+          "value": "string",
+          "context": "string or null"
         }
       ]
     }

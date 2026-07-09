@@ -27,6 +27,14 @@
       "rows": [{ "label": null, "cells": [{ "column": "A", "value": "1" }] }, { "label": null, "cells": [{ "column": "B", "value": "2" }, { "column": "C", "value": "3" }] }]
     }
   ],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "BUS to BUS with 2 stub taps, each through a transformer",
+      "components": ["R1", "R2", "R3", "R4"],
+      "parameters": [{ "label": "transformer turns ratio", "value": "1:1,41", "context": "each stub tap" }]
+    }
+  ],
   "tolerances": [],
   "notes": ["All dimensions in millimeters."],
   "warnings": ["`document_name` may contain a source filename or file extension: `ACME_WIDGET42_Technical_Drawing.pdf`."]

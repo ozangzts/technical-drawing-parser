@@ -21,6 +21,7 @@ Product JSON files under `outputs/products/` are the user-facing extraction resu
   "dimensions": [],
   "dimension_tables": [],
   "tables": [],
+  "schematics": [],
   "tolerances": [],
   "notes": [],
   "warnings": []
@@ -80,4 +81,5 @@ Internal JSON may include fingerprints, source paths, image metadata, regions, r
 - The extractor (model) always produces rows with readable `cells`, for example `{"column": "Signal", "value": "GND"}`, not disconnected `columns` plus positional `values` — this is what avoids positional-matching bugs where a model-produced row has the wrong number or order of values.
 - The final product JSON may still show a table as a table-level `columns` header plus per-row `values`. The validator collapses to that shape only after parsing, and only when every row's `cells` provably share the exact same column sequence; an irregular table keeps the explicit `cells` shape. See `docs/extraction.md` and `collapse_uniform_columns` in `validator.py`.
 - For repeated side-by-side table blocks, prefer one logical item per row, such as one connector pin or one specification row, instead of one very wide row with repeated headers.
+- Use `schematics` for circuit-level diagrams that show component reference designators (`R1`, `C3`, `U2`, ...) or a named electrical parameter repeated across the diagram (a turns ratio, a resistor value): `{"title", "context", "components": ["R1", ...], "parameters": [{"label", "value", "context"}]}`. A functional/block diagram with only boxes and arrows, no reference designators or values, does not get a `schematics` entry; describe it in `warnings` instead.
 - See `docs/extraction.md` for VLM extraction rules and dimension object guidance.

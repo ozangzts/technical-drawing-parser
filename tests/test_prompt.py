@@ -138,6 +138,23 @@ class PromptTests(unittest.TestCase):
         self.assertIn("form control stamp", full_page_prompt)
         self.assertIn("form control stamp", tile_prompt)
 
+    def test_prompts_extract_schematic_components_but_not_block_diagrams(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("reference designators", full_page_prompt)
+        self.assertIn("reference designators", tile_prompt)
+        self.assertIn("functional blocks and arrows with no", full_page_prompt)
+        self.assertIn("functional blocks and arrows with no", tile_prompt)
+
     def test_prompts_ask_for_consistent_row_column_order(self) -> None:
         source_file = Path("drawing.pdf")
         full_page_prompt = build_vlm_prompt(source_file)

@@ -24,6 +24,7 @@ PRODUCT_FIELDS = {
     "dimensions",
     "dimension_tables",
     "tables",
+    "schematics",
     "tolerances",
     "notes",
     "warnings",
@@ -96,6 +97,7 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
         "dimensions",
         "dimension_tables",
         "tables",
+        "schematics",
         "tolerances",
         "notes",
         "warnings",
@@ -116,6 +118,7 @@ def parse_product_json_response(response_text: str, source_file: Path) -> tuple[
         field_name="tables",
         include_type=True,
     )
+    result["schematics"] = normalize_schematics(result["schematics"], warnings)
 
     if warnings:
         result["warnings"].extend(warnings)
@@ -438,6 +441,73 @@ def normalize_table_type(value: Any) -> str:
         "unknown",
     }
     return normalized if normalized in allowed else "unknown"
+
+
+def normalize_schematics(
+    schematics: list[Any],
+    warnings: list[str],
+) -> list[dict[str, Any]]:
+    normalized_schematics = []
+    for schematic_index, schematic in enumerate(schematics, start=1):
+        if not isinstance(schematic, dict):
+            warnings.append(
+                f"schematics item {schematic_index} was not an object and was skipped."
+            )
+            continue
+
+        components = schematic.get("components")
+        normalized_components = [
+            normalize_scalar(component)
+            for component in components
+            if isinstance(component, str) and normalize_scalar(component) is not None
+        ] if isinstance(components, list) else []
+
+        normalized_schematics.append(
+            {
+                "title": normalize_scalar(schematic.get("title")),
+                "context": normalize_scalar(schematic.get("context")),
+                "components": normalized_components,
+                "parameters": normalize_schematic_parameters(
+                    schematic.get("parameters"),
+                    warnings,
+                    schematic_index,
+                ),
+            }
+        )
+
+    return normalized_schematics
+
+
+def normalize_schematic_parameters(
+    parameters: Any,
+    warnings: list[str],
+    schematic_index: int,
+) -> list[dict[str, Any]]:
+    if not isinstance(parameters, list):
+        if parameters is not None:
+            warnings.append(
+                f"schematics item {schematic_index} parameters was not a list "
+                "and was reset."
+            )
+        return []
+
+    normalized_parameters = []
+    for parameter_index, parameter in enumerate(parameters, start=1):
+        if not isinstance(parameter, dict):
+            warnings.append(
+                f"schematics item {schematic_index} parameter {parameter_index} "
+                "was not an object and was skipped."
+            )
+            continue
+        normalized_parameters.append(
+            {
+                "label": normalize_scalar(parameter.get("label")),
+                "value": normalize_scalar(parameter.get("value")),
+                "context": normalize_scalar(parameter.get("context")),
+            }
+        )
+
+    return normalized_parameters
 
 
 def normalize_table_rows(

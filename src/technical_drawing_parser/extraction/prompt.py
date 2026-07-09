@@ -105,6 +105,18 @@ RULE_NO_DEVELOPER_METADATA = (
     "Do not include developer metadata, coordinates, OCR blocks, "
     "fingerprints, or internal notes."
 )
+RULE_SCHEMATIC_COMPONENTS = (
+    "If a schematic or circuit diagram shows component reference "
+    "designators, such as R1, C3, or U2, or a named electrical parameter "
+    "repeated across the diagram, such as a transformer turns ratio or a "
+    "resistor value, extract them into schematics: components as the list "
+    "of visible reference designators, and parameters as label/value pairs."
+)
+RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK = (
+    "If a diagram only shows functional blocks and arrows with no "
+    "reference designators or values, describe it in warnings instead of "
+    "adding an empty or forced schematics entry."
+)
 RULE_CONSISTENT_ROW_COLUMN_ORDER = (
     "When a table has more than one row, use the same column order in "
     "every row's cells, such as always Pin Number then Connection, so rows "
@@ -172,6 +184,8 @@ def build_vlm_prompt(source_file: Path) -> str:
             "X, or Y as dimensions unless a numeric value is visible with "
             "the reference. If the symbol is defined by a table, keep it as "
             "table column text or context.",
+            RULE_SCHEMATIC_COMPONENTS,
+            RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK,
             RULE_NO_DEVELOPER_METADATA,
         ]
     )
@@ -243,6 +257,8 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             RULE_CONSISTENT_ROW_COLUMN_ORDER,
             "Do not list single-letter symbolic references as dimensions "
             "unless a numeric value is visible with the reference.",
+            RULE_SCHEMATIC_COMPONENTS,
+            RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK,
             RULE_NO_DEVELOPER_METADATA,
         ]
     )

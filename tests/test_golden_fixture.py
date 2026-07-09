@@ -81,6 +81,24 @@ class GoldenFixtureTests(unittest.TestCase):
             ],
         )
 
+        self.assertEqual(
+            result["schematics"],
+            [
+                {
+                    "title": "Stub Termination Network",
+                    "context": "BUS to BUS with 2 stub taps, each through a transformer",
+                    "components": ["R1", "R2", "R3", "R4"],
+                    "parameters": [
+                        {
+                            "label": "transformer turns ratio",
+                            "value": "1:1,41",
+                            "context": "each stub tap",
+                        }
+                    ],
+                }
+            ],
+        )
+
         self.assertEqual(json.loads(rendered), result)
 
 

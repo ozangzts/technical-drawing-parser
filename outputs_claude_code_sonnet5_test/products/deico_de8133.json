@@ -48,6 +48,14 @@
   ],
   "dimension_tables": [],
   "tables": [],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "BUS line with terminating resistors R7/R8, three stub taps (R1/R2, R3/R4, R5/R6) each through a transformer to a stub connector (J3/J4/J5), and a GND connection",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+      "parameters": [{ "label": "transformer turns ratio", "value": "1:1,41", "context": "each of the 3 stub taps" }]
+    }
+  ],
   "tolerances": [],
   "notes": [
     "Unless otherwise specified all dimensions are in millimeters.",
@@ -56,7 +64,6 @@
   ],
   "warnings": [
     "drawing_number was set to 'DE8133', the model code visible on the product front label ('3 STUB DTRM | DE8133') and embedded in document_name; no separate 'Drawing Number' field is printed. The footer code 'SBL-0033 Rev. No:2 Date: 19.12.2025' was not used, since it carries its own revision/date and looks like a document/form control stamp rather than this product's drawing number.",
-    "Schematic diagram shows a BUS line with terminating resistors R7/R8, three stub circuits (R1/R2, R3/R4, R5/R6) each through a 1:1,41 transformer ratio, and a GND connection. No component values beyond the repeated 1:1,41 ratio are visible, and there is no table or dimension field that fits reference designators or turns ratios, so this was not extracted as a table or dimension.",
     "Front view silkscreen labels GND, J3 STUB, J4 STUB, and J5 STUB identify connector positions but are not a pin-to-value or labeled table structure, so they were not extracted as a table.",
     "The rotated legal notice text along the left sheet border is small and partially compressed in the source image; transcription confidence is lower than for the horizontal title-block text.",
     "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
