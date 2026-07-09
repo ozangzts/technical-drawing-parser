@@ -180,3 +180,12 @@ Committed Claude Sonnet comparison outputs for the current sample PDFs are store
 - Normalize common unit spellings in unit fields when safe, such as `millimeters`, `millimetres`, or `millimeter` to `mm`.
 - Keep table output readable for humans. Product JSON should use row `cells` with explicit `column` and `value` pairs instead of disconnected `columns` plus positional `values`.
 - When a visible table repeats the same headers across side-by-side blocks, normalize it into logical rows where possible, such as one connector pin or one specification per row.
+
+## Drawing Number Vs. Form Control Stamp
+
+Across the DEICO sample set, no title block has ever had a field literally labeled "Drawing Number." Two different kinds of codes can look like a candidate for `drawing_number`, and they should be told apart:
+
+- A short product/model code, such as `DE4001`, that identifies this specific product. It usually appears inside `product_name` (`"DE3000 - Battery Simulation Unit ..."`) or `document_name` (`"DE4001 - Technical Drawing"`) rather than in its own field. Extract it into `drawing_number` anyway, even though it is embedded in another field's text.
+- A generic document/form control stamp, such as `SBL-0033 Rev. No:2 Date: 19.12.2025`, printed in a sheet border. It carries its own revision and date that are unrelated to the title block's `revision`/`revision_date`, because it identifies the drawing *template* or company form, not this specific product. Do not use it as `drawing_number`; keep it in `notes`.
+
+Comparing manual extractions against the existing Anthropic-run outputs for this sample set showed the model treating the same recurring form-control stamp three different ways across sibling drawings (left null, used as `drawing_number`, and "unclear, not used") — this distinction was added to the prompt specifically because that inconsistency was real, not a one-off misread.

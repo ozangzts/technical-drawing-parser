@@ -77,6 +77,7 @@ Internal JSON may include fingerprints, source paths, image metadata, regions, r
 - Normalize common unit spellings in unit fields when safe, such as `millimeters` or `millimetres` to `mm`.
 - Use `dimension_tables` for tabular product measurements where row and column context is needed to understand values.
 - Use `tables` for non-dimensional tables such as pinout, connection, specification, note, or legend tables.
-- Represent table rows with readable `cells`, for example `{"column": "Signal", "value": "GND"}`. Avoid disconnected `columns` plus positional `values` in product JSON.
+- The extractor (model) always produces rows with readable `cells`, for example `{"column": "Signal", "value": "GND"}`, not disconnected `columns` plus positional `values` — this is what avoids positional-matching bugs where a model-produced row has the wrong number or order of values.
+- The final product JSON may still show a table as a table-level `columns` header plus per-row `values`. The validator collapses to that shape only after parsing, and only when every row's `cells` provably share the exact same column sequence; an irregular table keeps the explicit `cells` shape. See `docs/extraction.md` and `collapse_uniform_columns` in `validator.py`.
 - For repeated side-by-side table blocks, prefer one logical item per row, such as one connector pin or one specification row, instead of one very wide row with repeated headers.
 - See `docs/extraction.md` for VLM extraction rules and dimension object guidance.

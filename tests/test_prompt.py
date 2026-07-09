@@ -121,6 +121,23 @@ class PromptTests(unittest.TestCase):
         self.assertIn("legend_table", full_page_prompt)
         self.assertIn("legend_table", tile_prompt)
 
+    def test_prompts_clarify_drawing_number_vs_form_control_stamp(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("embedded inside the product_name or document_name", full_page_prompt)
+        self.assertIn("embedded inside the product_name or document_name", tile_prompt)
+        self.assertIn("form control stamp", full_page_prompt)
+        self.assertIn("form control stamp", tile_prompt)
+
     def test_prompts_ask_for_consistent_row_column_order(self) -> None:
         source_file = Path("drawing.pdf")
         full_page_prompt = build_vlm_prompt(source_file)

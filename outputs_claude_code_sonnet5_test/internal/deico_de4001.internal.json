@@ -1,0 +1,8 @@
+{
+  "source_file": "DE4001_Technical_Drawing.pdf",
+  "extractor": "claude_code_manual",
+  "model": "claude-sonnet-5 (Claude Code session, direct image read, no Anthropic Messages API call)",
+  "method": "The rendered page image at outputs_claude_sonnet_test/internal/page_images/deico_de4001_page_001.png was read directly inside a Claude Code conversation and interpreted by hand against the rules in src/technical_drawing_parser/extraction/prompt.py (build_vlm_prompt) and the schema in product.py, then run through the real parse_product_json_response and format_json_compact. Done independently, without looking at outputs_claude_sonnet_test/products/deico_de4001.json first.",
+  "purpose": "Comparison baseline against outputs_claude_sonnet_test/products/deico_de4001.json (produced via the Anthropic API) without spending API budget or overwriting that result.",
+  "status": "completed"
+}

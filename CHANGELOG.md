@@ -16,10 +16,12 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 - Added `legend_table` to the `type` enum shown to the model in `product_schema_description()`. Prompts already told the model to put legend/notation tables in `tables`, and the validator already accepted `legend_table` as a type, but the model was never actually offered that value to choose from, so a legend table could only ever come back as `unknown`.
 - Added a rule asking the model to use the same column order in every row of a multi-row table, so the new `collapse_uniform_columns` step has a better chance of finding a table's rows provably uniform instead of falling back to the verbose `cells` shape.
 - Extracted the rule text shared verbatim between `build_vlm_prompt` and `build_tile_vlm_prompt` into named constants in `prompt.py` so the two prompts cannot silently drift apart on wording that was never meant to differ. Verified the rendered prompt text is unchanged from before the refactor (code-organization change only).
+- Clarified `drawing_number` extraction: a short product/model code (such as `DE4001`) should be extracted into `drawing_number` even when it only appears embedded inside `product_name` or `document_name` text, but a generic document/form control stamp that carries its own separate revision and date (such as `SBL-0033 Rev. No:2 Date: 19.12.2025`) should not be used as `drawing_number`. Comparing manual extractions against the existing Anthropic-run outputs for the DEICO sample set showed the model treating this same recurring footer stamp three different ways across sibling drawings (null, used as drawing_number, and "unclear, not used"), so the ambiguity was real rather than a one-off.
 
 ### Changed
 
 - Raised the Anthropic extractor `max_tokens` from `8192` to `16384` to reduce how often full-page technical drawings with large tables hit the output limit in the first place.
+- Updated `docs/schema.md`'s table guidance, which still said to avoid `columns` plus positional `values` with no exception. Clarified that this rule is about what the extractor (model) produces; the final product JSON may still show the collapsed `columns`/`values` shape when the validator has proven every row's columns are identical, per `docs/extraction.md`.
 
 ## 2026-07-08
 

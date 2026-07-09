@@ -1,0 +1,9 @@
+{
+  "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+  "run_label": "test1",
+  "extractor": "claude_code_manual",
+  "model": "claude-sonnet-5 (Claude Code session, direct image read, no Anthropic Messages API call)",
+  "method": "The rendered page image at outputs_claude_sonnet_test/internal/page_images/deico_de8133_page_001.png was read directly inside a Claude Code conversation and interpreted by hand against the rules in src/technical_drawing_parser/extraction/prompt.py (build_vlm_prompt) and the schema in product.py, then run through the real parse_product_json_response and format_json_compact so normalization matches the current pipeline exactly. This is a redone, independent second pass: the first pass was adjusted after looking at outputs_claude_sonnet_test/products/deico_de8133.json, which defeated the point of an independent comparison, so the extraction was repeated from the image alone (ambiguous calls such as document_name, drawing_number, and whether the front-panel labels form a table were decided on their own merits, not by matching the API run).",
+  "purpose": "Comparison baseline against outputs_claude_sonnet_test/products/deico_de8133.json (produced via the Anthropic API) without spending API budget or overwriting that result.",
+  "status": "completed"
+}

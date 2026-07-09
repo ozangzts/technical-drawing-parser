@@ -1,0 +1,98 @@
+{
+  "source_file": "DE4001_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Onyx USB - I²C/SPI Converter",
+  "document_name": "DE4001 - Technical Drawing",
+  "drawing_number": "DE4001",
+  "revision": "0",
+  "revision_date": "14.08.2023",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    { "raw_text": "85,7", "value": "85,7", "unit": "mm", "type": "linear", "quantity": null, "label": "overall length", "context": "Front view overall length including end caps" },
+    { "raw_text": "84", "value": "84", "unit": "mm", "type": "linear", "quantity": null, "label": "body length", "context": "Front view body length excluding end caps" },
+    { "raw_text": "18,8", "value": "18,8", "unit": "mm", "type": "linear", "quantity": null, "label": "overall depth", "context": "Right end view overall depth" },
+    { "raw_text": "49,3", "value": "49,3", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "Front view overall height" },
+    { "raw_text": "R10", "value": "10", "unit": "mm", "type": "radius", "quantity": null, "label": "end cap corner radius", "context": "Right end view, rounded corner radius of the end cap" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Host Bus Connector",
+      "context": "USB-C style 24-pin connector footprint, top and bottom rows shown as adjacent pin boxes with no printed pin numbers; position is the visible left-to-right order in each row",
+      "columns": ["Row", "Position", "Signal"],
+      "rows": [
+        ["Top", "1", "GND"],
+        ["Top", "2", "TX1+"],
+        ["Top", "3", "TX1-"],
+        ["Top", "4", "VBUS"],
+        ["Top", "5", "CC1"],
+        ["Top", "6", "D+"],
+        ["Top", "7", "D-"],
+        ["Top", "8", "SBU1"],
+        ["Top", "9", "VBUS"],
+        ["Top", "10", "RX2-"],
+        ["Top", "11", "RX2+"],
+        ["Top", "12", "GND"],
+        ["Bottom", "1", "GND"],
+        ["Bottom", "2", "RX1+"],
+        ["Bottom", "3", "RX1-"],
+        ["Bottom", "4", "VBUS"],
+        ["Bottom", "5", "SBU2"],
+        ["Bottom", "6", "D-"],
+        ["Bottom", "7", "D+"],
+        ["Bottom", "8", "CC2"],
+        ["Bottom", "9", "VBUS"],
+        ["Bottom", "10", "TX2-"],
+        ["Bottom", "11", "TX2+"],
+        ["Bottom", "12", "GND"]
+      ]
+    },
+    {
+      "type": "pinout_table",
+      "title": "Target Bus Connector",
+      "context": "10-pin connector, pin numbers printed above/below the pin circles",
+      "columns": ["Pin", "Pin Name", "Description"],
+      "rows": [
+        ["1", "I²C SCL", "I2C interface clock signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."],
+        ["2", "GND", "Ground connection."],
+        ["3", "I²C SDA", "I2C interface data signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."],
+        ["4", "VCC 3V3", "3.3V output."],
+        ["5", "SPI MISO", "SPI interface master in slave out signal. This pin can be used as GPIO."],
+        ["6", "VCC 3V3", "3.3V output."],
+        ["7", "SPI CLK", "SPI interface clock signal. This pin can be used as GPIO."],
+        ["8", "SPI MOSI", "SPI interface master out slave in signal. This pin can be used as GPIO."],
+        ["9", "SPI SS", "SPI interface slave select signal. This pin can be used as GPIO."],
+        ["10", "GND", "Ground connection."]
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical and Environmental Specifications",
+      "context": "Numbered specification sections 1.0 and 2.0",
+      "columns": ["Parameter", "Value"],
+      "rows": [
+        { "label": "1.1 Enclosure Material", "values": ["Enclosure Material", "EN AW-6060 T66, 2MM THK. Finish: Black Anodized"] },
+        { "label": "1.2 Front Panel Material", "values": ["Front Panel Material", "EN AW-Al Mg1 5005 H34, 2MM THK. Finish: Black Anodized"] },
+        { "label": "1.3 Plastic Strip Material", "values": ["Plastic Strip Material", "PC-ABS Alloy"] },
+        { "label": "2.1 Operating Temperature Range", "values": ["Operating Temperature Range", "-55°C to 125°C"] }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "SBL-0033 Rev. No:0 Date: 29.05.2023",
+    "All intellectual property rights regarding this document belong to DEICO Engineering Inc. The document is given on the condition that it is not reproduced, copied for production or other purposes and not shared with third parties without the written permission of DEICO, and received and committed."
+  ],
+  "warnings": [
+    "Product name field in the title block reads 'DEICO Onyx USB - I²C/SPI Converter'; DEICO was split out into brand_name and product_name kept as 'Onyx USB - I²C/SPI Converter'.",
+    "drawing_number was set to 'DE4001', the model code embedded in document_name and printed on the product label ('DE4001 USB-I2C/SPI CONVERTER'); no separate 'Drawing Number' field is printed. The footer code 'SBL-0033 Rev. No:0 Date: 29.05.2023' was not used, since it carries its own revision/date and looks like a document/form control stamp rather than this product's drawing number.",
+    "Host Bus Connector pin positions are not printed with numbers in the drawing; Position values reflect the visible left-to-right pin order in each row, not printed digits.",
+    "Circuitry block diagram (USB -> Controller -> I2C/GPIO, SPI/GPIO) is a functional block diagram without numeric values and was not extracted as a table or dimension.",
+    "The product photo view also shows the same 10 Target Bus Connector signals laid out physically on the unit's pin header (abbreviated as I2C_SCL, I2C_DA, SPI_MISO, SPI_CLK, SPI_SS on one side and GND, VCC_3V3, VCC_3V3, SPI_MOSI, GND on the other); this is the same pinout already captured in the Target Bus Connector table, not extracted again as a separate table.",
+    "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty."
+  ]
+}

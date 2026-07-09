@@ -53,6 +53,19 @@ RULE_DRAWING_NUMBER_IS_CONCISE_CODE = (
     "Put the concise visible drawing, part, or model code in drawing_number "
     "when visible."
 )
+RULE_DRAWING_NUMBER_MAY_BE_EMBEDDED = (
+    "A short product or model code, such as DE4001, still belongs in "
+    "drawing_number even when it only appears embedded inside the "
+    "product_name or document_name text rather than in its own separate "
+    "field."
+)
+RULE_DRAWING_NUMBER_NOT_FORM_STAMP = (
+    "Do not use a generic document or form control stamp as drawing_number, "
+    "such as a code that carries its own separate revision number and date "
+    "printed elsewhere on the sheet (for example SBL-0033 Rev. No:2 Date: "
+    "19.12.2025); that identifies the template or form, not this specific "
+    "product."
+)
 RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE = (
     "Put document type text such as Technical Drawing in document_name."
 )
@@ -126,6 +139,8 @@ def build_vlm_prompt(source_file: Path) -> str:
             RULE_BRAND_VS_PRODUCT_NAME,
             RULE_PRODUCT_NAME_IS_HUMAN_READABLE,
             RULE_DRAWING_NUMBER_IS_CONCISE_CODE,
+            RULE_DRAWING_NUMBER_MAY_BE_EMBEDDED,
+            RULE_DRAWING_NUMBER_NOT_FORM_STAMP,
             RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE,
             RULE_SOURCE_FILENAME_IS_ONLY_A_HINT,
             RULE_NO_FULL_FILENAME_AS_DRAWING_NUMBER,
@@ -207,6 +222,8 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             RULE_BRAND_VS_PRODUCT_NAME,
             RULE_PRODUCT_NAME_IS_HUMAN_READABLE,
             RULE_DRAWING_NUMBER_IS_CONCISE_CODE,
+            RULE_DRAWING_NUMBER_MAY_BE_EMBEDDED,
+            RULE_DRAWING_NUMBER_NOT_FORM_STAMP,
             RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE,
             RULE_SOURCE_FILENAME_IS_ONLY_A_HINT,
             RULE_NO_FULL_FILENAME_AS_DRAWING_NUMBER,
