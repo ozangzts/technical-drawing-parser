@@ -8,6 +8,9 @@ The format is inspired by Keep a Changelog, and this project uses chronological 
 
 ### Added
 
+- Added a golden end-to-end regression fixture (`tests/fixtures/sample_raw_response.json` and `tests/fixtures/expected_product.json`, exercised by `tests/test_golden_fixture.py`) that locks in `parse_product_json_response` and `format_json_compact` working together: table label dropping, the uniform-columns collapse, the non-uniform fallback, and the compact rendering all in one checked example. This was the last open item in this file's "Add a curated sample fixture" TODO.
+- Updated `AGENTS.md`'s Open TODO to reflect this session's findings: marked the `size`/`scale`/dimension-type normalization item done (already implemented in `validator.py`), noted that schematic/circuit diagrams are now a recurring, evidence-backed content gap across most samples (not yet designed), and noted that the new prompt/validator rules have only been checked by hand, not against a real Anthropic API run.
+
 - Added truncated-response detection for the Anthropic and Ollama extractors: a response cut off at the model's output token limit (`stop_reason: max_tokens` / `done_reason: length`) is now marked `validation_failed` with an explicit warning instead of silently risking a JSON object that parses cleanly but is missing trailing fields such as later tables, notes, or warnings.
 - Added unit tests for the new truncation-detection helpers in both extractors.
 - Added a table normalization rule that drops a row `label` when it only restates the row's first `cells` value (such as `label: "Pin 1"` next to a `Pin Number: 1` cell), so pinout/connection-style tables stop repeating the same value in two places. Labels that carry information beyond the first cell, such as numbered specification sections, are unaffected.

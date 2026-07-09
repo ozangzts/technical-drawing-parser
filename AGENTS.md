@@ -157,6 +157,8 @@ Preserve visible decimal separators in numeric strings. If the drawing shows `44
 - Developer/internal metadata output location: `outputs/internal/`
 - Compact review summary location: `outputs/internal/reviews/`
 - Committed Claude Sonnet comparison outputs: `outputs_claude_sonnet_test/`
+- Manual (no-API) Claude Code comparison outputs, produced by hand against the same prompt rules for cross-checking the Anthropic-run outputs above: `outputs_claude_code_sonnet5_test/`
+- Golden end-to-end fixture (raw model response -> expected compact product JSON): `tests/fixtures/`, exercised by `tests/test_golden_fixture.py`
 - Recommended Conda environment file: `environment.yml`
 - Local configuration template: `.env.example`
 - Local CLI wrapper: `tdp.py`
@@ -216,10 +218,11 @@ Both VLM extractors detect when a response was cut off at the model's output tok
 
 - Continue improving the opt-in Ollama extractor. Current model results: `gemma4:cloud` gives the best extraction so far; `minicpm-v4.6` runs locally and returns valid but imperfect JSON; `moondream` runs but is not useful for extraction; `qwen2.5vl:3b`, `qwen3-vl:2b`, and local `gemma4` crash with `0xe06d7363` on the current 8 GB RAM / GTX 1050 machine.
 - Claude Sonnet was evaluated on the current sample PDFs and produced the strongest structured output so far, especially for readable tables and specification sections. The committed comparison outputs live under `outputs_claude_sonnet_test/`. Sonnet is expensive on 300 DPI full-page technical drawings, so prefer smaller targeted tests, cheaper models, or lower-DPI experiments before running large batches again.
-- Update product schema, prompt, and validator for `size` versus `scale`, string `"null"`, empty strings, and allowed dimension types.
-- Add merge behavior for multi-page PDF page-level extraction.
-- Add PDF type detection.
+- The prompt and validator changed meaningfully after the outputs under `outputs_claude_sonnet_test/` were generated (table label/column collapse, `legend_table`, the `drawing_number` vs. form-control-stamp distinction, truncated-response detection). Those changes were checked by manually re-deriving product JSON by hand for comparison (see `outputs_claude_code_sonnet5_test/`), not by re-running the real Anthropic extractor. A real API run on at least one sample would confirm the new rules actually change a fresh, context-free, one-shot model response the way the manual comparison suggests, before spending a full batch run on it.
+- No sample seen so far (DE3000, DE8133, DE8135, DE8207, DE4001, DE12XXX) has shown any GD&T symbol, tolerance frame, or `+/-` tolerance callout. Do not add GD&T schema/prompt support until a real sample shows one; `tolerances` stays an empty placeholder until then.
+- Schematic/circuit diagrams appear in most samples (DE8135, DE8133, DE8207, DE4001) and are consistently left out of `dimensions`/`tables`, only described in a free-text `warnings` entry. This is the most evidence-backed content gap right now: DE8133/DE8135/DE8207 are the same bus-coupler topology scaled by stub count (3/5/7), each with reference designators (R1...) and a repeated transformer ratio (`1:1,41`) that would be useful to query or cross-check across the family if it were structured instead of embedded in a sentence. No schema decision has been made yet; discuss the shape (e.g. a `schematics` field with components and parameters) before implementing.
+- Add merge behavior for multi-page PDF page-level extraction. Still untested: every sample so far has been a single page.
+- Add PDF type detection (vector vs. raster vs. mixed).
 - Continue evaluating OCR target refinement quality. Safe metadata merge code exists but is paused for product JSON output; dimension merge is not implemented yet.
-- Add crop extraction merge and dedupe using page-space tile coordinates.
+- Add crop extraction merge and dedupe using page-space tile coordinates. This path (`--generate-crops`/`--extract-crops`) is currently Ollama-only and its results are not merged into product JSON.
 - Add layout detection only when needed.
-- Add a curated sample fixture and expected product JSON once VLM extraction exists.

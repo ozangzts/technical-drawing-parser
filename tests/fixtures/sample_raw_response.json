@@ -1,0 +1,91 @@
+{
+  "source_file": "ignored-by-validator.pdf",
+  "brand_name": "Acme",
+  "product_name": "Acme Widget 42 - Fixture Sample",
+  "document_name": "ACME_WIDGET42_Technical_Drawing.pdf",
+  "drawing_number": "WIDGET42",
+  "revision": "1",
+  "revision_date": "01.01.2025",
+  "sheet": "1/1",
+  "size": "A4",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "10,5",
+      "value": "10,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall width",
+      "context": "Front view overall width"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Connector Pinout",
+      "context": "4-pin header",
+      "rows": [
+        {
+          "label": "Pin 1",
+          "cells": [
+            {"column": "Pin", "value": "1"},
+            {"column": "Signal", "value": "VCC"}
+          ]
+        },
+        {
+          "label": "Pin 2",
+          "cells": [
+            {"column": "Pin", "value": "2"},
+            {"column": "Signal", "value": "GND"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Specifications",
+      "context": "Numbered specification sections",
+      "rows": [
+        {
+          "label": "1.1 Material",
+          "cells": [
+            {"column": "Parameter", "value": "Material"},
+            {"column": "Value", "value": "Aluminum"}
+          ]
+        },
+        {
+          "label": "1.2 Finish",
+          "cells": [
+            {"column": "Parameter", "value": "Finish"},
+            {"column": "Value", "value": "Anodized"}
+          ]
+        }
+      ]
+    },
+    {
+      "type": "unknown",
+      "title": "Irregular Table",
+      "context": "Rows with different column sets, should not collapse",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {"column": "A", "value": "1"}
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {"column": "B", "value": "2"},
+            {"column": "C", "value": "3"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": ["All dimensions in millimeters."],
+  "warnings": []
+}
