@@ -10,6 +10,7 @@ from .crops import generate_overlapping_tiles
 from .dedupe import build_tile_extraction_summary
 from .discovery import discover_inputs
 from .fingerprint import sha256_file
+from .json_format import format_json_compact
 from .metadata import read_file_metadata
 from .ocr import (
     DEFAULT_OCR_ENGINE,
@@ -38,6 +39,12 @@ from .registry import (
     load_registry,
     save_registry,
     should_process,
+)
+
+TRUNCATED_RESPONSE_WARNING = (
+    "Extractor response appears to have been cut off at the model's output "
+    "token limit; the parsed JSON may be missing trailing fields such as "
+    "later tables, notes, or warnings."
 )
 
 MERGE_READY_CONFIDENCE_THRESHOLD = 0.85
@@ -312,7 +319,7 @@ def create_product_json(
         processing_warnings=processing_warnings,
         processed_at=processed_at,
     )
-    write_json(result_path, result)
+    write_json(result_path, result, compact=True)
     write_json(internal_path, internal)
     write_json(tile_summary_path, internal["tile_extraction_summary"])
     write_json(review_path, build_review_result(internal, result))
@@ -518,6 +525,9 @@ def run_page_vlm_extraction(
                 extraction.raw_response,
                 input_file,
             )
+            if extraction.truncated:
+                validation_warnings.append(TRUNCATED_RESPONSE_WARNING)
+                product_json["warnings"].append(TRUNCATED_RESPONSE_WARNING)
             if validation_warnings:
                 status = "validation_failed"
 
@@ -574,6 +584,9 @@ def run_ollama_tile_extractions(
                     extraction.raw_response,
                     source_file,
                 )
+                if extraction.truncated:
+                    validation_warnings.append(TRUNCATED_RESPONSE_WARNING)
+                    product_json["warnings"].append(TRUNCATED_RESPONSE_WARNING)
                 if validation_warnings:
                     status = "validation_failed"
 
@@ -638,6 +651,9 @@ def run_ocr_target_refinements(
                         target,
                     )
                 )
+                if extraction.truncated:
+                    validation_warnings.append(TRUNCATED_RESPONSE_WARNING)
+                    refinement_json["warnings"].append(TRUNCATED_RESPONSE_WARNING)
                 if validation_warnings:
                     status = "validation_failed"
 
@@ -1464,8 +1480,11 @@ def now_utc() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def write_json(path: Path, data: object) -> None:
+def write_json(path: Path, data: object, compact: bool = False) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if compact:
+        path.write_text(format_json_compact(data), encoding="utf-8")
+        return
     with path.open("w", encoding="utf-8") as file:
         json.dump(data, file, indent=2, ensure_ascii=False)
         file.write("\n")

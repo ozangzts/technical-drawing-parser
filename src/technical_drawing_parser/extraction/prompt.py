@@ -8,45 +8,165 @@ from typing import Any
 from .product import product_schema_description
 
 
+# Rules below are shared verbatim between the full-page and tile prompts.
+# Keeping them as named constants (instead of retyping the same sentence in
+# both prompt builders) means a future rule change only has to happen once,
+# and the two prompts cannot silently drift apart on wording that was never
+# meant to differ.
+RULE_NO_GUESSING = "Do not guess missing or unclear values."
+RULE_PRESERVE_RAW_TEXT_FORMATTING = (
+    "Preserve original numeric formatting, decimal separators, symbols, and "
+    "quantity markers in raw_text."
+)
+RULE_PRESERVE_VALUE_FORMATTING = (
+    "Preserve visible numeric formatting in value too. Do not convert decimal "
+    "commas to decimal points."
+)
+RULE_PRESERVE_TITLE_BLOCK_FORMATTING = (
+    "Preserve visible title-block values exactly as written, including date "
+    "order, separators, revision text, sheet text, and scale ratios."
+)
+RULE_NULL_FOR_MISSING = "Use null for missing scalar values."
+RULE_EMPTY_ARRAYS = "Use empty arrays when no values are visible."
+RULE_NO_UNIT_INFERENCE = (
+    "Do not infer dimension unit from drawing style, decimal separators, "
+    "product type, previous drawings, or common mechanical drawing conventions."
+)
+RULE_UNIT_SCOPE_EXCLUSIONS = (
+    "Do not apply global dimension units to pin numbers, connector labels, "
+    "table indexes, dates, scale values, revision values, voltage, current, "
+    "temperature, humidity, frequency, standards, or free-text notes unless "
+    "that exact value visibly carries that unit."
+)
+RULE_SHEET_FROM_TITLE_BLOCK = (
+    "Extract title-block sheet information such as 1/1 into sheet when visible."
+)
+RULE_BRAND_VS_PRODUCT_NAME = (
+    "Put visible company, manufacturer, brand, or logo text in brand_name, "
+    "not product_name."
+)
+RULE_PRODUCT_NAME_IS_HUMAN_READABLE = (
+    "Put human-readable product/model descriptions in product_name. Do not "
+    "use brand-only text as product_name."
+)
+RULE_DRAWING_NUMBER_IS_CONCISE_CODE = (
+    "Put the concise visible drawing, part, or model code in drawing_number "
+    "when visible."
+)
+RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE = (
+    "Put document type text such as Technical Drawing in document_name."
+)
+RULE_SOURCE_FILENAME_IS_ONLY_A_HINT = (
+    "The source file name is only a processing hint. Do not copy the source "
+    "file name into product_name, document_name, or drawing_number unless "
+    "that exact text is visibly printed in the drawing."
+)
+RULE_NO_FULL_FILENAME_AS_DRAWING_NUMBER = (
+    "Do not use a full filename such as Brand_Code_Technical_Drawing.pdf as "
+    "drawing_number. Prefer the short visible code from the title block, "
+    "such as Code1234."
+)
+RULE_SIZE_VS_SCALE = (
+    "Use size for sheet sizes such as A3 or A4. Use scale only for drawing "
+    "scales such as 1:1, 2:1, 13:100, or NTS."
+)
+RULE_NO_ISOLATED_NUMBERS_AS_METADATA = (
+    "Do not assign isolated numbers to metadata fields unless a visible "
+    "label or title-block context supports the field."
+)
+RULE_DIMENSION_FIELDS = (
+    "For dimensions, include raw_text, value, unit, type, quantity, label, "
+    "and context when possible."
+)
+RULE_DIMENSION_CONTEXT_SPECIFICITY = (
+    "Make dimension context specific enough to locate the value, such as "
+    "overall width, front view height, connector body radius, or "
+    "recommended land pattern hole diameter."
+)
+RULE_NUMBERED_SPECIFICATION_SECTIONS = (
+    "Extract numbered specification sections as tables when they have a "
+    "parameter/value structure. Use notes only for free-text notes that do "
+    "not form a table."
+)
+RULE_NO_DEVELOPER_METADATA = (
+    "Do not include developer metadata, coordinates, OCR blocks, "
+    "fingerprints, or internal notes."
+)
+RULE_CONSISTENT_ROW_COLUMN_ORDER = (
+    "When a table has more than one row, use the same column order in "
+    "every row's cells, such as always Pin Number then Connection, so rows "
+    "stay aligned with each other."
+)
+
+
+def _rules_block(rules: list[str]) -> str:
+    return "\n".join(f"- {rule}" for rule in rules)
+
+
 def build_vlm_prompt(source_file: Path) -> str:
+    rules = _rules_block(
+        [
+            "Extract only information that is visible in the drawing.",
+            RULE_NO_GUESSING,
+            RULE_PRESERVE_RAW_TEXT_FORMATTING,
+            RULE_PRESERVE_VALUE_FORMATTING,
+            RULE_PRESERVE_TITLE_BLOCK_FORMATTING,
+            RULE_NULL_FOR_MISSING,
+            RULE_EMPTY_ARRAYS,
+            "Add warnings for unclear, ambiguous, cropped, or unreadable information.",
+            'Use dimension unit only when a unit is visible in a dimension label '
+            'or supported by a visible global note such as "all dimensions are '
+            'in millimeters".',
+            RULE_NO_UNIT_INFERENCE,
+            "If dimension units are not visibly stated, use null for dimension unit.",
+            'A global note such as "all dimensions are in millimeters" applies '
+            "only to physical product dimensions that do not show another unit.",
+            RULE_UNIT_SCOPE_EXCLUSIONS,
+            RULE_SHEET_FROM_TITLE_BLOCK,
+            RULE_BRAND_VS_PRODUCT_NAME,
+            RULE_PRODUCT_NAME_IS_HUMAN_READABLE,
+            RULE_DRAWING_NUMBER_IS_CONCISE_CODE,
+            RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE,
+            RULE_SOURCE_FILENAME_IS_ONLY_A_HINT,
+            RULE_NO_FULL_FILENAME_AS_DRAWING_NUMBER,
+            RULE_SIZE_VS_SCALE,
+            RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
+            RULE_DIMENSION_FIELDS,
+            RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            "Extract dimension tables when visible. Do not ignore table values "
+            "that describe product variants, cabinet sizes, ranges, or "
+            "option-dependent dimensions.",
+            "Put table-derived measurements in dimension_tables with their row "
+            "and column context instead of flattening them into dimensions "
+            "when the table context is needed to understand the value.",
+            "Put non-dimensional tables such as pinout, connection, "
+            "specification, note, or legend tables in tables, not in "
+            "dimension_tables.",
+            RULE_NUMBERED_SPECIFICATION_SECTIONS,
+            "For tables, make rows readable by humans. Use one logical item "
+            "per row when possible, such as one pin per row or one "
+            "specification per row.",
+            "In table rows, use cells as a list of objects with column and "
+            "value. Do not put table headers in a separate columns array "
+            "with disconnected row values.",
+            RULE_CONSISTENT_ROW_COLUMN_ORDER,
+            "If the visible table repeats the same headers across multiple "
+            "side-by-side blocks, normalize it into logical rows instead of "
+            "preserving repeated headers across one very wide row.",
+            "Do not list single-letter symbolic references such as A, B, C, "
+            "X, or Y as dimensions unless a numeric value is visible with "
+            "the reference. If the symbol is defined by a table, keep it as "
+            "table column text or context.",
+            RULE_NO_DEVELOPER_METADATA,
+        ]
+    )
+
     return f"""You are extracting visible information from a technical drawing.
 
 Return only valid JSON matching the schema below. Do not include markdown fences or explanations.
 
 Rules:
-- Extract only information that is visible in the drawing.
-- Do not guess missing or unclear values.
-- Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
-- Preserve visible numeric formatting in value too. Do not convert decimal commas to decimal points.
-- Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
-- Use null for missing scalar values.
-- Use empty arrays when no values are visible.
-- Add warnings for unclear, ambiguous, cropped, or unreadable information.
-- Use dimension unit only when a unit is visible in a dimension label or supported by a visible global note such as "all dimensions are in millimeters".
-- Do not infer dimension unit from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
-- If dimension units are not visibly stated, use null for dimension unit.
-- A global note such as "all dimensions are in millimeters" applies only to physical product dimensions that do not show another unit.
-- Do not apply global dimension units to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or free-text notes unless that exact value visibly carries that unit.
-- Extract title-block sheet information such as 1/1 into sheet when visible.
-- Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
-- Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
-- Put the concise visible drawing, part, or model code in drawing_number when visible.
-- Put document type text such as Technical Drawing in document_name.
-- The source file name is only a processing hint. Do not copy the source file name into product_name, document_name, or drawing_number unless that exact text is visibly printed in the drawing.
-- Do not use a full filename such as Brand_Code_Technical_Drawing.pdf as drawing_number. Prefer the short visible code from the title block, such as Code1234.
-- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
-- Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
-- For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
-- Make dimension context specific enough to locate the value, such as overall width, front view height, connector body radius, or recommended land pattern hole diameter.
-- Extract dimension tables when visible. Do not ignore table values that describe product variants, cabinet sizes, ranges, or option-dependent dimensions.
-- Put table-derived measurements in dimension_tables with their row and column context instead of flattening them into dimensions when the table context is needed to understand the value.
-- Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables, not in dimension_tables.
-- Extract numbered specification sections as tables when they have a parameter/value structure. Use notes only for free-text notes that do not form a table.
-- For tables, make rows readable by humans. Use one logical item per row when possible, such as one pin per row or one specification per row.
-- In table rows, use cells as a list of objects with column and value. Do not put table headers in a separate columns array with disconnected row values.
-- If the visible table repeats the same headers across multiple side-by-side blocks, normalize it into logical rows instead of preserving repeated headers across one very wide row.
-- Do not list single-letter symbolic references such as A, B, C, X, or Y as dimensions unless a numeric value is visible with the reference. If the symbol is defined by a table, keep it as table column text or context.
-- Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
+{rules}
 
 Source file name:
 {source_file.name}
@@ -60,43 +180,62 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
     tile_id = tile.get("id", "unknown_tile")
     page = tile.get("page", 1)
     bbox = tile.get("bbox")
+
+    rules = _rules_block(
+        [
+            "This image is a crop, not the full drawing.",
+            "Extract only information that is visible inside this crop.",
+            RULE_NO_GUESSING,
+            RULE_PRESERVE_RAW_TEXT_FORMATTING,
+            RULE_PRESERVE_VALUE_FORMATTING,
+            RULE_PRESERVE_TITLE_BLOCK_FORMATTING,
+            RULE_NULL_FOR_MISSING,
+            RULE_EMPTY_ARRAYS,
+            "Add warnings when a dimension, note, leader line, arrow, table "
+            "cell, or schematic connection appears cropped or incomplete.",
+            "Use dimension unit only when a unit is visible in a dimension "
+            "label or supported by a visible global note fragment such as "
+            '"all dimensions are in millimeters".',
+            RULE_NO_UNIT_INFERENCE,
+            "If dimension units are not visibly stated in this crop, use "
+            "null for dimension unit.",
+            'A global note fragment such as "all dimensions are in '
+            'millimeters" applies only to physical product dimensions that '
+            "do not show another unit.",
+            RULE_UNIT_SCOPE_EXCLUSIONS,
+            RULE_SHEET_FROM_TITLE_BLOCK,
+            RULE_BRAND_VS_PRODUCT_NAME,
+            RULE_PRODUCT_NAME_IS_HUMAN_READABLE,
+            RULE_DRAWING_NUMBER_IS_CONCISE_CODE,
+            RULE_DOCUMENT_NAME_IS_DOCUMENT_TYPE,
+            RULE_SOURCE_FILENAME_IS_ONLY_A_HINT,
+            RULE_NO_FULL_FILENAME_AS_DRAWING_NUMBER,
+            RULE_SIZE_VS_SCALE,
+            RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
+            RULE_DIMENSION_FIELDS,
+            RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            "Extract visible table-derived measurements into dimension_tables "
+            "when row or column context is needed.",
+            "Put non-dimensional tables such as pinout, connection, "
+            "specification, note, or legend tables in tables.",
+            RULE_NUMBERED_SPECIFICATION_SECTIONS,
+            "For tables, use one logical item per row when possible and "
+            "write row cells as objects with column and value.",
+            "Do not put table headers in a separate columns array with "
+            "disconnected row values.",
+            RULE_CONSISTENT_ROW_COLUMN_ORDER,
+            "Do not list single-letter symbolic references as dimensions "
+            "unless a numeric value is visible with the reference.",
+            RULE_NO_DEVELOPER_METADATA,
+        ]
+    )
+
     return f"""You are extracting visible information from an overlapping crop of a technical drawing.
 
 Return only valid JSON matching the schema below. Do not include markdown fences or explanations.
 
 Rules:
-- This image is a crop, not the full drawing.
-- Extract only information that is visible inside this crop.
-- Do not guess missing or unclear values.
-- Preserve original numeric formatting, decimal separators, symbols, and quantity markers in raw_text.
-- Preserve visible numeric formatting in value too. Do not convert decimal commas to decimal points.
-- Preserve visible title-block values exactly as written, including date order, separators, revision text, sheet text, and scale ratios.
-- Use null for missing scalar values.
-- Use empty arrays when no values are visible.
-- Add warnings when a dimension, note, leader line, arrow, table cell, or schematic connection appears cropped or incomplete.
-- Use dimension unit only when a unit is visible in a dimension label or supported by a visible global note fragment such as "all dimensions are in millimeters".
-- Do not infer dimension unit from drawing style, decimal separators, product type, previous drawings, or common mechanical drawing conventions.
-- If dimension units are not visibly stated in this crop, use null for dimension unit.
-- A global note fragment such as "all dimensions are in millimeters" applies only to physical product dimensions that do not show another unit.
-- Do not apply global dimension units to pin numbers, connector labels, table indexes, dates, scale values, revision values, voltage, current, temperature, humidity, frequency, standards, or free-text notes unless that exact value visibly carries that unit.
-- Extract title-block sheet information such as 1/1 into sheet when visible.
-- Put visible company, manufacturer, brand, or logo text in brand_name, not product_name.
-- Put human-readable product/model descriptions in product_name. Do not use brand-only text as product_name.
-- Put the concise visible drawing, part, or model code in drawing_number when visible.
-- Put document type text such as Technical Drawing in document_name.
-- The source file name is only a processing hint. Do not copy the source file name into product_name, document_name, or drawing_number unless that exact text is visibly printed in the drawing.
-- Do not use a full filename such as Brand_Code_Technical_Drawing.pdf as drawing_number. Prefer the short visible code from the title block, such as Code1234.
-- Use size for sheet sizes such as A3 or A4. Use scale only for drawing scales such as 1:1, 2:1, 13:100, or NTS.
-- Do not assign isolated numbers to metadata fields unless a visible label or title-block context supports the field.
-- For dimensions, include raw_text, value, unit, type, quantity, label, and context when possible.
-- Make dimension context specific enough to locate the value, such as overall width, front view height, connector body radius, or recommended land pattern hole diameter.
-- Extract visible table-derived measurements into dimension_tables when row or column context is needed.
-- Put non-dimensional tables such as pinout, connection, specification, note, or legend tables in tables.
-- Extract numbered specification sections as tables when they have a parameter/value structure. Use notes only for free-text notes that do not form a table.
-- For tables, use one logical item per row when possible and write row cells as objects with column and value.
-- Do not put table headers in a separate columns array with disconnected row values.
-- Do not list single-letter symbolic references as dimensions unless a numeric value is visible with the reference.
-- Do not include developer metadata, coordinates, OCR blocks, fingerprints, or internal notes.
+{rules}
 
 Source file name:
 {source_file.name}

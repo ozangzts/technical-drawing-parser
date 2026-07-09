@@ -403,16 +403,17 @@ def normalize_tables(
             warnings.append(f"{field_name} item {table_index} was not an object and was skipped.")
             continue
 
+        rows = normalize_table_rows(
+            table.get("rows"),
+            table.get("columns"),
+            warnings,
+            field_name,
+            table_index,
+        )
         normalized_table = {
             "title": normalize_scalar(table.get("title")),
             "context": normalize_scalar(table.get("context")),
-            "rows": normalize_table_rows(
-                table.get("rows"),
-                table.get("columns"),
-                warnings,
-                field_name,
-                table_index,
-            ),
+            **collapse_uniform_columns(rows),
         }
         if include_type:
             normalized_table = {
@@ -463,21 +464,105 @@ def normalize_table_rows(
                 f"{field_name} item {table_index} row {row_index} was not an object and was skipped."
             )
             continue
-        normalized_rows.append(
-            {
-                "label": normalize_scalar(row.get("label")),
-                "cells": normalize_table_cells(
-                    row,
-                    column_labels,
-                    warnings,
-                    field_name,
-                    table_index,
-                    row_index,
-                ),
-            }
+        cells = normalize_table_cells(
+            row,
+            column_labels,
+            warnings,
+            field_name,
+            table_index,
+            row_index,
         )
+        label = normalize_scalar(row.get("label"))
+        if label_is_redundant_with_first_cell(label, cells):
+            label = None
+        normalized_rows.append({"label": label, "cells": cells})
 
     return normalized_rows
+
+
+def collapse_uniform_columns(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Collapse `cells` into a table-level `columns` header plus per-row
+    `values` when every row provably shares the same column sequence.
+
+    This does not trust the model to align columns and values positionally
+    (that is exactly what caused the earlier move away from a columns/values
+    shape). Positional output is only produced here, after `cells` has
+    already been parsed and validated, and only when every row's column
+    order matches exactly. Any row with a different column set, a different
+    order, or a missing value falls back to the explicit `cells` shape for
+    the whole table, so nothing is ever positionally ambiguous.
+    """
+    columns = shared_row_columns(rows)
+    if columns is None:
+        return {"rows": rows}
+
+    labels_carry_information = any(row.get("label") is not None for row in rows)
+    collapsed_rows: list[Any] = []
+    for row in rows:
+        values = [cell.get("value") for cell in row["cells"]]
+        if labels_carry_information:
+            collapsed_rows.append({"label": row.get("label"), "values": values})
+        else:
+            collapsed_rows.append(values)
+
+    return {"columns": columns, "rows": collapsed_rows}
+
+
+def shared_row_columns(rows: list[dict[str, Any]]) -> list[str] | None:
+    if len(rows) < 2:
+        return None
+
+    first_columns: list[Any] | None = None
+    for row in rows:
+        cells = row.get("cells")
+        if not isinstance(cells, list) or not cells:
+            return None
+
+        columns = [cell.get("column") for cell in cells]
+        if any(not isinstance(column, str) or not column.strip() for column in columns):
+            return None
+
+        if first_columns is None:
+            first_columns = columns
+        elif columns != first_columns:
+            return None
+
+    return first_columns
+
+
+def label_is_redundant_with_first_cell(label: Any, cells: list[dict[str, Any]]) -> bool:
+    """Detect a row label that only restates the row's first cell, such as
+    `label: "Pin 1"` next to `{"column": "Pin Number", "value": "1"}`.
+
+    Matching only the trailing value is not enough: a label like
+    `"2.7 Shock"` also ends with a first-cell value of `"Shock"`, but the
+    leading `"2.7"` is real section-numbering information, not an echo of
+    the `Parameter` column. Requiring the remaining prefix to relate to the
+    first cell's column name (rather than an unrelated numbering scheme)
+    avoids dropping that information.
+    """
+    if not isinstance(label, str) or not cells:
+        return False
+
+    first_cell = cells[0]
+    value = first_cell.get("value")
+    column = first_cell.get("column")
+    if not isinstance(value, str) or not value.strip():
+        return False
+
+    normalized_label = label.strip().lower()
+    normalized_value = value.strip().lower()
+    if not normalized_label.endswith(normalized_value):
+        return False
+
+    prefix = normalized_label[: len(normalized_label) - len(normalized_value)].strip()
+    if not prefix:
+        return True
+
+    if not isinstance(column, str) or not column.strip():
+        return False
+
+    return prefix in column.strip().lower()
 
 
 def normalize_table_cells(

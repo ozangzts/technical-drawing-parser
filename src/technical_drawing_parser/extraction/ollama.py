@@ -20,6 +20,7 @@ class ExtractionResponse:
     status: str
     raw_response: str | None
     error: str | None = None
+    truncated: bool = False
 
 
 def extract_with_ollama(
@@ -59,7 +60,15 @@ def extract_with_ollama(
             error="Ollama response did not include a string `response` field.",
         )
 
-    return ExtractionResponse(status="completed", raw_response=raw_response)
+    return ExtractionResponse(
+        status="completed",
+        raw_response=raw_response,
+        truncated=response_was_truncated(data),
+    )
+
+
+def response_was_truncated(data: object) -> bool:
+    return isinstance(data, dict) and data.get("done_reason") == "length"
 
 
 def encode_image(path: Path) -> str:

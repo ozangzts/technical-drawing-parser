@@ -39,7 +39,7 @@ def extract_with_anthropic(
 
     payload = {
         "model": model,
-        "max_tokens": 8192,
+        "max_tokens": 16384,
         "messages": [
             {
                 "role": "user",
@@ -92,7 +92,15 @@ def extract_with_anthropic(
             error="Anthropic response did not include a text content block.",
         )
 
-    return ExtractionResponse(status="completed", raw_response=raw_response)
+    return ExtractionResponse(
+        status="completed",
+        raw_response=raw_response,
+        truncated=response_was_truncated(data),
+    )
+
+
+def response_was_truncated(data: object) -> bool:
+    return isinstance(data, dict) and data.get("stop_reason") == "max_tokens"
 
 
 def extract_text_response(data: object) -> str | None:

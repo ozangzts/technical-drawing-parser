@@ -4,6 +4,23 @@ All notable changes to this project should be documented in this file.
 
 The format is inspired by Keep a Changelog, and this project uses chronological entries while the project is still in early exploration.
 
+## 2026-07-09
+
+### Added
+
+- Added truncated-response detection for the Anthropic and Ollama extractors: a response cut off at the model's output token limit (`stop_reason: max_tokens` / `done_reason: length`) is now marked `validation_failed` with an explicit warning instead of silently risking a JSON object that parses cleanly but is missing trailing fields such as later tables, notes, or warnings.
+- Added unit tests for the new truncation-detection helpers in both extractors.
+- Added a table normalization rule that drops a row `label` when it only restates the row's first `cells` value (such as `label: "Pin 1"` next to a `Pin Number: 1` cell), so pinout/connection-style tables stop repeating the same value in two places. Labels that carry information beyond the first cell, such as numbered specification sections, are unaffected.
+- Added `src/technical_drawing_parser/json_format.py` and switched `outputs/products/*.json` to it: short, uniform rows (dimensions, table rows) now render on one line each instead of one line per key, while long values still expand so nothing is truncated. This is formatting only; the underlying JSON values and structure are unchanged. Internal/debug JSON output is unaffected.
+- Added a table normalization step (`collapse_uniform_columns` in `validator.py`) that collapses a table's rows to a table-level `columns` header plus per-row `values` when every row (at least two) shares the exact same column sequence, removing repeated column names such as `"Pin Number"` on every one of 25 pinout rows. Uniformity is verified from the already-parsed `cells`, not assumed from the model's output, so an irregular table keeps the explicit `cells` shape. Rows also drop `label` entirely (becoming a plain value array) when every row's label is null across the table; labels that carry real information keep a `{"label": ..., "values": [...]}` row shape.
+- Added `legend_table` to the `type` enum shown to the model in `product_schema_description()`. Prompts already told the model to put legend/notation tables in `tables`, and the validator already accepted `legend_table` as a type, but the model was never actually offered that value to choose from, so a legend table could only ever come back as `unknown`.
+- Added a rule asking the model to use the same column order in every row of a multi-row table, so the new `collapse_uniform_columns` step has a better chance of finding a table's rows provably uniform instead of falling back to the verbose `cells` shape.
+- Extracted the rule text shared verbatim between `build_vlm_prompt` and `build_tile_vlm_prompt` into named constants in `prompt.py` so the two prompts cannot silently drift apart on wording that was never meant to differ. Verified the rendered prompt text is unchanged from before the refactor (code-organization change only).
+
+### Changed
+
+- Raised the Anthropic extractor `max_tokens` from `8192` to `16384` to reduce how often full-page technical drawings with large tables hit the output limit in the first place.
+
 ## 2026-07-08
 
 ### Added

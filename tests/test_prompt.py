@@ -106,6 +106,36 @@ class PromptTests(unittest.TestCase):
         self.assertIn("numbered specification sections", full_page_prompt)
         self.assertIn("one logical item per row", tile_prompt)
 
+    def test_prompts_offer_legend_table_as_a_table_type(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("legend_table", full_page_prompt)
+        self.assertIn("legend_table", tile_prompt)
+
+    def test_prompts_ask_for_consistent_row_column_order(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("same column order in every row", full_page_prompt)
+        self.assertIn("same column order in every row", tile_prompt)
+
     def test_ocr_target_prompt_requires_visual_text_verification(self) -> None:
         prompt = build_ocr_target_refinement_prompt(
             Path("drawing.pdf"),

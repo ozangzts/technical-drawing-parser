@@ -71,7 +71,7 @@ def product_schema_description() -> str:
   ],
   "tables": [
     {
-      "type": "pinout_table | connection_table | specification_table | notes_table | unknown",
+      "type": "pinout_table | connection_table | specification_table | notes_table | legend_table | unknown",
       "title": "string or null",
       "context": "string or null",
       "rows": [

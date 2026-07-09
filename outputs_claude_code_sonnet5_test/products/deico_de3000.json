@@ -10,42 +10,10 @@
   "size": "A3",
   "scale": "13:100",
   "dimensions": [
-    {
-      "raw_text": "482,6",
-      "value": "482,6",
-      "unit": "mm",
-      "type": "linear",
-      "quantity": null,
-      "label": "overall width",
-      "context": "Front view overall width"
-    },
-    {
-      "raw_text": "44,45",
-      "value": "44,45",
-      "unit": "mm",
-      "type": "linear",
-      "quantity": null,
-      "label": "overall height",
-      "context": "Front view overall height"
-    },
-    {
-      "raw_text": "427,8",
-      "value": "427,8",
-      "unit": "mm",
-      "type": "linear",
-      "quantity": null,
-      "label": "overall width",
-      "context": "Top view overall width"
-    },
-    {
-      "raw_text": "456,19",
-      "value": "456,19",
-      "unit": "mm",
-      "type": "linear",
-      "quantity": null,
-      "label": "overall length",
-      "context": "Side view overall length"
-    }
+    { "raw_text": "482,6", "value": "482,6", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "Front view overall width" },
+    { "raw_text": "44,45", "value": "44,45", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "Front view overall height" },
+    { "raw_text": "427,8", "value": "427,8", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "Top view overall width" },
+    { "raw_text": "456,19", "value": "456,19", "unit": "mm", "type": "linear", "quantity": null, "label": "overall length", "context": "Side view overall length" }
   ],
   "dimension_tables": [],
   "tables": [
@@ -53,151 +21,77 @@
       "type": "connection_table",
       "title": "Cell Output Connector (Connection to BMS)",
       "context": "Part No: 0039303046",
-      "rows": [
-        {
-          "label": "Pin 1",
-          "cells": [
-            { "column": "Pin", "value": "1" },
-            { "column": "Connection", "value": "Sense +" }
-          ]
-        },
-        {
-          "label": "Pin 2",
-          "cells": [
-            { "column": "Pin", "value": "2" },
-            { "column": "Connection", "value": "Vout +" }
-          ]
-        },
-        {
-          "label": "Pin 3",
-          "cells": [
-            { "column": "Pin", "value": "3" },
-            { "column": "Connection", "value": "Vout -" }
-          ]
-        },
-        {
-          "label": "Pin 4",
-          "cells": [
-            { "column": "Pin", "value": "4" },
-            { "column": "Connection", "value": "Sense -" }
-          ]
-        }
-      ]
+      "columns": ["Pin", "Connection"],
+      "rows": [["1", "Sense +"], ["2", "Vout +"], ["3", "Vout -"], ["4", "Sense -"]]
     },
     {
       "type": "pinout_table",
       "title": "Auxiliary I/O Connector Pinout",
       "context": "Part No: L77SDB25S1ACH4F, 25-pin D-sub connector",
+      "columns": ["Pin Number", "Connection"],
       "rows": [
-        { "label": "Pin 1", "cells": [ { "column": "Pin Number", "value": "1" }, { "column": "Connection", "value": "Analog In #1" } ] },
-        { "label": "Pin 2", "cells": [ { "column": "Pin Number", "value": "2" }, { "column": "Connection", "value": "Analog In #3" } ] },
-        { "label": "Pin 3", "cells": [ { "column": "Pin Number", "value": "3" }, { "column": "Connection", "value": "Analog In #5" } ] },
-        { "label": "Pin 4", "cells": [ { "column": "Pin Number", "value": "4" }, { "column": "Connection", "value": "Analog In #7" } ] },
-        { "label": "Pin 5", "cells": [ { "column": "Pin Number", "value": "5" }, { "column": "Connection", "value": "GND" } ] },
-        { "label": "Pin 6", "cells": [ { "column": "Pin Number", "value": "6" }, { "column": "Connection", "value": "Analog Out #1" } ] },
-        { "label": "Pin 7", "cells": [ { "column": "Pin Number", "value": "7" }, { "column": "Connection", "value": "GND" } ] },
-        { "label": "Pin 8", "cells": [ { "column": "Pin Number", "value": "8" }, { "column": "Connection", "value": "Digital I/O #2" } ] },
-        { "label": "Pin 9", "cells": [ { "column": "Pin Number", "value": "9" }, { "column": "Connection", "value": "Digital I/O #4" } ] },
-        { "label": "Pin 10", "cells": [ { "column": "Pin Number", "value": "10" }, { "column": "Connection", "value": "Digital I/O #6" } ] },
-        { "label": "Pin 11", "cells": [ { "column": "Pin Number", "value": "11" }, { "column": "Connection", "value": "Digital I/O #8" } ] },
-        { "label": "Pin 12", "cells": [ { "column": "Pin Number", "value": "12" }, { "column": "Connection", "value": "GND" } ] },
-        { "label": "Pin 13", "cells": [ { "column": "Pin Number", "value": "13" }, { "column": "Connection", "value": "CANH" } ] },
-        { "label": "Pin 14", "cells": [ { "column": "Pin Number", "value": "14" }, { "column": "Connection", "value": "Analog In #2" } ] },
-        { "label": "Pin 15", "cells": [ { "column": "Pin Number", "value": "15" }, { "column": "Connection", "value": "Analog In #4" } ] },
-        { "label": "Pin 16", "cells": [ { "column": "Pin Number", "value": "16" }, { "column": "Connection", "value": "Analog In #6" } ] },
-        { "label": "Pin 17", "cells": [ { "column": "Pin Number", "value": "17" }, { "column": "Connection", "value": "Analog In #8" } ] },
-        { "label": "Pin 18", "cells": [ { "column": "Pin Number", "value": "18" }, { "column": "Connection", "value": "GND" } ] },
-        { "label": "Pin 19", "cells": [ { "column": "Pin Number", "value": "19" }, { "column": "Connection", "value": "Analog In #1" } ] },
-        { "label": "Pin 20", "cells": [ { "column": "Pin Number", "value": "20" }, { "column": "Connection", "value": "Analog In #3" } ] },
-        { "label": "Pin 21", "cells": [ { "column": "Pin Number", "value": "21" }, { "column": "Connection", "value": "Analog In #5" } ] },
-        { "label": "Pin 22", "cells": [ { "column": "Pin Number", "value": "22" }, { "column": "Connection", "value": "Analog In #7" } ] },
-        { "label": "Pin 23", "cells": [ { "column": "Pin Number", "value": "23" }, { "column": "Connection", "value": "GND" } ] },
-        { "label": "Pin 24", "cells": [ { "column": "Pin Number", "value": "24" }, { "column": "Connection", "value": "Analog Out #1" } ] },
-        { "label": "Pin 25", "cells": [ { "column": "Pin Number", "value": "25" }, { "column": "Connection", "value": "CANL" } ] }
+        ["1", "Analog In #1"],
+        ["2", "Analog In #3"],
+        ["3", "Analog In #5"],
+        ["4", "Analog In #7"],
+        ["5", "GND"],
+        ["6", "Analog Out #1"],
+        ["7", "GND"],
+        ["8", "Digital I/O #2"],
+        ["9", "Digital I/O #4"],
+        ["10", "Digital I/O #6"],
+        ["11", "Digital I/O #8"],
+        ["12", "GND"],
+        ["13", "CANH"],
+        ["14", "Analog In #2"],
+        ["15", "Analog In #4"],
+        ["16", "Analog In #6"],
+        ["17", "Analog In #8"],
+        ["18", "GND"],
+        ["19", "Analog In #1"],
+        ["20", "Analog In #3"],
+        ["21", "Analog In #5"],
+        ["22", "Analog In #7"],
+        ["23", "GND"],
+        ["24", "Analog Out #1"],
+        ["25", "CANL"]
       ]
     },
     {
       "type": "specification_table",
       "title": "Mechanical, Environmental and Safety Specifications",
       "context": "Numbered specification sections 1.0 through 3.0",
+      "columns": ["Parameter", "Value"],
       "rows": [
-        {
-          "label": "1.1 Enclosure Material",
-          "cells": [
-            { "column": "Parameter", "value": "Enclosure Material" },
-            { "column": "Value", "value": "AL-5754; Finish: Powder Textured Matte Paint, RAL 9005; Chemical Film per SI-0000-0036, Class 2" }
-          ]
-        },
-        {
-          "label": "2.1 Storage Temperature",
-          "cells": [
-            { "column": "Parameter", "value": "Storage Temperature" },
-            { "column": "Value", "value": "-40°C to 71°C (IEC 60068-2-1 & IEC 60068-2-2. Meets MIL-PRF-28800F Class 3 limits.)" }
-          ]
-        },
+        { "label": "1.1 Enclosure Material", "values": ["Enclosure Material", "AL-5754; Finish: Powder Textured Matte Paint, RAL 9005; Chemical Film per SI-0000-0036, Class 2"] },
+        { "label": "2.1 Storage Temperature", "values": ["Storage Temperature", "-40°C to 71°C (IEC 60068-2-1 & IEC 60068-2-2. Meets MIL-PRF-28800F Class 3 limits.)"] },
         {
           "label": "2.2 Operating Temperature",
-          "cells": [
-            { "column": "Parameter", "value": "Operating Temperature" },
-            { "column": "Value", "value": "0°C to 50°C (IEC-60068-2-1 & IEC-60068-2-2. Meets MIL-PRF-28800F Class 3 low temperature limit and MIL-PRF-28800F Class 2 high temperature limit.)" }
-          ]
+          "values": ["Operating Temperature", "0°C to 50°C (IEC-60068-2-1 & IEC-60068-2-2. Meets MIL-PRF-28800F Class 3 low temperature limit and MIL-PRF-28800F Class 2 high temperature limit.)"]
         },
-        {
-          "label": "2.3 Operating Humidity",
-          "cells": [
-            { "column": "Parameter", "value": "Operating Humidity" },
-            { "column": "Value", "value": "10% to 90%, noncondensing (IEC 60068-2-78)" }
-          ]
-        },
-        {
-          "label": "2.4 Storage Humidity",
-          "cells": [
-            { "column": "Parameter", "value": "Storage Humidity" },
-            { "column": "Value", "value": "5% to 95%, non condensing (IEC 60068-2-78)" }
-          ]
-        },
-        {
-          "label": "2.5 Operating Vibration",
-          "cells": [
-            { "column": "Parameter", "value": "Operating Vibration" },
-            { "column": "Value", "value": "5 Hz to 500 Hz, 0.3 Grms (with solid-state hard drive)" }
-          ]
-        },
+        { "label": "2.3 Operating Humidity", "values": ["Operating Humidity", "10% to 90%, noncondensing (IEC 60068-2-78)"] },
+        { "label": "2.4 Storage Humidity", "values": ["Storage Humidity", "5% to 95%, non condensing (IEC 60068-2-78)"] },
+        { "label": "2.5 Operating Vibration", "values": ["Operating Vibration", "5 Hz to 500 Hz, 0.3 Grms (with solid-state hard drive)"] },
         {
           "label": "2.6 Non-Operating Vibration",
-          "cells": [
-            { "column": "Parameter", "value": "Non-Operating Vibration" },
-            { "column": "Value", "value": "5 Hz to 500 Hz, 2.4 Grms (IEC 60068-2-64. Non-operating test profile exceeds the requirements of MIL-PRF-28800F, Class 3.)" }
-          ]
+          "values": ["Non-Operating Vibration", "5 Hz to 500 Hz, 2.4 Grms (IEC 60068-2-64. Non-operating test profile exceeds the requirements of MIL-PRF-28800F, Class 3.)"]
         },
-        {
-          "label": "2.7 Shock",
-          "cells": [
-            { "column": "Parameter", "value": "Shock" },
-            { "column": "Value", "value": "30 G peak, half-sine, 11 ms pulse (IEC 60068-2-27. Meets MIL-PRF-28800F Class 2 limits.)" }
-          ]
-        },
+        { "label": "2.7 Shock", "values": ["Shock", "30 G peak, half-sine, 11 ms pulse (IEC 60068-2-27. Meets MIL-PRF-28800F Class 2 limits.)"] },
         {
           "label": "2.8 Acoustic",
-          "cells": [
-            { "column": "Parameter", "value": "Acoustic" },
-            { "column": "Value", "value": "Acoustic testing should be carried out according to ISO-7779 on a standard test table at the operator position. Chassis testing should be conducted with the chassis running at full load with front panels installed. If multiple fan speed options are available, the sound pressure levels shall be provided for the various fan speed options." }
+          "values": [
+            "Acoustic",
+            "Acoustic testing should be carried out according to ISO-7779 on a standard test table at the operator position. Chassis testing should be conducted with the chassis running at full load with front panels installed. If multiple fan speed options are available, the sound pressure levels shall be provided for the various fan speed options."
           ]
         },
         {
           "label": "2.9 EMI/EMC",
-          "cells": [
-            { "column": "Parameter", "value": "EMI/EMC" },
-            { "column": "Value", "value": "EN 61326-1 (IEC 61326-1): Class A Emissions; Basic Immunity; EN 55011 (CISPR 11): Group 1, Class A Emissions; EN 55022 (CISPR 22): Class A Emissions; EN 55024 (CISPR 24): Immunity; AS/NZS CISPR 11: Group 1, Class A Emissions; AS/NZS CISPR 22: Class A Emissions; FCC 47 CFR Part 15B: Class A Emissions; ICES-001: Class A Emissions" }
+          "values": [
+            "EMI/EMC",
+            "EN 61326-1 (IEC 61326-1): Class A Emissions; Basic Immunity; EN 55011 (CISPR 11): Group 1, Class A Emissions; EN 55022 (CISPR 22): Class A Emissions; EN 55024 (CISPR 24): Immunity; AS/NZS CISPR 11: Group 1, Class A Emissions; AS/NZS CISPR 22: Class A Emissions; FCC 47 CFR Part 15B: Class A Emissions; ICES-001: Class A Emissions"
           ]
         },
-        {
-          "label": "3.0 Safety Requirements",
-          "cells": [
-            { "column": "Parameter", "value": "Safety Requirements" },
-            { "column": "Value", "value": "IEC 61010-1, EN 61010-1; UL 61010-1, CSA C22.2 No. 61010-1" }
-          ]
-        }
+        { "label": "3.0 Safety Requirements", "values": ["Safety Requirements", "IEC 61010-1, EN 61010-1; UL 61010-1, CSA C22.2 No. 61010-1"] }
       ]
     }
   ],
@@ -213,6 +107,7 @@
     "System Functionality Chart is a block diagram (System Controller, Battery Simulation Cell x12, Connectivity, Auxiliary I/O) without numeric values and was not extracted as a table.",
     "Front panel LED labels (PWR, FAULT) and back panel connector silkscreen labels (LAN, EtherCAT IN/OUT, RST, AUX I/O, BATTERY CELLS 1-12, PWR INPUT) are visible but not extracted as a table since no structured pin/value list is printed for them.",
     "The rotated legal notice text along the left sheet border is small and partially compressed in the source image; transcription confidence is lower than for the horizontal title-block text.",
-    "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty."
+    "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
   ]
 }

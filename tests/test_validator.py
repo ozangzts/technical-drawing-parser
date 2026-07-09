@@ -238,6 +238,284 @@ class ValidatorTests(unittest.TestCase):
             [{"column": "Signal", "value": "GND"}],
         )
 
+    def test_parse_product_json_response_accepts_legend_table_type(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "legend_table",
+      "title": "Symbol legend",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {"column": "Symbol", "value": "\\u00d8"},
+            {"column": "Meaning", "value": "Diameter"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["tables"][0]["type"], "legend_table")
+
+    def test_parse_product_json_response_drops_label_redundant_with_first_cell(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Connector pinout",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": "Pin 1",
+          "cells": [
+            {"column": "Pin Number", "value": "1"},
+            {"column": "Connection", "value": "Analog In #1"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertIsNone(result["tables"][0]["rows"][0]["label"])
+        self.assertEqual(
+            result["tables"][0]["rows"][0]["cells"],
+            [
+                {"column": "Pin Number", "value": "1"},
+                {"column": "Connection", "value": "Analog In #1"},
+            ],
+        )
+
+    def test_parse_product_json_response_keeps_label_with_extra_information(self) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "specification_table",
+      "title": "Environmental specifications",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": "2.1 Storage Temperature",
+          "cells": [
+            {"column": "Parameter", "value": "Storage Temperature"},
+            {"column": "Value", "value": "-40C to 71C"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(
+            result["tables"][0]["rows"][0]["label"],
+            "2.1 Storage Temperature",
+        )
+
+    def test_parse_product_json_response_keeps_numbered_label_matching_single_word_value(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "specification_table",
+      "title": "Environmental specifications",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": "2.7 Shock",
+          "cells": [
+            {"column": "Parameter", "value": "Shock"},
+            {"column": "Value", "value": "30 G peak"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["tables"][0]["rows"][0]["label"], "2.7 Shock")
+
+    def test_parse_product_json_response_collapses_uniform_columns_with_no_labels(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Connector pinout",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": "Pin 1",
+          "cells": [
+            {"column": "Pin Number", "value": "1"},
+            {"column": "Connection", "value": "Analog In #1"}
+          ]
+        },
+        {
+          "label": "Pin 2",
+          "cells": [
+            {"column": "Pin Number", "value": "2"},
+            {"column": "Connection", "value": "Analog In #3"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        table = result["tables"][0]
+        self.assertEqual(table["columns"], ["Pin Number", "Connection"])
+        self.assertEqual(
+            table["rows"],
+            [["1", "Analog In #1"], ["2", "Analog In #3"]],
+        )
+
+    def test_parse_product_json_response_collapses_uniform_columns_keeping_real_labels(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "specification_table",
+      "title": "Environmental specifications",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": "2.1 Storage Temperature",
+          "cells": [
+            {"column": "Parameter", "value": "Storage Temperature"},
+            {"column": "Value", "value": "-40C to 71C"}
+          ]
+        },
+        {
+          "label": "2.7 Shock",
+          "cells": [
+            {"column": "Parameter", "value": "Shock"},
+            {"column": "Value", "value": "30 G peak"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        table = result["tables"][0]
+        self.assertEqual(table["columns"], ["Parameter", "Value"])
+        self.assertEqual(
+            table["rows"],
+            [
+                {"label": "2.1 Storage Temperature", "values": ["Storage Temperature", "-40C to 71C"]},
+                {"label": "2.7 Shock", "values": ["Shock", "30 G peak"]},
+            ],
+        )
+
+    def test_parse_product_json_response_keeps_cells_when_columns_are_not_uniform(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "unknown",
+      "title": "Irregular table",
+      "context": "visible table",
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {"column": "Pin", "value": "1"},
+            {"column": "Connection", "value": "GND"}
+          ]
+        },
+        {
+          "label": null,
+          "cells": [
+            {"column": "Signal", "value": "CANH"}
+          ]
+        }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        table = result["tables"][0]
+        self.assertNotIn("columns", table)
+        self.assertEqual(
+            table["rows"],
+            [
+                {
+                    "label": None,
+                    "cells": [
+                        {"column": "Pin", "value": "1"},
+                        {"column": "Connection", "value": "GND"},
+                    ],
+                },
+                {
+                    "label": None,
+                    "cells": [{"column": "Signal", "value": "CANH"}],
+                },
+            ],
+        )
+
     def test_parse_ocr_target_refinement_preserves_visual_text_check(self) -> None:
         response = """{
   "target_id": "page_001_ocr_target_001",

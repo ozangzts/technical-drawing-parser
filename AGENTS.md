@@ -139,6 +139,8 @@ Prefer explicit uncertainty:
 
 Tables in product JSON should be readable without positional matching. Prefer rows with `cells` objects such as `{"column": "Signal", "value": "GND"}` instead of separate `columns` arrays plus positional `values`. For repeated side-by-side table blocks, prefer one logical item per row, such as one connector pin, one part, or one specification row.
 
+This rule is about what the extractor (model) is asked to produce, not about the final output file. After `cells` has been parsed, the validator collapses a table to a table-level `columns` header plus per-row `values` only when every row's column sequence is provably identical — this is checked in code after parsing, not assumed from the model's output, so the earlier positional-ambiguity problem does not return. A row with a different column set, order, or length keeps the explicit `cells` shape instead. When every row's `label` is also null across a collapsed table, `label` is dropped and each row becomes a plain value array (`["1", "Analog In #1"]`); if any row's `label` carries real information (such as a numbered specification section), rows stay as `{"label": ..., "values": [...]}` objects. See `collapse_uniform_columns` in `src/technical_drawing_parser/extraction/validator.py`.
+
 Preserve visible decimal separators in numeric strings. If the drawing shows `44,12`, keep `value` as `44,12`; do not convert it to `44.12`. Unit fields may be normalized when safe, such as `millimeters` or `millimetres` to `mm`.
 
 ## Where To Look
@@ -165,6 +167,7 @@ Preserve visible decimal separators in numeric strings. If the drawing shows `44
 - Overlapping tile crop helper: `src/technical_drawing_parser/crops.py`
 - Tile extraction duplicate summary helper: `src/technical_drawing_parser/dedupe.py`
 - Product, crop, and OCR target refinement prompts: `src/technical_drawing_parser/extraction/prompt.py`
+- Compact human-readable JSON serialization for product output: `src/technical_drawing_parser/json_format.py`
 - Anthropic Claude extractor: `src/technical_drawing_parser/extraction/anthropic.py`
 - Registry helpers: `src/technical_drawing_parser/registry.py`
 - Reference sample drawing: `DEICO_DE8135_Technical_Drawing_page-0001.jpg`
@@ -192,6 +195,8 @@ Use `--outputs <new_output_root>` for one-off model comparisons so existing outp
 Use `--ollama-think` only for Ollama models that support thinking. Accepted values are `true`, `false`, `low`, `medium`, `high`, and `max`; model support varies.
 
 OCR refinement and safe metadata merge helpers may remain in the codebase, but product JSON mutation from OCR-target refinement is currently paused. Until this decision changes deliberately, `outputs/products/*.json` should reflect the full-page VLM extraction result, not OCR/refinement merge output.
+
+Both VLM extractors detect when a response was cut off at the model's output token limit (`stop_reason: max_tokens` for Anthropic, `done_reason: length` for Ollama) and mark that extraction `validation_failed` with an explicit truncation warning instead of silently accepting a possibly incomplete JSON object. See `docs/extraction.md` for details. This is a reliability safeguard only; it does not recover missing data.
 
 ## Development Rules For Future Agents
 

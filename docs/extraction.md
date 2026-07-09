@@ -33,6 +33,8 @@ Extractor output is normalized with narrow deterministic rules before it is writ
 - Unknown dimension types are set to `unknown` and recorded as warnings.
 - Obvious mojibake for the diameter symbol is repaired.
 - Suspicious but plausible symbol misreads, such as `#` in a diameter dimension, are recorded as warnings without changing `raw_text`.
+- A table row `label` that only restates the row's first `cells` value (for example `label: "Pin 1"` next to `{"column": "Pin Number", "value": "1"}`) is dropped to `null`. The information is not lost, since it still lives in `cells`; only the redundant echo is removed. A `label` that carries information beyond the first cell, such as `"2.1 Storage Temperature"` next to `{"column": "Parameter", "value": "Storage Temperature"}`, is kept.
+- When a table has at least two rows and every row's `cells` share the exact same column sequence (same names, same order, same count), the table collapses to a table-level `columns` header plus per-row `values` (dropping the repeated column names from every row). This is verified after parsing, not assumed from the model's raw output, so a table with any row that has a different column set, order, or length keeps the explicit `cells` shape instead — nothing is ever positionally guessed. If every row's `label` is also null after the label-redundancy rule above, `label` is dropped too and each row becomes a plain `values` array; if any row's `label` carries real information, rows keep the `{"label": ..., "values": [...]}` shape. See `collapse_uniform_columns` in `validator.py`.
 - OCR-target refinement is currently review/evidence only. Safe metadata merge helper code exists, but product JSON mutation from OCR refinement is paused unless the pipeline design changes deliberately.
 
 These rules clean schema shape and common formatting errors only. They should not infer values that are not visible in the drawing.
@@ -104,6 +106,8 @@ The canonical prompt builders live in `src/technical_drawing_parser/extraction/p
 - `build_tile_vlm_prompt`: overlapping tile extraction.
 - `build_ocr_target_refinement_prompt`: OCR-target crop refinement.
 
+`build_vlm_prompt` and `build_tile_vlm_prompt` share most of their rules (unit inference limits, metadata field distinctions, table formatting, etc.) since a crop is extracting from the same kind of drawing, just a smaller visible area. The rule text that is identical between the two lives once as a named `RULE_*` constant near the top of `prompt.py` and is referenced by both builders, instead of being retyped in each function. Only genuinely crop-specific lines (the crop framing sentence, the cropped/incomplete warning, wording that mentions "this crop") stay local to `build_tile_vlm_prompt`. This is a code-duplication fix, not a wording change: the rendered prompt text is unchanged from before the constants existed.
+
 The pipeline writes the prompt used for each file to:
 
 ```text
@@ -111,6 +115,25 @@ outputs/internal/<name>.vlm_prompt.txt
 ```
 
 This keeps the current MVP provider-independent while making the next VLM integration step explicit.
+
+## Product JSON Formatting
+
+`outputs/products/*.json` is written with `src/technical_drawing_parser/json_format.py` instead of plain `json.dump(indent=2)`. Standard `indent=2` puts every dict key on its own line, so a table with many short, uniform rows (one pin per row, one connector per row) turns into hundreds of lines for a handful of short values.
+
+`format_json_compact` renders the same data, choosing per node whether it fits on one line (up to `DEFAULT_MAX_LINE_LENGTH`, currently 200 characters) before falling back to the normal expanded form. A short row such as a pinout entry collapses to one line; a row containing a long specification paragraph still expands so nothing is cut off. This is formatting only — the underlying values, key order, and structure are unchanged, so `json.loads` on the compact output equals `json.loads` on the equivalent `indent=2` output. Internal/debug JSON (`outputs/internal/*.json`, the registry, tile summaries, reviews) still uses plain `indent=2` through `write_json(..., compact=False)`, since verbosity matters less there than in the product JSON a human is expected to read.
+
+## Truncated Response Detection
+
+Large tables or long specification text can push a full-page response past the model's output token limit before the JSON object closes. If the response is cut off exactly after a nested closing brace, the truncated text can still parse as syntactically valid JSON while silently missing every field that comes after the cut point (for example later tables, `notes`, or `warnings`), and nothing in the shape check would otherwise catch this.
+
+To avoid a truncated response being reported as a clean `completed` result:
+
+- The Anthropic extractor checks the response `stop_reason`; `max_tokens` marks the response as truncated.
+- The Ollama extractor checks the response `done_reason`; `length` marks the response as truncated.
+- When an extraction is marked truncated, the pipeline appends an explicit warning to both the internal `validation_warnings` and the parsed product JSON `warnings`, and forces the extraction status to `validation_failed` even if the response otherwise parsed without other warnings.
+- The Anthropic extractor requests `max_tokens: 16384` (raised from the original `8192`) to reduce how often full-page technical drawings hit the limit in the first place. Requesting a higher `max_tokens` does not cost more unless the model actually generates that many tokens.
+
+This is a reliability safeguard, not an extraction-quality improvement: it does not recover the missing data, it only turns a silent partial result into a visible one so a retry (for example with a still-higher `max_tokens`) can be made deliberately instead of the gap going unnoticed.
 
 ## Local VLM Notes
 
