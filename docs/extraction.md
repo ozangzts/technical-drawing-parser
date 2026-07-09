@@ -98,6 +98,8 @@ Allowed initial `type` values:
 - `pattern`
 - `unknown`
 
+`pattern` is for a repeated center-to-center spacing or pitch (a pin pitch, a hole pitch), especially one marked with a repeat count like `(x6)`. `linear` is for a single, non-repeated straight-line measurement (an overall length, width, or height), even if it also carries a quantity marker. This distinction is called out explicitly in the prompt because comparing manual extractions against the existing Anthropic-run outputs showed the model choosing `pattern` for a pitch dimension on one sample and `linear` for the same kind of pitch dimension on a sibling sample — the validator's `pitch -> pattern` alias (see below) only fixes this when the model's own `type` string is literally `pitch`, not when it directly guesses `linear`.
+
 ## VLM Prompts
 
 The canonical prompt builders live in `src/technical_drawing_parser/extraction/prompt.py`:

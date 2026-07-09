@@ -96,6 +96,13 @@ RULE_DIMENSION_CONTEXT_SPECIFICITY = (
     "overall width, front view height, connector body radius, or "
     "recommended land pattern hole diameter."
 )
+RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE = (
+    "Use dimension type pattern for a repeated center-to-center spacing or "
+    "pitch, such as a pin pitch or hole pitch, especially one marked with a "
+    "repeat count like (x6). Use type linear for a single, non-repeated "
+    "straight-line measurement such as an overall length, width, or height, "
+    "even if it also carries a quantity marker."
+)
 RULE_NUMBERED_SPECIFICATION_SECTIONS = (
     "Extract numbered specification sections as tables when they have a "
     "parameter/value structure. Use notes only for free-text notes that do "
@@ -160,6 +167,7 @@ def build_vlm_prompt(source_file: Path) -> str:
             RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
             RULE_DIMENSION_FIELDS,
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
             "Extract dimension tables when visible. Do not ignore table values "
             "that describe product variants, cabinet sizes, ranges, or "
             "option-dependent dimensions.",
@@ -245,6 +253,7 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
             RULE_DIMENSION_FIELDS,
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
             "Extract visible table-derived measurements into dimension_tables "
             "when row or column context is needed.",
             "Put non-dimensional tables such as pinout, connection, "

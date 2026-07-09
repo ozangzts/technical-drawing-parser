@@ -155,6 +155,23 @@ class PromptTests(unittest.TestCase):
         self.assertIn("functional blocks and arrows with no", full_page_prompt)
         self.assertIn("functional blocks and arrows with no", tile_prompt)
 
+    def test_prompts_distinguish_pattern_from_linear_dimension_type(self) -> None:
+        source_file = Path("drawing.pdf")
+        full_page_prompt = build_vlm_prompt(source_file)
+        tile_prompt = build_tile_vlm_prompt(
+            source_file,
+            {
+                "id": "page_001_tile_001",
+                "page": 1,
+                "bbox": {"x": 0, "y": 0, "width": 100, "height": 100},
+            },
+        )
+
+        self.assertIn("repeated center-to-center spacing", full_page_prompt)
+        self.assertIn("repeated center-to-center spacing", tile_prompt)
+        self.assertIn("even if it also carries a quantity marker", full_page_prompt)
+        self.assertIn("even if it also carries a quantity marker", tile_prompt)
+
     def test_prompts_ask_for_consistent_row_column_order(self) -> None:
         source_file = Path("drawing.pdf")
         full_page_prompt = build_vlm_prompt(source_file)
