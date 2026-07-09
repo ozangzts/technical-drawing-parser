@@ -173,6 +173,57 @@ class ValidatorTests(unittest.TestCase):
             )
         )
 
+    def test_parse_product_json_response_drops_dimension_label_matching_raw_text(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [
+    {
+      "raw_text": "R10",
+      "value": "10",
+      "unit": "mm",
+      "type": "radius",
+      "quantity": null,
+      "label": "R10",
+      "context": "End view corner radius"
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertIsNone(result["dimensions"][0]["label"])
+        self.assertEqual(result["dimensions"][0]["raw_text"], "R10")
+
+    def test_parse_product_json_response_keeps_dimension_label_distinct_from_value(
+        self,
+    ) -> None:
+        response = """{
+  "dimensions": [
+    {
+      "raw_text": "(x11) DIA 1,22",
+      "value": "1,22",
+      "unit": "mm",
+      "type": "diameter",
+      "quantity": 11,
+      "label": "hole diameter",
+      "context": "recommended land pattern"
+    }
+  ],
+  "tolerances": [],
+  "notes": [],
+  "warnings": []
+}"""
+
+        result, warnings = parse_product_json_response(response, Path("drawing.jpg"))
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(result["dimensions"][0]["label"], "hole diameter")
+
     def test_parse_product_json_response_preserves_dimension_tables(self) -> None:
         response = """{
   "dimensions": [],

@@ -88,6 +88,8 @@ Use this shape for visible dimensions:
 }
 ```
 
+`label` and `context` answer different questions and neither should repeat `raw_text` or `value`: `label` is a short, reusable category for *what kind* of measurement this is (`hole diameter`, `overall width`, `pin pitch`); `context` is *where* this specific instance is (`recommended land pattern`, `front view`, `connector body`), so it is not confused with another dimension of the same category elsewhere on the sheet. Real Anthropic-run output across the DEICO sample set showed this was not consistently followed: `label` was left `null` for every dimension on some drawings, populated with an invented category on others, and on one drawing (`DE4001`) set to `"R10"` — a plain echo of `raw_text`, adding nothing. The validator now nulls out a `label` that exactly matches `raw_text` or `value` (`drop_label_redundant_with_dimension_value` in `validator.py`) as a safety net, but the real fix is the clearer prompt rule, since a model that already decided to repeat the value isn't corrected by that decision being explained better after the fact.
+
 Allowed initial `type` values:
 
 - `linear`

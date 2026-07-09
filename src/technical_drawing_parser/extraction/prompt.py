@@ -92,9 +92,19 @@ RULE_DIMENSION_FIELDS = (
     "and context when possible."
 )
 RULE_DIMENSION_CONTEXT_SPECIFICITY = (
-    "Make dimension context specific enough to locate the value, such as "
-    "overall width, front view height, connector body radius, or "
-    "recommended land pattern hole diameter."
+    "Make dimension context specific enough to locate exactly where this "
+    "measurement is on the sheet, such as front view, top view, connector "
+    "body, or recommended land pattern, especially when the same kind of "
+    "measurement appears more than once on the sheet."
+)
+RULE_DIMENSION_LABEL_VS_CONTEXT = (
+    "Use label for a short, reusable category name for what kind of "
+    "measurement this is, such as hole diameter, overall width, or pin "
+    "pitch. Use context for where this specific instance is, such as which "
+    "view or feature, so it is not confused with another dimension of the "
+    "same category elsewhere on the sheet. Do not repeat raw_text or value "
+    "in label; use null for label instead of forcing a category name when "
+    "none applies naturally."
 )
 RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE = (
     "Use dimension type pattern for a repeated center-to-center spacing or "
@@ -167,6 +177,7 @@ def build_vlm_prompt(source_file: Path) -> str:
             RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
             RULE_DIMENSION_FIELDS,
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            RULE_DIMENSION_LABEL_VS_CONTEXT,
             RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
             "Extract dimension tables when visible. Do not ignore table values "
             "that describe product variants, cabinet sizes, ranges, or "
@@ -253,6 +264,7 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             RULE_NO_ISOLATED_NUMBERS_AS_METADATA,
             RULE_DIMENSION_FIELDS,
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
+            RULE_DIMENSION_LABEL_VS_CONTEXT,
             RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
             "Extract visible table-derived measurements into dimension_tables "
             "when row or column context is needed.",

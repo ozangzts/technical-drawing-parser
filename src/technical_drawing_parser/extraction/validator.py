@@ -341,6 +341,7 @@ def normalize_dimensions(
             warnings,
             index,
         )
+        drop_label_redundant_with_dimension_value(normalized_dimension)
         warn_about_suspicious_dimension_symbols(
             normalized_dimension,
             warnings,
@@ -348,6 +349,23 @@ def normalize_dimensions(
         normalized.append(normalized_dimension)
 
     return normalized
+
+
+def drop_label_redundant_with_dimension_value(dimension: dict[str, Any]) -> None:
+    """Null out a dimension `label` that only restates `raw_text` or `value`,
+    such as `label: "R10"` next to `raw_text: "R10"`. Real Anthropic-run
+    output has shown this exact echo, so it is not a hypothetical case.
+    """
+    label = dimension.get("label")
+    if not isinstance(label, str):
+        return
+
+    normalized_label = label.strip().lower()
+    for field in ("raw_text", "value"):
+        value = dimension.get(field)
+        if isinstance(value, str) and normalized_label == value.strip().lower():
+            dimension["label"] = None
+            return
 
 
 def normalize_unit(value: Any) -> Any:
