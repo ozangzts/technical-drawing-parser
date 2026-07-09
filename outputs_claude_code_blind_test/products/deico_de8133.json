@@ -1,0 +1,59 @@
+{
+  "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 3 Stub DTRM",
+  "document_name": "DEICO_DE8133_Technical_Drawing.pdf",
+  "drawing_number": "DE8133",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "2:1",
+  "dimensions": [
+    { "raw_text": "48,85", "value": "48,85", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "front view (photo)" },
+    { "raw_text": "23,2", "value": "23,2", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "side view" },
+    { "raw_text": "(x7) Ø1,02", "value": "1,02", "unit": "mm", "type": "diameter", "quantity": 7, "label": "pin diameter", "context": "PCB mount pins, bottom view detail" },
+    { "raw_text": "11,5", "value": "11,5", "unit": "mm", "type": "linear", "quantity": null, "label": "pin tip height above PCB level", "context": "PCB mount pins, bottom view detail" },
+    { "raw_text": "12,7", "value": "12,7", "unit": "mm", "type": "linear", "quantity": null, "label": "connector body height", "context": "PCB mount pins, bottom view detail" },
+    { "raw_text": "1", "value": "1", "unit": "mm", "type": "linear", "quantity": null, "label": "clearance above PCB level", "context": "PCB level reference, bottom view detail" },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "recommended max height of pin receptacle head above PCB",
+      "context": "Recommended max height of pin receptacle head from PCB diagram"
+    },
+    { "raw_text": "(x6) 6,34", "value": "6,34", "unit": "mm", "type": "pattern", "quantity": 6, "label": "pad pitch", "context": "Recommended Land Pattern" },
+    { "raw_text": "15,24", "value": "15,24", "unit": "mm", "type": "linear", "quantity": null, "label": "row spacing", "context": "Recommended Land Pattern" },
+    { "raw_text": "(x7) Ø1,22 (HOLE DIAMETER)", "value": "1,22", "unit": "mm", "type": "diameter", "quantity": 7, "label": "hole diameter", "context": "Recommended Land Pattern" },
+    { "raw_text": "(x7) Ø1,83 (PAD DIAMETER)", "value": "1,83", "unit": "mm", "type": "diameter", "quantity": 7, "label": "pad diameter", "context": "Recommended Land Pattern" }
+  ],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [
+    {
+      "title": "Schematic Diagram",
+      "context": "3 stub DTRM bus coupler",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+      "parameters": [
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "Stub 1 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "Stub 2 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "Stub 3 coupling transformer" }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified, all dimensions are in millimeters (title block general note).",
+    "Front-view photo shows connector pin labels GND, J3 STUB, J4 STUB, and J5 STUB along the top edge of the housing.",
+    "The device body is labeled 'PCB MOUNT COUPLER 3 STUB DTRM | DE8133' on its front face."
+  ],
+  "warnings": [
+    "The exact start/end reference points for the 11,5 and 12,7 dimensions on the PCB mount pin detail view are inferred from arrow placement and could not be fully confirmed.",
+    "Two separate '1' mm callouts appear (one in the recommended max height diagram, one near the PCB LEVEL annotation); they may refer to the same recommended standoff value but are kept as separate entries since they annotate different sub-drawings.",
+    "A generic form/document control stamp (SBL-0033 Rev. No:2 Date: 19.12.2025) is visible at the bottom left but was not used as drawing_number since it identifies the template, not this product.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8133_Technical_Drawing.pdf`."
+  ]
+}

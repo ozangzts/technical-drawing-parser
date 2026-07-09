@@ -1,0 +1,133 @@
+{
+  "source_file": "DEICO_DE3000_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "DE3000 - Battery Simulation Unit 12 CH 5 V 500 mA",
+  "document_name": "DEICO_DE3000_Technical_Drawing",
+  "drawing_number": "DE3000",
+  "revision": "2",
+  "revision_date": "04.06.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "13:100",
+  "dimensions": [
+    { "raw_text": "482,6", "value": "482,6", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "front view" },
+    { "raw_text": "44,45", "value": "44,45", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "front view" },
+    { "raw_text": "427,8", "value": "427,8", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "top view" },
+    {
+      "raw_text": "456,19",
+      "value": "456,19",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall depth",
+      "context": "measured between top view and side view; exact reference view not fully clear"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Cell Output Connector (Connection to BMS)",
+      "context": "Part No: 0039303046",
+      "columns": ["Connection"],
+      "rows": [{ "label": "Pin 1", "values": ["Sense +"] }, { "label": "Pin 2", "values": ["Vout +"] }, { "label": "Pin 3", "values": ["Vout -"] }, { "label": "Pin 4", "values": ["Sense -"] }]
+    },
+    {
+      "type": "pinout_table",
+      "title": "Auxiliary I/O Connector",
+      "context": "Part No: L77SDB25S1ACH4F",
+      "columns": ["Connection"],
+      "rows": [
+        { "label": "Pin 1", "values": ["Analog In #1"] },
+        { "label": "Pin 2", "values": ["Analog In #3"] },
+        { "label": "Pin 3", "values": ["Analog In #5"] },
+        { "label": "Pin 4", "values": ["Analog In #7"] },
+        { "label": "Pin 5", "values": ["GND"] },
+        { "label": "Pin 6", "values": ["Analog Out #1"] },
+        { "label": "Pin 7", "values": ["GND"] },
+        { "label": "Pin 8", "values": ["Digital I/O #2"] },
+        { "label": "Pin 9", "values": ["Digital I/O #4"] },
+        { "label": "Pin 10", "values": ["Digital I/O #6"] },
+        { "label": "Pin 11", "values": ["Digital I/O #8"] },
+        { "label": "Pin 12", "values": ["GND"] },
+        { "label": "Pin 13", "values": ["CANH"] },
+        { "label": "Pin 14", "values": ["Analog In #2"] },
+        { "label": "Pin 15", "values": ["Analog In #4"] },
+        { "label": "Pin 16", "values": ["Analog In #6"] },
+        { "label": "Pin 17", "values": ["Analog In #8"] },
+        { "label": "Pin 18", "values": ["GND"] },
+        { "label": "Pin 19", "values": ["Analog In #1"] },
+        { "label": "Pin 20", "values": ["Analog In #3"] },
+        { "label": "Pin 21", "values": ["Analog In #5"] },
+        { "label": "Pin 22", "values": ["Analog In #7"] },
+        { "label": "Pin 23", "values": ["GND"] },
+        { "label": "Pin 24", "values": ["Analog Out #1"] },
+        { "label": "Pin 25", "values": ["CANL"] }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical Specifications",
+      "context": "1.0 Mechanical Specifications",
+      "columns": ["Value"],
+      "rows": [
+        { "label": "1.1 Material", "values": ["AL-5754"] },
+        { "label": "1.1 Finish", "values": ["Powder textured matte paint, RAL 9005"] },
+        { "label": "1.1 Chemical Film", "values": ["Per SI-0000-0036, Class 2"] }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Environmental Specifications",
+      "context": "2.0 Environmental Specifications",
+      "rows": [
+        { "label": "2.1 Storage Temperature", "cells": [{ "column": "Value", "value": "-40°C to 71°C (IEC 60068-2-1 & IEC 60068-2-2. Meets MIL-PRF-28800F Class 3 limits.)" }] },
+        {
+          "label": "2.2 Operating Temperature",
+          "cells": [{ "column": "Value", "value": "0°C to 50°C (IEC-60068-2-1 & IEC-60068-2-2. Meets MIL-PRF-28800F Class 3 low temperature limit and MIL-PRF-28800F Class 2 high temperature limit.)" }]
+        },
+        { "label": "2.3 Operating Humidity", "cells": [{ "column": "Value", "value": "10% to 90%, noncondensing (IEC 60068-2-78)" }] },
+        { "label": "2.4 Storage Humidity", "cells": [{ "column": "Value", "value": "5% to 95%, non condensing (IEC 60068-2-78)" }] },
+        { "label": "2.5 Operating Vibration", "cells": [{ "column": "Value", "value": "5 Hz to 500 Hz, 0.3 Grms (with solid-state hard drive)" }] },
+        {
+          "label": "2.6 Non-Operating Vibration",
+          "cells": [{ "column": "Value", "value": "5 Hz to 500 Hz, 2.4 Grms (IEC 60068-2-64. Non-operating test profile exceeds the requirements of MIL-PRF-28800F, Class 3.)" }]
+        },
+        { "label": "2.7 Shock", "cells": [{ "column": "Value", "value": "30 G peak, half-sine, 11 ms pulse (IEC 60068-2-27. Meets MIL-PRF-28800F Class 2 limits.)" }] },
+        {
+          "label": "2.8 Acoustic",
+          "cells": [
+            {
+              "column": "Value",
+              "value": "Acoustic testing should be carried out according to ISO-7779 on a standard test table at the operator position. Chassis testing should be conducted with the chassis running at full load with front panels installed. If multiple fan speed options are available, the sound pressure levels shall be provided for the various fan speed options."
+            }
+          ]
+        },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "EN 61326-1 (IEC 61326-1)" }, { "column": "Rating", "value": "Class A emissions; basic immunity" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "EN 55011 (CISPR 11)" }, { "column": "Rating", "value": "Group 1, Class A emissions" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "EN 55022 (CISPR 22)" }, { "column": "Rating", "value": "Class A emissions" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "EN 55024 (CISPR 24)" }, { "column": "Rating", "value": "Immunity" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "AS/NZS CISPR 11" }, { "column": "Rating", "value": "Group 1, Class A emissions" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "AS/NZS CISPR 22" }, { "column": "Rating", "value": "Class A emissions" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "FCC 47 CFR Part 15B" }, { "column": "Rating", "value": "Class A emissions" }] },
+        { "label": "2.9 EMI/EMC", "cells": [{ "column": "Standard", "value": "ICES-001" }, { "column": "Rating", "value": "Class A emissions" }] }
+      ]
+    }
+  ],
+  "schematics": [],
+  "tolerances": [],
+  "notes": [
+    "All dimensions are in millimeters unless otherwise specified (title block general note).",
+    "3.0 Safety Requirements: IEC 61010-1, EN 61010-1, UL 61010-1, CSA C22.2 No. 61010-1.",
+    "Front view shows DEICO logo, product label 'BATTERY SIMULATION UNIT 12 CH 5 V 500 mA DE3000', a power ON/OFF button, and PWR/FAULT indicator LEDs.",
+    "Back view shows LAN and EtherCAT IN ports, an ON/OFF switch, an auxiliary I/O connector, connectors labeled CELL 1 through CELL 12 under a 'BATTERY CELLS' heading, and a PWR INPUT AC inlet, next to a DEICO logo."
+  ],
+  "warnings": [
+    "The 'SYSTEM FUNCTIONALITY CHART' is a functional block diagram (System Controller, Battery Simulation Cell x12, Connectivity, Auxiliary analog/digital I/O) with no reference designators or component values, so it was not extracted as a schematics entry.",
+    "Some small back-view panel labels (e.g. exact wording near the LAN/EtherCAT connectors and the AUX I/O switch) are too small to fully verify at the available resolution.",
+    "Dimension 456,19 mm is positioned between the top view and side view; its exact associated view could not be fully confirmed.",
+    "Pins 19-22 and 24 of the Auxiliary I/O Connector table repeat the same connection labels as pins 1-4 and 6 (Analog In #1/#3/#5/#7 and Analog Out #1); this duplication is preserved as printed on the drawing.",
+    "A generic form/document control stamp (SBL-0033 Rev. No:0 Date: 29.05.2023) is visible at the bottom left but was not used as drawing_number since it identifies the template, not this product.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
+  ]
+}

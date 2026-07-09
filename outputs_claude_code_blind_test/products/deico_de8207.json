@@ -1,0 +1,62 @@
+{
+  "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Box Type Bus Coupler 7 Stub",
+  "document_name": "DEICO_DE8207_Technical_Drawing.pdf",
+  "drawing_number": "DE8207",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    { "raw_text": "222", "value": "222", "unit": "mm", "type": "linear", "quantity": null, "label": "overall length", "context": "top view, outer mounting flange to flange" },
+    { "raw_text": "212", "value": "212", "unit": "mm", "type": "linear", "quantity": null, "label": "body length", "context": "top view, excluding mounting flanges" },
+    { "raw_text": "197,8", "value": "197,8", "unit": "mm", "type": "linear", "quantity": null, "label": "connector span", "context": "top view, between J1 BUS and J2 BUS connector centers" },
+    { "raw_text": "(x4) Ø4,2 THRU", "value": "4,2", "unit": "mm", "type": "diameter", "quantity": 4, "label": "mounting hole diameter", "context": "mounting flange, through holes" },
+    { "raw_text": "30,3", "value": "30,3", "unit": "mm", "type": "linear", "quantity": null, "label": "first stub port offset", "context": "top view, from body edge to stub port J3" },
+    { "raw_text": "(x6) 22,9", "value": "22,9", "unit": "mm", "type": "pattern", "quantity": 6, "label": "stub port pitch", "context": "top view, between stub ports J3 through J9" },
+    { "raw_text": "26", "value": "26", "unit": "mm", "type": "linear", "quantity": null, "label": "height", "context": "top view, right side, upper measurement" },
+    { "raw_text": "36", "value": "36", "unit": "mm", "type": "linear", "quantity": null, "label": "height", "context": "top view, right side, upper measurement (overlapping callout)" },
+    { "raw_text": "5", "value": "5", "unit": "mm", "type": "linear", "quantity": null, "label": "height", "context": "top view, right side, lower measurement" },
+    { "raw_text": "48,5", "value": "48,5", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "top view, right side, full-span reference" },
+    { "raw_text": "24", "value": "24", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "front view" },
+    { "raw_text": "13,1", "value": "13,1", "unit": "mm", "type": "linear", "quantity": null, "label": "height", "context": "front view, lower measurement" },
+    { "raw_text": "2", "value": "2", "unit": "mm", "type": "linear", "quantity": null, "label": "base plate thickness", "context": "front view, base plate" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "connection_table",
+      "title": "Intermateability",
+      "context": "Recommended mating connector for the bus/stub connectors",
+      "rows": [{ "label": null, "cells": [{ "column": "Connector", "value": "BJ770" }, { "column": "Recommended Mating Connector", "value": "PL75" }] }]
+    }
+  ],
+  "schematics": [
+    {
+      "title": "Schematic Diagram",
+      "context": "7 stub bus coupler, J1 BUS to J2 BUS",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14"],
+      "parameters": [
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J3 Stub 1 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J4 Stub 2 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J5 Stub 3 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J6 Stub 4 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J7 Stub 5 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J8 Stub 6 coupling transformer" },
+        { "label": "Turns Ratio", "value": "1:1.41", "context": "J9 Stub 7 coupling transformer" }
+      ]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified, all dimensions are in millimeters (title block general note).",
+    "Top view of the housing is labeled 'BUS COUPLER 7 STUB | DE8207' with connector ports labeled J1 BUS and J2 BUS at the ends and stub ports labeled J3 through J9 under a 'STUB PORTS' heading."
+  ],
+  "warnings": [
+    "The right-side height callouts (26, 36, 5, 48,5) on the top view could not be fully confirmed as to exactly which body features their endpoints reference; they are preserved as separate visible values.",
+    "A generic form/document control stamp (SBL-0033 Rev. No:2 Date: 19.12.2025) is visible at the bottom left but was not used as drawing_number since it identifies the template, not this product.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8207_Technical_Drawing.pdf`."
+  ]
+}

@@ -134,6 +134,13 @@ RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK = (
     "reference designators or values, describe it in warnings instead of "
     "adding an empty or forced schematics entry."
 )
+RULE_SCHEMATIC_PARAMETER_CONSOLIDATION = (
+    "If the same parameter value repeats identically across multiple "
+    "repeating units in a schematic, such as one transformer turns ratio "
+    "per stub, list it once in parameters with a context describing that "
+    "it applies to each repeating unit, instead of adding one identical "
+    "entry per unit."
+)
 RULE_CONSISTENT_ROW_COLUMN_ORDER = (
     "When a table has more than one row, use the same column order in "
     "every row's cells, such as always Pin Number then Connection, so rows "
@@ -205,6 +212,7 @@ def build_vlm_prompt(source_file: Path) -> str:
             "table column text or context.",
             RULE_SCHEMATIC_COMPONENTS,
             RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK,
+            RULE_SCHEMATIC_PARAMETER_CONSOLIDATION,
             RULE_NO_DEVELOPER_METADATA,
         ]
     )
@@ -280,6 +288,7 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             "unless a numeric value is visible with the reference.",
             RULE_SCHEMATIC_COMPONENTS,
             RULE_SCHEMATIC_BLOCK_DIAGRAM_FALLBACK,
+            RULE_SCHEMATIC_PARAMETER_CONSOLIDATION,
             RULE_NO_DEVELOPER_METADATA,
         ]
     )

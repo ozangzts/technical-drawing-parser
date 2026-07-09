@@ -1,0 +1,49 @@
+{
+  "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "19\" Rack Cabinets",
+  "document_name": "DEICO_DE12XXX_Technical_Drawing",
+  "drawing_number": "DE12XXX",
+  "revision": "0",
+  "revision_date": "05.09.2025",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": null,
+  "dimensions": [
+    { "raw_text": "600", "value": "600", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "single cabinet, front view" },
+    { "raw_text": "75", "value": "75", "unit": "mm", "type": "linear", "quantity": null, "label": "frame/rail depth offset", "context": "single cabinet, front view, top of frame" },
+    { "raw_text": "182", "value": "182", "unit": "mm", "type": "linear", "quantity": null, "label": "base/caster section height", "context": "single cabinet, front view, bottom of frame" },
+    { "raw_text": "1200", "value": "1200", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "double cabinet, front view" }
+  ],
+  "dimension_tables": [
+    {
+      "title": "Rack Cabinet Product Variants",
+      "context": "Cabinet height (A) and depth (B), referenced by letter callouts A and B on the single/double cabinet views",
+      "columns": ["Cabinet Height (A)", "Cabinet Depth (B) (mm)", "Cabinet Type"],
+      "rows": [
+        { "label": "DE12000", "values": ["20U", "800", "SINGLE"] },
+        { "label": "DE12001", "values": ["32U", "800", "SINGLE"] },
+        { "label": "DE12002", "values": ["32U", "800", "DOUBLE"] },
+        { "label": "DE12003", "values": ["36U", "800", "SINGLE"] },
+        { "label": "DE12004", "values": ["36U", "800", "DOUBLE"] },
+        { "label": "DE12005", "values": ["38U", "900", "SINGLE"] },
+        { "label": "DE12006", "values": ["38U", "900", "DOUBLE"] },
+        { "label": "CUSTOM CABINET", "values": ["20U-42U", "800-1000", "CUSTOMIZABLE"] }
+      ]
+    }
+  ],
+  "tables": [],
+  "schematics": [],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified, all dimensions are in millimeters (title block general note).",
+    "Letter callouts A (cabinet height) and B (cabinet depth) on the single and double cabinet views are symbolic and are defined per product code in the product variants table, not by a single fixed numeric value on this sheet.",
+    "Drawing shows single-cabinet and double-cabinet front views, each with an open-frame (rear) view and a door view; doors include a cam lock, ventilated bottom panels, and castors."
+  ],
+  "warnings": [
+    "The '75' dimension near the top of the single cabinet front view could not be confirmed with certainty as to exactly what feature (frame lip vs. mounting rail offset) it measures.",
+    "This drawing covers a family of rack cabinet models (DE12000-DE12006 and a customizable variant); no single scale value is printed in the title block.",
+    "A generic form/document control stamp text is visible at the bottom left margin but its exact code/date were not legible enough to confirm and were not used as drawing_number.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
+  ]
+}

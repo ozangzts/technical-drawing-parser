@@ -1,0 +1,103 @@
+{
+  "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+  "brand_name": "DEICO",
+  "product_name": "DEICO ONYX USB - I²C/SPI Converter",
+  "document_name": "DE4001 - TECHNICAL DRAWING",
+  "drawing_number": "DE4001",
+  "revision": "0",
+  "revision_date": "14.08.2023",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    { "raw_text": "85,7", "value": "85,7", "unit": "mm", "type": "linear", "quantity": null, "label": "overall length", "context": "top view, including end cap" },
+    { "raw_text": "84", "value": "84", "unit": "mm", "type": "linear", "quantity": null, "label": "body length", "context": "top view, main housing" },
+    { "raw_text": "R10", "value": "10", "unit": "mm", "type": "radius", "quantity": null, "label": "end cap corner radius", "context": "right end view" },
+    { "raw_text": "18,8", "value": "18,8", "unit": "mm", "type": "linear", "quantity": null, "label": "end cap width", "context": "right end view" },
+    { "raw_text": "49,3", "value": "49,3", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "side view, Onyx label side" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Host Bus Connector (USB Type-C)",
+      "context": "USB-C host-side connector, two contact rows shown around the connector outline",
+      "columns": ["Signal"],
+      "rows": [
+        { "label": "Row A, position 1", "values": ["GND"] },
+        { "label": "Row A, position 2", "values": ["TX1+"] },
+        { "label": "Row A, position 3", "values": ["TX1-"] },
+        { "label": "Row A, position 4", "values": ["VBUS"] },
+        { "label": "Row A, position 5", "values": ["CC1"] },
+        { "label": "Row A, position 6", "values": ["D+"] },
+        { "label": "Row A, position 7", "values": ["D-"] },
+        { "label": "Row A, position 8", "values": ["SBU1"] },
+        { "label": "Row A, position 9", "values": ["VBUS"] },
+        { "label": "Row A, position 10", "values": ["RX2-"] },
+        { "label": "Row A, position 11", "values": ["RX2+"] },
+        { "label": "Row A, position 12", "values": ["GND"] },
+        { "label": "Row B, position 1", "values": ["GND"] },
+        { "label": "Row B, position 2", "values": ["RX1+"] },
+        { "label": "Row B, position 3", "values": ["RX1-"] },
+        { "label": "Row B, position 4", "values": ["VBUS"] },
+        { "label": "Row B, position 5", "values": ["SBU2"] },
+        { "label": "Row B, position 6", "values": ["D-"] },
+        { "label": "Row B, position 7", "values": ["D+"] },
+        { "label": "Row B, position 8", "values": ["CC2"] },
+        { "label": "Row B, position 9", "values": ["VBUS"] },
+        { "label": "Row B, position 10", "values": ["TX2-"] },
+        { "label": "Row B, position 11", "values": ["TX2+"] },
+        { "label": "Row B, position 12", "values": ["GND"] }
+      ]
+    },
+    {
+      "type": "pinout_table",
+      "title": "Target Bus Connector (I2C/SPI Header)",
+      "context": "10-pin header, pins numbered 1-10 (odd numbers top row 9-7-5-3-1, even numbers bottom row 10-8-6-4-2)",
+      "columns": ["Pin Name", "Description"],
+      "rows": [
+        { "label": "Pin 1", "values": ["I2C SCL", "I2C interface clock signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."] },
+        { "label": "Pin 2", "values": ["GND", "Ground connection."] },
+        { "label": "Pin 3", "values": ["I2C SDA", "I2C interface data signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."] },
+        { "label": "Pin 4", "values": ["VCC 3V3", "3.3V output."] },
+        { "label": "Pin 5", "values": ["SPI MISO", "SPI interface master in slave out signal. This pin can be used as GPIO."] },
+        { "label": "Pin 6", "values": ["VCC 3V3", "3.3V output."] },
+        { "label": "Pin 7", "values": ["SPI CLK", "SPI interface clock signal. This pin can be used as GPIO."] },
+        { "label": "Pin 8", "values": ["SPI MOSI", "SPI interface master out slave in signal. This pin can be used as GPIO."] },
+        { "label": "Pin 9", "values": ["SPI SS", "SPI interface slave select signal. This pin can be used as GPIO."] },
+        { "label": "Pin 10", "values": ["GND", "Ground connection."] }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical Specifications",
+      "context": "1.0 Mechanical Specifications",
+      "columns": ["Value"],
+      "rows": [
+        { "label": "1.1 Enclosure Material", "values": ["EN AW-6060 T66, 2mm thk."] },
+        { "label": "1.1 Enclosure Finish", "values": ["Black anodized"] },
+        { "label": "1.2 Front Panel Material", "values": ["EN AW-Al Mg1 5005 H34, 2mm thk."] },
+        { "label": "1.2 Front Panel Finish", "values": ["Black anodized"] },
+        { "label": "1.3 Plastic Strip Material", "values": ["PC-ABS Alloy"] }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Environmental Specifications",
+      "context": "2.0 Environmental",
+      "rows": [{ "label": "2.1 Operating Temperature Range", "cells": [{ "column": "Value", "value": "-55°C to 125°C" }] }]
+    }
+  ],
+  "schematics": [],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified, all dimensions are in millimeters (title block general note).",
+    "Front panel shows PWR and ACT LED indicators, a TYPE-C port, CE/FCC/WEEE markings, www.deico.com.tr text, and a small 2x5 pinheader outlined in red matching the Target Bus Connector pins.",
+    "Product is labeled 'Onyx I2C/SPI' with 'DE4001 USB-I2C/SPI CONVERTER' text on a side-view label."
+  ],
+  "warnings": [
+    "The 'CIRCUITRY' diagram (USB -> CONTROLLER -> I2C/GPIO, SPI/GPIO) is a functional block diagram with no reference designators or component values, so it was not extracted as a schematics entry.",
+    "The Host Bus Connector's two 12-position label rows have no printed pin numbers on this sheet; row/position labels here are based on left-to-right reading order, not printed numbering.",
+    "A generic form/document control stamp (SBL-0033 Rev. No:0 Date: 29.05.2023) is visible at the bottom left but was not used as drawing_number since it identifies the template, not this product."
+  ]
+}
