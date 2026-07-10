@@ -113,6 +113,12 @@ RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE = (
     "straight-line measurement such as an overall length, width, or height, "
     "even if it also carries a quantity marker."
 )
+RULE_GDT_NOT_YET_STRUCTURED = (
+    "If a GD&T feature control frame, datum reference, or a +/- tolerance "
+    "callout is visible, do not force it into dimensions or invent a shape "
+    "for tolerances; describe what you see in warnings instead so it is not "
+    "silently dropped."
+)
 RULE_NUMBERED_SPECIFICATION_SECTIONS = (
     "Extract numbered specification sections as tables when they have a "
     "parameter/value structure. Use notes only for free-text notes that do "
@@ -186,6 +192,7 @@ def build_vlm_prompt(source_file: Path) -> str:
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
             RULE_DIMENSION_LABEL_VS_CONTEXT,
             RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
+            RULE_GDT_NOT_YET_STRUCTURED,
             "Extract dimension tables when visible. Do not ignore table values "
             "that describe product variants, cabinet sizes, ranges, or "
             "option-dependent dimensions.",
@@ -274,6 +281,7 @@ def build_tile_vlm_prompt(source_file: Path, tile: dict[str, Any]) -> str:
             RULE_DIMENSION_CONTEXT_SPECIFICITY,
             RULE_DIMENSION_LABEL_VS_CONTEXT,
             RULE_PATTERN_VS_LINEAR_DIMENSION_TYPE,
+            RULE_GDT_NOT_YET_STRUCTURED,
             "Extract visible table-derived measurements into dimension_tables "
             "when row or column context is needed.",
             "Put non-dimensional tables such as pinout, connection, "

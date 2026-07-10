@@ -102,6 +102,12 @@ Allowed initial `type` values:
 
 `pattern` is for a repeated center-to-center spacing or pitch (a pin pitch, a hole pitch), especially one marked with a repeat count like `(x6)`. `linear` is for a single, non-repeated straight-line measurement (an overall length, width, or height), even if it also carries a quantity marker. This distinction is called out explicitly in the prompt because comparing manual extractions against the existing Anthropic-run outputs showed the model choosing `pattern` for a pitch dimension on one sample and `linear` for the same kind of pitch dimension on a sibling sample — the validator's `pitch -> pattern` alias (see below) only fixes this when the model's own `type` string is literally `pitch`, not when it directly guesses `linear`.
 
+## GD&T (Not Yet Structured)
+
+No sample seen so far has shown a GD&T feature control frame, datum reference, or `+/-` tolerance callout, so `tolerances` has no designed shape yet — deliberately: this session repeatedly found that a schema/rule designed without a real example to check it against needed correcting once one appeared (`schematics.parameters` consolidation, the `drawing_number` vs. form-stamp split), so guessing a GD&T shape now risks the same rework later for no benefit today.
+
+That absence of a schema is a real blind spot, though: without any instruction, there is no guarantee the model would even notice GD&T content if a future drawing had it, rather than silently dropping it or forcing it into `dimensions`. As a cheap safety net, the prompt asks the model to describe a feature control frame or `+/-` callout in `warnings` instead, if it ever sees one. This does not solve GD&T extraction; it only makes sure a future occurrence gets noticed and preserved as text instead of disappearing, until there is a real sample to design a proper shape against.
+
 ## VLM Prompts
 
 The canonical prompt builders live in `src/technical_drawing_parser/extraction/prompt.py`:
