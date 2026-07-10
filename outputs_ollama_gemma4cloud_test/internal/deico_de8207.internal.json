@@ -1,0 +1,346 @@
+{
+  "schema_version": "0.1.0",
+  "product_json_path": "outputs_ollama_gemma4cloud_test\\products\\deico_de8207.json",
+  "tile_summary_path": "outputs_ollama_gemma4cloud_test\\internal\\deico_de8207.tile_summary.json",
+  "vlm_prompt_path": "outputs_ollama_gemma4cloud_test\\internal\\deico_de8207.vlm_prompt.txt",
+  "raw_response_path": "outputs_ollama_gemma4cloud_test\\internal\\deico_de8207.raw_response.txt",
+  "rendered_page": {
+    "path": "outputs_ollama_gemma4cloud_test\\internal\\page_images\\deico_de8207_page_001.png",
+    "page": 1,
+    "dpi": 300,
+    "width": 4961,
+    "height": 3508,
+    "pdf_width_points": 1190.550048828125,
+    "pdf_height_points": 841.8900146484375
+  },
+  "rendered_pages": [
+    {
+      "path": "outputs_ollama_gemma4cloud_test\\internal\\page_images\\deico_de8207_page_001.png",
+      "page": 1,
+      "dpi": 300,
+      "width": 4961,
+      "height": 3508,
+      "pdf_width_points": 1190.550048828125,
+      "pdf_height_points": 841.8900146484375
+    }
+  ],
+  "page_extractions": [
+    {
+      "page": 1,
+      "image_path": "outputs_ollama_gemma4cloud_test\\internal\\page_images\\deico_de8207_page_001.png",
+      "raw_response_path": "outputs_ollama_gemma4cloud_test\\internal\\deico_de8207.raw_response.txt",
+      "status": "completed",
+      "error": null,
+      "extractor": "ollama",
+      "model": "gemma4:cloud",
+      "validation_warnings": [],
+      "product_json": {
+        "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+        "brand_name": "DEICO",
+        "product_name": "Box Type Bus Coupler 7 Stub",
+        "document_name": "Technical Drawing",
+        "drawing_number": "DE8207",
+        "revision": "2",
+        "revision_date": "26.06.2026",
+        "sheet": "1/1",
+        "size": "A3",
+        "scale": "1:1",
+        "dimensions": [
+          {
+            "raw_text": "222",
+            "value": "222",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "overall width",
+            "context": "top view"
+          },
+          {
+            "raw_text": "212",
+            "value": "212",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "mounting hole spacing width",
+            "context": "top view"
+          },
+          {
+            "raw_text": "197,8",
+            "value": "197,8",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "body width",
+            "context": "top view"
+          },
+          {
+            "raw_text": "48,5",
+            "value": "48,5",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "overall height",
+            "context": "top view"
+          },
+          {
+            "raw_text": "36",
+            "value": "36",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "mounting hole spacing height",
+            "context": "top view"
+          },
+          {
+            "raw_text": "26",
+            "value": "26",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "body height",
+            "context": "top view"
+          },
+          {
+            "raw_text": "5",
+            "value": "5",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "offset",
+            "context": "top view"
+          },
+          {
+            "raw_text": "(x4) $\\phi$4,2 THRU",
+            "value": "4,2",
+            "unit": null,
+            "type": "diameter",
+            "quantity": 4,
+            "label": "mounting hole diameter",
+            "context": "top view"
+          },
+          {
+            "raw_text": "30,3",
+            "value": "30,3",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "edge distance",
+            "context": "top view"
+          },
+          {
+            "raw_text": "(x6) 22,9",
+            "value": "22,9",
+            "unit": null,
+            "type": "pattern",
+            "quantity": 6,
+            "label": "stub port pitch",
+            "context": "top view"
+          },
+          {
+            "raw_text": "24",
+            "value": "24",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "overall height",
+            "context": "front view"
+          },
+          {
+            "raw_text": "13,1",
+            "value": "13,1",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "body height",
+            "context": "front view"
+          },
+          {
+            "raw_text": "2",
+            "value": "2",
+            "unit": null,
+            "type": "linear",
+            "quantity": null,
+            "label": "clearance",
+            "context": "front view"
+          }
+        ],
+        "dimension_tables": [],
+        "tables": [
+          {
+            "type": "specification_table",
+            "title": "INTERMATEBILITY",
+            "context": null,
+            "rows": [
+              {
+                "label": null,
+                "cells": [
+                  {
+                    "column": "CONNECTOR",
+                    "value": "BJ770"
+                  },
+                  {
+                    "column": "RECOMMENDED MATING CONNECTOR",
+                    "value": "PL75"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "schematics": [
+          {
+            "title": "SCHEMATIC DIAGRAM",
+            "context": null,
+            "components": [
+              "R1",
+              "R2",
+              "R3",
+              "R4",
+              "R5",
+              "R6",
+              "R7",
+              "R8",
+              "R9",
+              "R10",
+              "R11",
+              "R12",
+              "R13",
+              "J1 BUS",
+              "J2 BUS",
+              "J3 STUB 1",
+              "J4 STUB 2",
+              "J5 STUB 3",
+              "J6 STUB 4",
+              "J7 STUB 5",
+              "J8 STUB 6",
+              "J9 STUB 7"
+            ],
+            "parameters": []
+          }
+        ],
+        "tolerances": [],
+        "notes": [
+          "Unless otherwise specified all dimensions are in millimeters."
+        ],
+        "warnings": []
+      }
+    }
+  ],
+  "tile_extractions": [],
+  "tile_extraction_summary": {
+    "summary_notes": {
+      "purpose": "Internal review aid for crop/tile extraction results; it does not change product JSON.",
+      "duplicate_candidate_groups": "Dimensions that may be repeated because the same visible measurement was extracted from overlapping tiles.",
+      "strong_duplicate": "A duplicate group with stronger matching evidence such as label or quantity; merge evidence only after review.",
+      "weak_duplicate": "A duplicate group with limited matching evidence, usually missing label or quantity; review carefully.",
+      "full_page_supported_candidates": "Tile dimensions that match a dimension found by full-page extraction.",
+      "tile_only_candidates": "Tile dimensions not found in full-page extraction; they may be useful new evidence or crop-only false positives.",
+      "tile_only_review_candidates": "Count of tile-only candidates that look potentially useful enough for manual review.",
+      "weak_tile_only": "Tile-only candidates with weak evidence, such as missing labels or very short raw text.",
+      "non_product_candidate": "Tile-only candidates that look like schematic ratios, reference labels, or other information that should not automatically become product dimensions."
+    },
+    "tiles_processed": 0,
+    "dimensions_found": 0,
+    "duplicate_candidate_groups": [],
+    "full_page_supported_candidates": [],
+    "tile_only_candidates": [],
+    "unique_dimension_candidates": [],
+    "review_summary": {
+      "strong_duplicate_groups": 0,
+      "weak_duplicate_groups": 0,
+      "full_page_supported_candidates": 0,
+      "tile_only_candidates": 0,
+      "tile_only_review_candidates": 0,
+      "weak_tile_only_candidates": 0,
+      "non_product_candidates": 0
+    }
+  },
+  "ocr_target_refinement_summary": {
+    "targets": 0,
+    "dimensions": 0,
+    "metadata": 0,
+    "notes": 0,
+    "uncertain": 0,
+    "irrelevant": 0,
+    "failed": 0,
+    "merge_candidates": [],
+    "covered_by_dimensions": [],
+    "covered_by_dimension_tables": [],
+    "new_dimension_candidates": [],
+    "metadata_review_candidates": []
+  },
+  "extraction": {
+    "extractor": "ollama",
+    "model": "gemma4:cloud",
+    "ollama_think": null,
+    "status": "completed",
+    "error": null,
+    "validation_warnings": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE8207_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE8207_Technical_Drawing.pdf",
+    "fingerprint": "sha256:1dae902ebe7c66e8c9a2dd48c060da40bb3677be981da1c3f86d9426ab66a71c",
+    "metadata": {
+      "filename": "DEICO_DE8207_Technical_Drawing.pdf",
+      "extension": ".pdf",
+      "size_bytes": 320380,
+      "pdf": {
+        "page_count": 1,
+        "is_pdf": true
+      },
+      "rendered_pages": [
+        {
+          "path": "outputs_ollama_gemma4cloud_test\\internal\\page_images\\deico_de8207_page_001.png",
+          "page": 1,
+          "dpi": 300,
+          "width": 4961,
+          "height": 3508,
+          "pdf_width_points": 1190.550048828125,
+          "pdf_height_points": 841.8900146484375
+        }
+      ],
+      "image": {
+        "width": 4961,
+        "height": 3508,
+        "derived_from": "inputs\\incoming\\DEICO_DE8207_Technical_Drawing.pdf",
+        "page": 1
+      }
+    },
+    "processed_at": "2026-07-10T05:37:33+00:00"
+  },
+  "regions": [
+    {
+      "id": "page_001_region_001",
+      "type": "full_page",
+      "page": 1,
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "width": 4961,
+        "height": 3508
+      },
+      "source_ref": "inputs\\incoming\\DEICO_DE8207_Technical_Drawing.pdf#page=1",
+      "crop_ref": null,
+      "confidence": 1.0
+    }
+  ],
+  "tiles": [],
+  "raw_ocr_blocks": [],
+  "ocr_candidates": [],
+  "ocr_target_crops": [],
+  "ocr_target_refinements": [],
+  "metadata_merges": [],
+  "warnings": [
+    "Layout detection, dimension merge from refinement results, and region-specific semantic extraction are not implemented yet."
+  ],
+  "uncertain_fields": [
+    {
+      "field": "semantic_extraction",
+      "value": null,
+      "reason": "Dimension merge from OCR target refinement and region-specific semantic extraction are not implemented yet.",
+      "evidence": [],
+      "confidence": 0.0
+    }
+  ]
+}

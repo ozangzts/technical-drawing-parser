@@ -1,0 +1,34 @@
+{
+  "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 3 Stub DTRM",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE8133",
+  "revision": "No. 2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "2:1",
+  "dimensions": [
+    { "raw_text": "48,85", "value": "48,85", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "top view" },
+    { "raw_text": "23,2", "value": "23,2", "unit": "mm", "type": "linear", "quantity": null, "label": "overall depth", "context": "side view" },
+    { "raw_text": "11,5", "value": "11,5", "unit": "mm", "type": "linear", "quantity": null, "label": "pin height", "context": "front view" },
+    { "raw_text": "12,7", "value": "12,7", "unit": "mm", "type": "linear", "quantity": null, "label": "body height", "context": "front view" },
+    { "raw_text": "1", "value": "1", "unit": "mm", "type": "linear", "quantity": null, "label": "clearance", "context": "front view, PCB level" },
+    { "raw_text": "(x7) #1,02", "value": "1,02", "unit": "mm", "type": "diameter", "quantity": 7, "label": "pin diameter", "context": "front view" },
+    { "raw_text": "15,24", "value": "15,24", "unit": "mm", "type": "linear", "quantity": null, "label": "overall depth", "context": "recommended land pattern" },
+    { "raw_text": "(x6) 6,34", "value": "6,34", "unit": "mm", "type": "pattern", "quantity": 6, "label": "pin pitch", "context": "recommended land pattern" },
+    { "raw_text": "(x7) #1,22 (HOLE DIAMETER)", "value": "1,22", "unit": "mm", "type": "diameter", "quantity": 7, "label": "hole diameter", "context": "recommended land pattern" },
+    { "raw_text": "(x7) #1,83 (PAD DIAMETER)", "value": "1,83", "unit": "mm", "type": "diameter", "quantity": 7, "label": "pad diameter", "context": "recommended land pattern" }
+  ],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [{ "title": "SCHEMATIC DIAGRAM", "context": "internal circuitry", "components": ["R7", "R8", "R1", "R2", "R3", "R4", "R5", "R6"], "parameters": [] }],
+  "tolerances": [],
+  "notes": ["Unless otherwise specified all dimensions are in millimeters."],
+  "warnings": [
+    "Suspicious diameter symbol in raw_text: `(x7) #1,02`.",
+    "Suspicious diameter symbol in raw_text: `(x7) #1,22 (HOLE DIAMETER)`.",
+    "Suspicious diameter symbol in raw_text: `(x7) #1,83 (PAD DIAMETER)`."
+  ]
+}

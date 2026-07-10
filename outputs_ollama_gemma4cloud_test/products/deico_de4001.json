@@ -1,0 +1,60 @@
+{
+  "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+  "brand_name": "DEICO",
+  "product_name": "DEICO ONYX USB - I2C/SPI CONVERTER",
+  "document_name": "TECHNICAL DRAWING",
+  "drawing_number": "DE4001",
+  "revision": null,
+  "revision_date": "14.08.2023",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    { "raw_text": "85,7", "value": "85,7", "unit": "mm", "type": "linear", "quantity": null, "label": "overall length", "context": "top view" },
+    { "raw_text": "84", "value": "84", "unit": "mm", "type": "linear", "quantity": null, "label": "body length", "context": "top view" },
+    { "raw_text": "18,8", "value": "18,8", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "top view" },
+    { "raw_text": "49,3", "value": "49,3", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "front view" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "TARGET BUS CONNECTOR",
+      "context": "pinout description",
+      "columns": ["PIN", "PIN NAME", "DESCRIPTION"],
+      "rows": [
+        ["1", "I2C SCL", "I2C interface clock signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."],
+        ["2", "GND", "Ground connection."],
+        ["3", "I2C SDA", "I2C interface data signal. There is an internal 4.7KOHM pull-up resistor. This pin can be used as GPIO."],
+        ["4", "VCC 3V3", "3.3V output."],
+        ["5", "SPI MISO", "SPI interface master in slot signal. This pin can be used as GPIO."],
+        ["6", "VCC 3V3", "3.3V output."],
+        ["7", "SPI CLK", "SPI interface clock signal. This pin can be used as GPIO."],
+        ["8", "SPI MOSI", "SPI interface master out slave signal. This pin can be used as GPIO."],
+        ["9", "SPI SS", "SPI interface slave select signal. This pin can be used as GPIO."],
+        ["10", "GND", "Ground connection."]
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "1.0 MECHANICAL SPECIFICATIONS",
+      "context": "physical specifications",
+      "columns": ["Section", "Specification"],
+      "rows": [
+        ["1.1", "ENCLOSURE MATERIAL: AN. Al 6061 T6L, 2MM THK."],
+        ["1.2", "FRONT PANEL MATERIAL: EN. Al Mg Si 5083 H34, 2MM THK. FINISH: BLACK ANODISED"],
+        ["1.3", "PLASTIC PART MATERIAL: PC-ABS ALLOY"]
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "2.0 ENVIRONMENTAL",
+      "context": "environmental specifications",
+      "rows": [{ "label": null, "cells": [{ "column": "Section", "value": "2.1" }, { "column": "Specification", "value": "OPERATING TEMPERATURE RANGE: -55 °C TO 125 °C" }] }]
+    }
+  ],
+  "schematics": [{ "title": "CIRCUITRY", "context": "functional block diagram", "components": ["CONTROLLER"], "parameters": [] }],
+  "tolerances": [],
+  "notes": ["UNLESS OTHERWISE SPECIFIED ALL DRAWINGS ARE IN MILLIMETERS."],
+  "warnings": []
+}

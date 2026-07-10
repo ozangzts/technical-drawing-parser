@@ -1,0 +1,279 @@
+```json
+{
+  "source_file": "DEICO_DE3000_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Battery Simulation Unit",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DEICO_DE3000",
+  "revision": null,
+  "revision_date": "04.06.2021",
+  "sheet": "1/1",
+  "size": null,
+  "scale": null,
+  "dimensions": [
+    {
+      "raw_text": "482,6",
+      "value": "482,6",
+      "unit": "millimeters",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall width",
+      "context": "front view"
+    },
+    {
+      "raw_text": "44,45",
+      "value": "44,45",
+      "unit": "millimeters",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall height",
+      "context": "front view"
+    },
+    {
+      "raw_text": "427,8",
+      "value": "427,8",
+      "unit": "millimeters",
+      "type": "linear",
+      "quantity": null,
+      "label": "depth",
+      "context": "top view"
+    },
+    {
+      "raw_text": "456,19",
+      "value": "456,19",
+      "unit": "millimeters",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall depth",
+      "context": "side view"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Auxiliary I/O Connector Pinout",
+      "context": "Part No L17520251ACD4NEF",
+      "rows": [
+        {
+          "label": "Pin 1",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 1" },
+            { "column": "Connection", "value": "Analog In #1" }
+          ]
+        },
+        {
+          "label": "Pin 2",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 2" },
+            { "column": "Connection", "value": "Analog In #3" }
+          ]
+        },
+        {
+          "label": "Pin 3",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 3" },
+            { "column": "Connection", "value": "Analog In #5" }
+          ]
+        },
+        {
+          "label": "Pin 4",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 4" },
+            { "column": "Connection", "value": "Analog In #7" }
+          ]
+        },
+        {
+          "label": "Pin 5",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 5" },
+            { "column": "Connection", "value": "Analog Out #1" }
+          ]
+        },
+        {
+          "label": "Pin 6",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 6" },
+            { "column": "Connection", "value": "Analog Out #2" }
+          ]
+        },
+        {
+          "label": "Pin 7",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 7" },
+            { "column": "Connection", "value": "GND" }
+          ]
+        },
+        {
+          "label": "Pin 8",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 8" },
+            { "column": "Connection", "value": "Digital I/O #2" }
+          ]
+        },
+        {
+          "label": "Pin 9",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 9" },
+            { "column": "Connection", "value": "Digital I/O #4" }
+          ]
+        },
+        {
+          "label": "Pin 10",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 10" },
+            { "column": "Connection", "value": "Digital I/O #6" }
+          ]
+        },
+        {
+          "label": "Pin 11",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 11" },
+            { "column": "Connection", "value": "Digital I/O #8" }
+          ]
+        },
+        {
+          "label": "Pin 12",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 12" },
+            { "column": "Connection", "value": "GND" }
+          ]
+        },
+        {
+          "label": "Pin 13",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 13" },
+            { "column": "Connection", "value": "CANH" }
+          ]
+        },
+        {
+          "label": "Pin 14",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 14" },
+            { "column": "Connection", "value": "CANL" }
+          ]
+        },
+        {
+          "label": "Pin 15",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 15" },
+            { "column": "Connection", "value": "Analog In #2" }
+          ]
+        },
+        {
+          "label": "Pin 16",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 16" },
+            { "column": "Connection", "value": "Analog In #4" }
+          ]
+        },
+        {
+          "label": "Pin 17",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 17" },
+            { "column": "Connection", "value": "Analog In #6" }
+          ]
+        },
+        {
+          "label": "Pin 18",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 18" },
+            { "column": "Connection", "value": "Analog In #8" }
+          ]
+        },
+        {
+          "label": "Pin 19",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 19" },
+            { "column": "Connection", "value": "Analog In #1" }
+          ]
+        },
+        {
+          "label": "Pin 20",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 20" },
+            { "column": "Connection", "value": "Analog In #3" }
+          ]
+        },
+        {
+          "label": "Pin 21",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 21" },
+            { "column": "Connection", "value": "Analog In #5" }
+          ]
+        },
+        {
+          "label": "Pin 22",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 22" },
+            { "column": "Connection", "value": "Analog In #7" }
+          ]
+        },
+        {
+          "label": "Pin 23",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 23" },
+            { "column": "Connection", "value": "GND" }
+          ]
+        },
+        {
+          "label": "Pin 24",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 24" },
+            { "column": "Connection", "value": "Analog Out #1" }
+          ]
+        },
+        {
+          "label": "Pin 25",
+          "cells": [
+            { "column": "Pin Number", "value": "Pin 25" },
+            { "column": "Connection", "value": "CANL" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical and Environmental Specifications",
+      "context": "Sections 1 & 2",
+      "rows": [
+        {
+          "label": "1.1 Enclosure Material",
+          "cells": [
+            { "column": "Parameter", "value": "Enclosure Material" },
+            { "column": "Value", "value": "ALUMINIUM ALLOY WITH POWDER PAINT, RAL 9005 CHEMICAL FILM PER MIL-DTL-5541, CLASS 2" }
+          ]
+        },
+        {
+          "label": "2.1 Operating Temperature",
+          "cells": [
+            { "column": "Parameter", "value": "Operating Temperature" },
+            { "column": "Value", "value": "From -20 °C to 70 °C" }
+          ]
+        },
+        {
+          "label": "2.2 Operating Humidity",
+          "cells": [
+            { "column": "Parameter", "value": "Operating Humidity" },
+            { "column": "Value", "value": "10% to 90%, noncondensing" }
+          ]
+        },
+        {
+          "label": "2.3 Storage Humidity",
+          "cells": [
+            { "column": "Parameter", "value": "Storage Humidity" },
+            { "column": "Value", "value": "5% to 95%, noncondensing" }
+          ]
+        }
+      ]
+    }
+  ],
+  "schematics": [],
+  "tolerances": [],
+  "notes": [
+    "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS",
+    "DE3000: Battery Simulation Unit 12 Ch 5 V 300 mA"
+  ],
+  "warnings": []
+}
+```

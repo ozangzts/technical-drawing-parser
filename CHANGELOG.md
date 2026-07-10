@@ -4,6 +4,12 @@ All notable changes to this project should be documented in this file.
 
 The format is inspired by Keep a Changelog, and this project uses chronological entries while the project is still in early exploration.
 
+## 2026-07-10
+
+### Added
+
+- Re-ran the opt-in Ollama extractor with `gemma4:cloud` on all 5 DEICO samples against the current, post-`schematics` prompt (`outputs_ollama_gemma4cloud_test/`). It completed without crashing on every sample, and inherited the same table-collapse/compact-formatting quality as the Anthropic runs (that happens in `validator.py`/`json_format.py` regardless of extractor). Its own extraction quality was clearly weaker than Sonnet's, though: wrong `revision_date` on two samples, a fabricated `"Analog Out #2"` signal name and a duplicated `"CANL"` pin value in a pinout table, a wrong current rating in a note, two tables dropped entirely, the diameter symbol misrendered as `#` or `$\phi$`, `schematics.parameters` left empty on both bus-coupler samples, and (most notably) the schematic-vs-block-diagram distinction misapplied on `DE4001` — the one distinction the Claude blind-session cross-check got right on all 5 samples. See the Open TODO entry in `AGENTS.md` for the full list.
+
 ## 2026-07-09
 
 ### Added

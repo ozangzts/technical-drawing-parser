@@ -1,0 +1,70 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_ollama_gemma4cloud_test\\products\\deico_de8133.json",
+    "source_file": "DEICO_DE8133_Technical_Drawing.pdf",
+    "brand_name": "DEICO",
+    "product_name": "PCB Type Bus Coupler 3 Stub DTRM",
+    "document_name": "Technical Drawing",
+    "revision": "No. 2",
+    "revision_date": "26.06.2026",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": "2:1"
+  },
+  "extraction": {
+    "status": "validation_failed",
+    "extractor": "ollama",
+    "model": "gemma4:cloud",
+    "error": null,
+    "validation_warnings": [
+      "Suspicious diameter symbol in raw_text: `(x7) #1,02`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,22 (HOLE DIAMETER)`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,83 (PAD DIAMETER)`."
+    ]
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 10,
+    "dimension_tables": 0,
+    "tables": 0,
+    "notes": 1,
+    "product_warnings": 3,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [
+      "Suspicious diameter symbol in raw_text: `(x7) #1,02`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,22 (HOLE DIAMETER)`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,83 (PAD DIAMETER)`."
+    ],
+    "product_warnings": [
+      "Suspicious diameter symbol in raw_text: `(x7) #1,02`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,22 (HOLE DIAMETER)`.",
+      "Suspicious diameter symbol in raw_text: `(x7) #1,83 (PAD DIAMETER)`."
+    ]
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE8133_Technical_Drawing.pdf",
+    "original_filename": "DEICO_DE8133_Technical_Drawing.pdf",
+    "processed_at": "2026-07-10T05:36:11+00:00"
+  }
+}

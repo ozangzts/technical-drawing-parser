@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1.0",
+  "product": {
+    "path": "outputs_ollama_gemma4cloud_test\\products\\deico_de4001.json",
+    "source_file": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "brand_name": "DEICO",
+    "product_name": "DEICO ONYX USB - I2C/SPI CONVERTER",
+    "document_name": "TECHNICAL DRAWING",
+    "revision": null,
+    "revision_date": "14.08.2023",
+    "sheet": "1/1",
+    "size": "A3",
+    "scale": "1:1"
+  },
+  "extraction": {
+    "status": "completed",
+    "extractor": "ollama",
+    "model": "gemma4:cloud",
+    "error": null,
+    "validation_warnings": []
+  },
+  "counts": {
+    "pages": 1,
+    "dimensions": 4,
+    "dimension_tables": 0,
+    "tables": 3,
+    "notes": 1,
+    "product_warnings": 0,
+    "raw_ocr_blocks": 0,
+    "ocr_candidates": 0,
+    "ocr_target_crops": 0,
+    "ocr_target_refinements": 0,
+    "metadata_merges": 0,
+    "tile_extractions": 0
+  },
+  "review": {
+    "applied_merges": [],
+    "merge_ready": [],
+    "needs_review": [],
+    "failed_refinements": 0,
+    "validation_warnings": [],
+    "product_warnings": []
+  },
+  "coverage": {
+    "covered_by_dimensions_count": 0,
+    "covered_by_dimension_tables_count": 0
+  },
+  "tile_review": {
+    "dimensions_found": 0,
+    "tile_only_candidates": [],
+    "duplicate_candidate_groups": []
+  },
+  "document": {
+    "source_path": "inputs\\incoming\\DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "original_filename": "DEICO_DE4001_TECHNICAL_DRAWING.pdf",
+    "processed_at": "2026-07-10T05:33:58+00:00"
+  }
+}

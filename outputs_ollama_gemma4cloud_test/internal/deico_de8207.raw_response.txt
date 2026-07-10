@@ -1,0 +1,192 @@
+```json
+{
+  "source_file": "DEICO_DE8207_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Box Type Bus Coupler 7 Stub",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DE8207",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "222",
+      "value": "222",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "overall width",
+      "context": "top view"
+    },
+    {
+      "raw_text": "212",
+      "value": "212",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "mounting hole spacing width",
+      "context": "top view"
+    },
+    {
+      "raw_text": "197,8",
+      "value": "197,8",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "body width",
+      "context": "top view"
+    },
+    {
+      "raw_text": "48,5",
+      "value": "48,5",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "overall height",
+      "context": "top view"
+    },
+    {
+      "raw_text": "36",
+      "value": "36",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "mounting hole spacing height",
+      "context": "top view"
+    },
+    {
+      "raw_text": "26",
+      "value": "26",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "body height",
+      "context": "top view"
+    },
+    {
+      "raw_text": "5",
+      "value": "5",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "offset",
+      "context": "top view"
+    },
+    {
+      "raw_text": "(x4) $\\phi$4,2 THRU",
+      "value": "4,2",
+      "unit": null,
+      "type": "diameter",
+      "quantity": 4,
+      "label": "mounting hole diameter",
+      "context": "top view"
+    },
+    {
+      "raw_text": "30,3",
+      "value": "30,3",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "edge distance",
+      "context": "top view"
+    },
+    {
+      "raw_text": "(x6) 22,9",
+      "value": "22,9",
+      "unit": null,
+      "type": "pattern",
+      "quantity": 6,
+      "label": "stub port pitch",
+      "context": "top view"
+    },
+    {
+      "raw_text": "24",
+      "value": "24",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "overall height",
+      "context": "front view"
+    },
+    {
+      "raw_text": "13,1",
+      "value": "13,1",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "body height",
+      "context": "front view"
+    },
+    {
+      "raw_text": "2",
+      "value": "2",
+      "unit": null,
+      "type": "linear",
+      "quantity": null,
+      "label": "clearance",
+      "context": "front view"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "specification_table",
+      "title": "INTERMATEBILITY",
+      "context": null,
+      "rows": [
+        {
+          "label": null,
+          "cells": [
+            {
+              "column": "CONNECTOR",
+              "value": "BJ770"
+            },
+            {
+              "column": "RECOMMENDED MATING CONNECTOR",
+              "value": "PL75"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "schematics": [
+    {
+      "title": "SCHEMATIC DIAGRAM",
+      "context": null,
+      "components": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "J1 BUS",
+        "J2 BUS",
+        "J3 STUB 1",
+        "J4 STUB 2",
+        "J5 STUB 3",
+        "J6 STUB 4",
+        "J7 STUB 5",
+        "J8 STUB 6",
+        "J9 STUB 7"
+      ],
+      "parameters": []
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters."
+  ],
+  "warnings": []
+}
+```

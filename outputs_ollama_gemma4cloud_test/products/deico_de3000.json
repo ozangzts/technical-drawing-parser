@@ -1,0 +1,70 @@
+{
+  "source_file": "DEICO_DE3000_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Battery Simulation Unit",
+  "document_name": "Technical Drawing",
+  "drawing_number": "DEICO_DE3000",
+  "revision": null,
+  "revision_date": "04.06.2021",
+  "sheet": "1/1",
+  "size": null,
+  "scale": null,
+  "dimensions": [
+    { "raw_text": "482,6", "value": "482,6", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "front view" },
+    { "raw_text": "44,45", "value": "44,45", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "front view" },
+    { "raw_text": "427,8", "value": "427,8", "unit": "mm", "type": "linear", "quantity": null, "label": "depth", "context": "top view" },
+    { "raw_text": "456,19", "value": "456,19", "unit": "mm", "type": "linear", "quantity": null, "label": "overall depth", "context": "side view" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "pinout_table",
+      "title": "Auxiliary I/O Connector Pinout",
+      "context": "Part No L17520251ACD4NEF",
+      "columns": ["Pin Number", "Connection"],
+      "rows": [
+        ["Pin 1", "Analog In #1"],
+        ["Pin 2", "Analog In #3"],
+        ["Pin 3", "Analog In #5"],
+        ["Pin 4", "Analog In #7"],
+        ["Pin 5", "Analog Out #1"],
+        ["Pin 6", "Analog Out #2"],
+        ["Pin 7", "GND"],
+        ["Pin 8", "Digital I/O #2"],
+        ["Pin 9", "Digital I/O #4"],
+        ["Pin 10", "Digital I/O #6"],
+        ["Pin 11", "Digital I/O #8"],
+        ["Pin 12", "GND"],
+        ["Pin 13", "CANH"],
+        ["Pin 14", "CANL"],
+        ["Pin 15", "Analog In #2"],
+        ["Pin 16", "Analog In #4"],
+        ["Pin 17", "Analog In #6"],
+        ["Pin 18", "Analog In #8"],
+        ["Pin 19", "Analog In #1"],
+        ["Pin 20", "Analog In #3"],
+        ["Pin 21", "Analog In #5"],
+        ["Pin 22", "Analog In #7"],
+        ["Pin 23", "GND"],
+        ["Pin 24", "Analog Out #1"],
+        ["Pin 25", "CANL"]
+      ]
+    },
+    {
+      "type": "specification_table",
+      "title": "Mechanical and Environmental Specifications",
+      "context": "Sections 1 & 2",
+      "columns": ["Parameter", "Value"],
+      "rows": [
+        { "label": "1.1 Enclosure Material", "values": ["Enclosure Material", "ALUMINIUM ALLOY WITH POWDER PAINT, RAL 9005 CHEMICAL FILM PER MIL-DTL-5541, CLASS 2"] },
+        { "label": "2.1 Operating Temperature", "values": ["Operating Temperature", "From -20 °C to 70 °C"] },
+        { "label": "2.2 Operating Humidity", "values": ["Operating Humidity", "10% to 90%, noncondensing"] },
+        { "label": "2.3 Storage Humidity", "values": ["Storage Humidity", "5% to 95%, noncondensing"] }
+      ]
+    }
+  ],
+  "schematics": [],
+  "tolerances": [],
+  "notes": ["UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS", "DE3000: Battery Simulation Unit 12 Ch 5 V 300 mA"],
+  "warnings": []
+}

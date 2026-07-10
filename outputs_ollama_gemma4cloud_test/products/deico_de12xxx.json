@@ -1,0 +1,40 @@
+{
+  "source_file": "DEICO_DE12XXX_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "19\" RACK CABINETS",
+  "document_name": "Technical_Drawing",
+  "drawing_number": "DEICO_DE12XXX",
+  "revision": "0",
+  "revision_date": "09.09.2021",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": null,
+  "dimensions": [
+    { "raw_text": "600", "value": "600", "unit": "mm", "type": "linear", "quantity": null, "label": "width", "context": "Single Cabinet front view" },
+    { "raw_text": "75", "value": "75", "unit": "mm", "type": "linear", "quantity": null, "label": "depth offset", "context": "Single Cabinet side view" },
+    { "raw_text": "182", "value": "182", "unit": "mm", "type": "linear", "quantity": null, "label": "base height", "context": "Single Cabinet front view" },
+    { "raw_text": "1200", "value": "1200", "unit": "mm", "type": "linear", "quantity": null, "label": "width", "context": "Double Cabinet front view" }
+  ],
+  "dimension_tables": [
+    {
+      "title": null,
+      "context": "Product variants",
+      "columns": ["PRODUCT CODE", "CABINET HEIGHT (A)", "CABINET DEPTH (B) (MM)", "CABINET TYPE"],
+      "rows": [
+        ["DE12000", "20U", "800", "SINGLE"],
+        ["DE12001", "32U", "800", "SINGLE"],
+        ["DE12002", "32U", "800", "DOUBLE"],
+        ["DE12003", "36U", "800", "SINGLE"],
+        ["DE12004", "36U", "800", "DOUBLE"],
+        ["DE12005", "38U", "900", "SINGLE"],
+        ["DE12006", "38U", "900", "DOUBLE"],
+        ["CUSTOM CABINET", "20U-42U", "800-1000", "CUSTOMIZABLE"]
+      ]
+    }
+  ],
+  "tables": [],
+  "schematics": [],
+  "tolerances": [],
+  "notes": ["UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETER."],
+  "warnings": []
+}
