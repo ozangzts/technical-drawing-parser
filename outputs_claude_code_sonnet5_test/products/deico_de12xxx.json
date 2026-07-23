@@ -49,10 +49,11 @@
     }
   ],
   "tables": [],
+  "schematics": [],
   "tolerances": [],
   "notes": [
     "Unless otherwise specified all dimensions are in millimeters.",
-    "All intellectual property rights regarding this document belong to DEICO Engineering Inc. The document is given on the condition that it is not reproduced, copied for production or other purposes and not shared with third parties without the written permission of DEICO, and received and committed."
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc.. The document is given on the conditions that it is not reproduced, used for production or other purposes and not shared with third parties without the written permission of DEICO, and receipt of the document means that these conditions are accepted and committed."
   ],
   "warnings": [
     "The scale field in the title block appears blank; scale left null instead of guessed.",
@@ -60,7 +61,7 @@
     "Cabinet height (A) and depth (B) are symbolic per-variant letters explained by the product code table, not fixed numeric dimensions of one product, so they were not listed as standalone dimensions themselves.",
     "The 75 mm and 182 mm dimensions have visible leader lines and values but no adjacent text label identifying what feature they measure; recorded with their view location only.",
     "This drawing describes a product family with multiple cabinet height/depth/type variants rather than a single fixed product.",
-    "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
+    "No GD&T feature control frames, datum references, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
     "`document_name` may contain a source filename or file extension: `DEICO_DE12XXX_Technical_Drawing`."
   ]
 }

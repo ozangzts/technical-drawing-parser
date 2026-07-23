@@ -4,6 +4,20 @@ All notable changes to this project should be documented in this file.
 
 The format is inspired by Keep a Changelog, and this project uses chronological entries while the project is still in early exploration.
 
+## 2026-07-23
+
+### Changed
+
+- Refreshed all 5 hand-derived reference files in `outputs_claude_code_sonnet5_test/products/` (DE3000, DE4001, DE8133, DE8207, DE12XXX) using the source PDF's embedded text layer in addition to the rendered page image, instead of the rendered image alone as in the original 2026-07-09 pass. Each raw response was hand-written against the current `build_vlm_prompt()`/`product_schema_description()` rules, then passed through the real `parse_product_json_response`/`format_json_compact` so the result matches what the pipeline would produce from that raw response, not a hand-formatted approximation. Confirmed this text-layer method is appropriate specifically for this folder's stated purpose (a hand-derived ground-truth reference for checking prompt/schema correctness), not for `outputs_claude_code_blind_test/`, which deliberately simulates the real image-only VLM call and should stay image-only.
+- Fixed a real, confirmed transcription error repeated across all 5 files: the DEICO legal-notice boilerplate note was paraphrased ("intellectual property rights... condition... copied for production... received and committed.") instead of matching the verbatim printed text ("intellectual rights... conditions... used for production... receipt of the document means that these conditions are accepted and committed."). Confirmed identical wording verbatim across all 5 source PDFs, which is strong evidence this is the correct fixed text, not a per-drawing OCR mistake.
+- Fixed the diameter symbol in DE8133 and DE8207: `Ø` (Latin capital O with stroke) was used where the source PDFs actually print `⌀` (the true Unicode diameter sign, U+2300) — visually similar but a different character.
+- Fixed the schematic transformer turns ratio in DE8133 and DE8207: was `1:1,41` (comma) in both files; the source PDFs print `1:1.41` (period) in the schematic, distinct from the comma-decimal mm dimensions elsewhere on the same sheets.
+- Fixed `source_file` in DE4001, which held an incorrect approximation of the real filename (`DE4001_Technical_Drawing.pdf`) instead of the actual `DEICO_DE4001_TECHNICAL_DRAWING.pdf`.
+- Fixed an inconsistent superscript in two DE4001 Target Bus Connector pin descriptions (`I2C interface...` where the Pin Name column correctly used `I²C` but the Description text did not, even though the source prints the superscript in both places).
+- Added the `schematics` field (empty where no schematic content exists) to all 5 files; it was missing from the original 2026-07-09 pass, which predates that schema addition.
+- Decided, when a title-block metadata value (`product_name`, `document_name`) is printed in all caps, to preserve that case verbatim rather than title-casing it for readability, since sibling drawings show this varies by drawing (DE3000's equivalent fields are printed in mixed case, DE4001's in all caps), meaning it reflects what was actually typed rather than a fixed template font. Table column headers are unaffected by this and keep the existing Title Case convention, since those are schema-level labels rather than transcribed field values.
+- Removed 2 now-stale "the source image is worth zooming into or has an OCR text confidence"-style hedge warnings whose underlying uncertainty was actually resolved once text-layer verification confirmed the transcription (each individual file's warnings list still reflects genuinely unresolved uncertainty, such as unlabeled dimension leader lines).
+
 ## 2026-07-10
 
 ### Added

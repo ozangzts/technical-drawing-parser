@@ -1,0 +1,82 @@
+{
+  "source_file": "DEICO_DE8135_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 5 Stub DTRM",
+  "document_name": "DEICO_DE8135_Technical_Drawing.pdf",
+  "drawing_number": "DE8135",
+  "revision": "0",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    { "raw_text": "61,3", "value": "61,3", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "Front view overall width of the PCB mount coupler body" },
+    { "raw_text": "23,2", "value": "23,2", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "Side view overall height" },
+    { "raw_text": "(x9) 5,08", "value": "5,08", "unit": "mm", "type": "pattern", "quantity": 9, "label": "land pattern pitch", "context": "Recommended land pattern pad-to-pad pitch" },
+    {
+      "raw_text": "15,45",
+      "value": "15,45",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": null,
+      "label": "land pattern row offset",
+      "context": "Recommended land pattern row offset from the reference point to the pad row"
+    },
+    {
+      "raw_text": "23,11",
+      "value": "23,11",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": null,
+      "label": "land pattern span",
+      "context": "Recommended land pattern, additional horizontal dimension spanning the top of the pad layout"
+    },
+    { "raw_text": "(x11) ⌀1,22 (HOLE DIAMETER)", "value": "1,22", "unit": "mm", "type": "diameter", "quantity": 11, "label": "hole diameter", "context": "Recommended land pattern hole diameter" },
+    { "raw_text": "(x11) ⌀1,83 (PAD DIAMETER)", "value": "1,83", "unit": "mm", "type": "diameter", "quantity": 11, "label": "pad diameter", "context": "Recommended land pattern pad diameter" },
+    { "raw_text": "(x11) ⌀1,02", "value": "1,02", "unit": "mm", "type": "diameter", "quantity": 11, "label": "pin diameter", "context": "Bottom view pin diameter" },
+    { "raw_text": "11,5", "value": "11,5", "unit": "mm", "type": "linear", "quantity": null, "label": "pin length above PCB level", "context": "Bottom view pin height above PCB level" },
+    { "raw_text": "12,7", "value": "12,7", "unit": "mm", "type": "linear", "quantity": null, "label": "body height", "context": "Bottom view body height below PCB level" },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "body standoff at PCB level",
+      "context": "Bottom view, small standoff dimension between the body tab and the PCB level line"
+    },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "max pin receptacle head height",
+      "context": "Recommended maximum height of pin receptacle head from PCB, mounting detail diagram"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "BUS line with terminating resistors R11/R12 at both ends, five stub taps (R1/R2 through R9/R10) each through a transformer to a stub connector, and a GND connection",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12"],
+      "parameters": [{ "label": "transformer turns ratio", "value": "1:1.41", "context": "each of the 5 stub taps" }]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "SBL-0033 Rev. No:2 Date: 19.12.2025",
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc.. The document is given on the conditions that it is not reproduced, used for production or other purposes and not shared with third parties without the written permission of DEICO, and receipt of the document means that these conditions are accepted and committed."
+  ],
+  "warnings": [
+    "drawing_number was set to 'DE8135', the model code visible on the product front label ('PCB MOUNT COUPLER 5 STUB DTRM | DE8135') and embedded in document_name; no separate 'Drawing Number' field is printed. The footer stamp 'SBL-0033 Rev. No:2 Date: 19.12.2025' was not used, since it carries its own revision/date and reads as a document/form control stamp rather than this product's drawing number.",
+    "This drawing confirms the family-wide component numbering pattern: both termination slots (R11, R12) are filled here since both BUS ends are terminated (DTRM), matching the 3-stub and 4-stub DTRM siblings (DE8133 fills R7/R8, DE8134 fills R9/R10).",
+    "Front view silkscreen labels GND, J3 STUB, J4 STUB, J5 STUB, J6 STUB, and J7 STUB identify connector positions (no J1 BUS or J2 BUS labels, since both BUS terminals are internally terminated per the schematic) but are not a pin-to-value or labeled table structure, so they were not extracted as a table.",
+    "The recommended land pattern shows 11 holes/pads total; unlike sibling drawings DE8105/DE8115/DE8125 (which show a full-pitch dimension exactly twice the half-pitch, plus a separate small stagger offset), this drawing shows a single additional span dimension (23,11 mm) that does not reduce to a clean multiple of the 5,08 mm pitch, so its exact geometric role in the pad layout is not fully resolvable from the printed dimensions alone.",
+    "No GD&T feature control frames, datum references, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8135_Technical_Drawing.pdf`."
+  ]
+}

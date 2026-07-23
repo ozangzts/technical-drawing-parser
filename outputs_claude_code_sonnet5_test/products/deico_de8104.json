@@ -1,0 +1,81 @@
+{
+  "source_file": "DEICO_DE8104_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "PCB Type Bus Coupler 4 Stub",
+  "document_name": "DEICO_DE8104_Technical_Drawing.pdf",
+  "drawing_number": "DE8104",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "2:1",
+  "dimensions": [
+    { "raw_text": "57,8", "value": "57,8", "unit": "mm", "type": "linear", "quantity": null, "label": "overall width", "context": "Front view overall width of the PCB mount coupler body" },
+    { "raw_text": "23,2", "value": "23,2", "unit": "mm", "type": "linear", "quantity": null, "label": "overall height", "context": "Side view overall height" },
+    { "raw_text": "(x10) 6,35", "value": "6,35", "unit": "mm", "type": "pattern", "quantity": 10, "label": "land pattern pitch", "context": "Recommended land pattern pad-to-pad pitch" },
+    {
+      "raw_text": "25,4",
+      "value": "25,4",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": null,
+      "label": "land pattern row stagger",
+      "context": "Recommended land pattern, additional horizontal dimension near the top pad row, likely the horizontal offset between the staggered top and bottom pad rows"
+    },
+    {
+      "raw_text": "15,25",
+      "value": "15,25",
+      "unit": "mm",
+      "type": "pattern",
+      "quantity": null,
+      "label": "land pattern row offset",
+      "context": "Recommended land pattern row offset from the reference point to the pad row"
+    },
+    { "raw_text": "(x13) ⌀1,22 (HOLE DIAMETER)", "value": "1,22", "unit": "mm", "type": "diameter", "quantity": 13, "label": "hole diameter", "context": "Recommended land pattern hole diameter" },
+    { "raw_text": "(x13) ⌀1,83 (PAD DIAMETER)", "value": "1,83", "unit": "mm", "type": "diameter", "quantity": 13, "label": "pad diameter", "context": "Recommended land pattern pad diameter" },
+    { "raw_text": "(x13) ⌀1,02", "value": "1,02", "unit": "mm", "type": "diameter", "quantity": 13, "label": "pin diameter", "context": "Bottom view pin diameter" },
+    { "raw_text": "11,5", "value": "11,5", "unit": "mm", "type": "linear", "quantity": null, "label": "pin length above PCB level", "context": "Bottom view pin height above PCB level" },
+    { "raw_text": "12,7", "value": "12,7", "unit": "mm", "type": "linear", "quantity": null, "label": "body height", "context": "Bottom view body height below PCB level" },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "body standoff at PCB level",
+      "context": "Bottom view, small standoff dimension between the body tab and the PCB level line"
+    },
+    {
+      "raw_text": "1",
+      "value": "1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "max pin receptacle head height",
+      "context": "Recommended maximum height of pin receptacle head from PCB, mounting detail diagram"
+    }
+  ],
+  "dimension_tables": [],
+  "tables": [],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "BUS line (no separate termination resistors shown at either end on this drawing) with four stub taps (R1/R2, R3/R4, R5/R6, R7/R8) each through a transformer to a stub connector, and a GND connection",
+      "components": ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"],
+      "parameters": [{ "label": "transformer turns ratio", "value": "1:1.41", "context": "each of the 4 stub taps" }]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "SBL-0033 Rev. No:2 Date: 19.12.2025",
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc.. The document is given on the conditions that it is not reproduced, used for production or other purposes and not shared with third parties without the written permission of DEICO, and receipt of the document means that these conditions are accepted and committed."
+  ],
+  "warnings": [
+    "drawing_number was set to 'DE8104', the model code visible on the product front label ('PCB MOUNT COUPLER 4 STUB | DE8104') and embedded in document_name; no separate 'Drawing Number' field is printed. The footer stamp 'SBL-0033 Rev. No:2 Date: 19.12.2025' was not used, since it carries its own revision/date and reads as a document/form control stamp rather than this product's drawing number.",
+    "Front view silkscreen labels J1 BUS, GND, J2 BUS, J3 STUB, J4 STUB, J5 STUB, and J6 STUB identify connector positions but are not a pin-to-value or labeled table structure, so they were not extracted as a table.",
+    "The recommended land pattern shows a staggered two-row arrangement of 13 holes/pads total; the exact split of the 13 pads between the two rows is not fully resolvable from the printed dimensions alone.",
+    "No GD&T feature control frames, datum references, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8104_Technical_Drawing.pdf`."
+  ]
+}

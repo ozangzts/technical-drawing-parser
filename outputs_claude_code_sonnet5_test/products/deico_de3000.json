@@ -95,18 +95,18 @@
       ]
     }
   ],
+  "schematics": [],
   "tolerances": [],
   "notes": [
-    "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS",
+    "UNLESS OTHERWISE SPECIFIED ALL DIMENSIONS ARE IN MILLIMETERS.",
     "SBL-0033 Rev. No:0 Date: 29.05.2023",
-    "All intellectual property rights regarding this document belong to DEICO Engineering Inc. The document is given on the condition that it is not reproduced, copied for production or other purposes and not shared with third parties without the written permission of DEICO, and received and committed."
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc.. The document is given on the conditions that it is not reproduced, used for production or other purposes and not shared with third parties without the written permission of DEICO, and receipt of the document means that these conditions are accepted and committed."
   ],
   "warnings": [
     "drawing_number was set to 'DE3000', the model code embedded at the start of product_name; no separate 'Drawing Number' field is printed. The footer code 'SBL-0033 Rev. No:0 Date: 29.05.2023' was not used, since it carries its own revision/date and looks like a document/form control stamp rather than this product's drawing number.",
     "Auxiliary I/O connector pinout table repeats Analog In #1, #3, #5, #7 and Analog Out #1 across Pin 1-6 and Pin 19-24; preserved as printed, may indicate a labeling inconsistency in the source drawing rather than a reading error.",
     "System Functionality Chart is a block diagram (System Controller, Battery Simulation Cell x12, Connectivity, Auxiliary I/O) without numeric values and was not extracted as a table.",
     "Front panel LED labels (PWR, FAULT) and back panel connector silkscreen labels (LAN, EtherCAT IN/OUT, RST, AUX I/O, BATTERY CELLS 1-12, PWR INPUT) are visible but not extracted as a table since no structured pin/value list is printed for them.",
-    "The rotated legal notice text along the left sheet border is small and partially compressed in the source image; transcription confidence is lower than for the horizontal title-block text.",
     "No GD&T symbols, tolerance frames, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
     "`document_name` may contain a source filename or file extension: `DEICO_DE3000_Technical_Drawing`."
   ]

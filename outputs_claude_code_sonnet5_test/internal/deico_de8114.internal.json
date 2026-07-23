@@ -1,0 +1,8 @@
+{
+  "source_file": "DEICO_DE8114_Technical_Drawing.pdf",
+  "extractor": "claude_code_manual",
+  "model": "claude-sonnet-5 (Claude Code session, direct image + text-layer read, no Anthropic Messages API call)",
+  "method": "The source PDF (inputs/incoming/DEICO_DE8114_Technical_Drawing.pdf) was read directly inside a Claude Code conversation, using both the rendered page image and the PDF's embedded text layer, and interpreted by hand against the rules in src/technical_drawing_parser/extraction/prompt.py (build_vlm_prompt) and the schema in product.py, then passed through the real parse_product_json_response and format_json_compact so the final shape matches what the pipeline would produce from that raw response. No API request was made, so this run has no token/API cost beyond the conversation itself and no raw_response.txt equivalent. Because text-layer access is not available to the real image-only VLM call, this file is a hand-derived reference for checking prompt/schema correctness, not a simulation of real Anthropic/Ollama image-only extraction quality.",
+  "purpose": "First batch (10 of 41 new samples) of a larger DEICO drawing set staged in outputs_claude_code_sonnet5_test/ for review before promotion to outputs/products/.",
+  "status": "completed"
+}

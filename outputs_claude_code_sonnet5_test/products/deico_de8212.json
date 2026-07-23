@@ -1,0 +1,137 @@
+{
+  "source_file": "DEICO_DE8212_Technical_Drawing.pdf",
+  "brand_name": "DEICO",
+  "product_name": "Box Type Bus Coupler 2 Stub RTRM",
+  "document_name": "DEICO_DE8212_Technical_Drawing.pdf",
+  "drawing_number": "DE8212",
+  "revision": "2",
+  "revision_date": "26.06.2026",
+  "sheet": "1/1",
+  "size": "A3",
+  "scale": "1:1",
+  "dimensions": [
+    {
+      "raw_text": "108,5",
+      "value": "108,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall length",
+      "context": "Top view overall length, outer edge to outer edge of the mounting flanges"
+    },
+    {
+      "raw_text": "98,5",
+      "value": "98,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "flange bolt-circle length",
+      "context": "Top view length between the mounting flange bolt hole centers"
+    },
+    {
+      "raw_text": "83,5",
+      "value": "83,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "body length",
+      "context": "Top view length of the black body/label area, excluding the mounting flanges"
+    },
+    { "raw_text": "(x4) ⌀4,2 THRU", "value": "4,2", "unit": "mm", "type": "diameter", "quantity": 4, "label": "mounting hole diameter", "context": "Mounting flange through-hole diameter" },
+    { "raw_text": "22,9", "value": "22,9", "unit": "mm", "type": "linear", "quantity": null, "label": "stub port pitch", "context": "Top view center-to-center pitch between the 2 stub ports" },
+    {
+      "raw_text": "30,3",
+      "value": "30,3",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "edge to first stub port",
+      "context": "Top view distance from the mounting flange to the center of the first stub port (J3)"
+    },
+    {
+      "raw_text": "26",
+      "value": "26",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "unlabeled height (upper)",
+      "context": "Top view, right side height dimension from the top edge; the specific referenced feature is not explicitly labeled"
+    },
+    {
+      "raw_text": "36",
+      "value": "36",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "unlabeled height (mid)",
+      "context": "Top view, right side height dimension from the top edge; the specific referenced feature is not explicitly labeled"
+    },
+    {
+      "raw_text": "5",
+      "value": "5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "unlabeled height (small)",
+      "context": "Top view, small right-side height dimension near the bottom of the body; the specific referenced feature is not explicitly labeled"
+    },
+    {
+      "raw_text": "48,5",
+      "value": "48,5",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "overall height",
+      "context": "Top view total height including the protruding stub connector barrels"
+    },
+    {
+      "raw_text": "24",
+      "value": "24",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "unlabeled height (bottom view, upper)",
+      "context": "Bottom view, right side height dimension; the specific referenced feature is not explicitly labeled"
+    },
+    {
+      "raw_text": "13,1",
+      "value": "13,1",
+      "unit": "mm",
+      "type": "linear",
+      "quantity": null,
+      "label": "unlabeled height (bottom view, lower)",
+      "context": "Bottom view, right side height dimension; the specific referenced feature is not explicitly labeled"
+    },
+    { "raw_text": "2", "value": "2", "unit": "mm", "type": "linear", "quantity": null, "label": "base plate thickness", "context": "Bottom view, mounting base plate thickness at the bottom edge" }
+  ],
+  "dimension_tables": [],
+  "tables": [
+    {
+      "type": "connection_table",
+      "title": "Intermateability",
+      "context": "Recommended mating connector reference",
+      "rows": [{ "label": null, "cells": [{ "column": "Connector", "value": "BJ770" }, { "column": "Recommended Mating Connector", "value": "PL75" }] }]
+    }
+  ],
+  "schematics": [
+    {
+      "title": "Stub Termination Network",
+      "context": "J1 BUS with a single termination resistor (R6) at the right terminal only; the right terminal is not broken out to an external port. Two stub taps (R1/R2, R3/R4) each through a transformer to a stub connector (J3 STUB 1, J4 STUB 2).",
+      "components": ["R1", "R2", "R3", "R4", "R6"],
+      "parameters": [{ "label": "transformer turns ratio", "value": "1:1.41", "context": "each of the 2 stub taps" }]
+    }
+  ],
+  "tolerances": [],
+  "notes": [
+    "Unless otherwise specified all dimensions are in millimeters.",
+    "SBL-0033 Rev. No:2 Date: 19.12.2025",
+    "All intellectual rights regarding this document belong to DEICO Engineering Inc.. The document is given on the conditions that it is not reproduced, used for production or other purposes and not shared with third parties without the written permission of DEICO, and receipt of the document means that these conditions are accepted and committed."
+  ],
+  "warnings": [
+    "drawing_number was set to 'DE8212', the model code visible on the product front label ('BUS COUPLER 2 STUB RTRM | DE8212') and embedded in document_name; no separate 'Drawing Number' field is printed. The footer stamp 'SBL-0033 Rev. No:2 Date: 19.12.2025' was not used, since it carries its own revision/date and reads as a document/form control stamp rather than this product's drawing number.",
+    "Component numbering in the schematic skips R5: only R6 is present as a single termination resistor, confirming the same 'skip the unused termination slot' numbering pattern seen on the PCB Type family (e.g. DE8113/DE8114) now also applies to the Box Type family (sibling DE8211, 1-stub RTRM, skips R3 and uses R4).",
+    "Several height dimensions on the right side of the top and bottom views (26, 36, 5, 24, 13,1) have visible leader lines and values but no adjacent text label identifying the exact referenced feature; recorded with their view location only. These match sibling drawing DE8202's values except this drawing additionally shows the small '5 mm' dimension that DE8202 (non-RTRM 2-stub) does not.",
+    "No GD&T feature control frames, datum references, or +/- tolerance callouts were visible on this sheet; tolerances left empty.",
+    "`document_name` may contain a source filename or file extension: `DEICO_DE8212_Technical_Drawing.pdf`."
+  ]
+}
